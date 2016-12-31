@@ -5,18 +5,24 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
-import android.text.TextUtils;
-import android.view.View;
 import android.support.design.widget.NavigationView;
+import android.support.design.widget.Snackbar;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.TextView;
+
+import java.io.IOException;
+import java.net.Authenticator;
+import java.net.PasswordAuthentication;
+
+import in.andres.kandroid.kanboard.KanboardAPI;
+import in.andres.kandroid.kanboard.KanboardUserInfo;
+import in.andres.kandroid.kanboard.KanbordEvents;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -25,6 +31,9 @@ public class MainActivity extends AppCompatActivity
     String apiKey;
     String username;
     String password;
+    TextView mInfotext;
+    KanboardAPI kanboardAPI;
+    KanboardUserInfo Me;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,8 +56,8 @@ public class MainActivity extends AppCompatActivity
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close) {
             public void onDrawerOpened(View drawerView) {
                 TextView mServerUrl = (TextView) findViewById(R.id.nav_serverurl);
-                if (mServerUrl != null)
-                    mServerUrl.setText(serverURL);
+                if ((mServerUrl != null) && (Me != null))
+                    mServerUrl.setText(Me.Name);
             }
         };
         drawer.setDrawerListener(toggle);
@@ -79,6 +88,28 @@ public class MainActivity extends AppCompatActivity
         if (showLoginScreen) {
             Intent iLoginScreen = new Intent(this, LoginActivity.class);
             startActivity(iLoginScreen);
+        }
+
+        Authenticator.setDefault(new Authenticator() {
+            @Override
+            protected PasswordAuthentication getPasswordAuthentication() {
+                return new PasswordAuthentication(username, password.toCharArray());
+            }
+        });
+
+        mInfotext = (TextView) findViewById(R.id.infotext);
+
+        try {
+            kanboardAPI = new KanboardAPI(serverURL, username, password);
+            kanboardAPI.addListener(new KanbordEvents() {
+                @Override
+                public void onGetMe(boolean succsess, KanboardUserInfo userInfo) {
+                    Me = userInfo;
+                }
+            });
+            kanboardAPI.getMe();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 
