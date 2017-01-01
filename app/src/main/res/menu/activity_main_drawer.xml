@@ -1,25 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
-
+    <item
+        android:title="@string/action_dashboard"
+        android:id="@+id/nav_dashboard"
+        android:icon="@drawable/laptop" />
+    <item
+        android:title="@string/action_overdue"
+        android:id="@+id/nav_overdue"
+        android:icon="@drawable/calendar" />
     <!--<group android:checkableBehavior="single" android:id="@+id/projects">-->
     <item android:title="@string/action_projects" android:id="@+id/projects">
         <menu>
-            <item
-                android:id="@+id/nav_camera"
-                android:icon="@drawable/ic_menu_camera"
-                android:title="Import" />
-            <item
-                android:id="@+id/nav_gallery"
-                android:icon="@drawable/ic_menu_gallery"
-                android:title="Gallery" />
-            <item
-                android:id="@+id/nav_slideshow"
-                android:icon="@drawable/ic_menu_slideshow"
-                android:title="Slideshow" />
-            <item
-                android:id="@+id/nav_manage"
-                android:icon="@drawable/ic_menu_manage"
-                android:title="Tools" />
+            <!--<item-->
+                <!--android:id="@+id/nav_camera"-->
+                <!--android:icon="@drawable/ic_menu_camera"-->
+                <!--android:title="Import" />-->
+            <!--<item-->
+                <!--android:id="@+id/nav_gallery"-->
+                <!--android:icon="@drawable/ic_menu_gallery"-->
+                <!--android:title="Gallery" />-->
+            <!--<item-->
+                <!--android:id="@+id/nav_slideshow"-->
+                <!--android:icon="@drawable/ic_menu_slideshow"-->
+                <!--android:title="Slideshow" />-->
+            <!--<item-->
+                <!--android:id="@+id/nav_manage"-->
+                <!--android:icon="@drawable/ic_menu_manage"-->
+                <!--android:title="Tools" />-->
         </menu>
     </item>
     <!--</group>-->

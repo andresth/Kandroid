@@ -1,11 +1,10 @@
 <resources>
-    <string name="app_name">Kandroid</string>
 
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
 
     <string name="action_settings">Einstellungen</string>
-    <string name="title_activity_login">Sign in</string>
+    <string name="title_activity_login">Anmeldedaten</string>
 
     <!-- Strings related to login -->
     <string name="prompt_email">Email</string>
@@ -24,4 +23,6 @@
     </string>
     <string name="action_projects">Projekte</string>
     <string name="action_refresh">Aktualisieren</string>
+    <string name="action_dashboard">Dashboard</string>
+    <string name="action_overdue">Überfällige Aufgaben</string>
 </resources>
