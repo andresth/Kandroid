@@ -33,6 +33,9 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="in.andres.kandroid.MainActivity" />
         </activity>
+        <activity
+            android:name=".AboutActivity"
+            android:label="@string/title_activity_about"></activity>
     </application>
 
 </manifest>

@@ -234,11 +234,18 @@ public class MainActivity extends AppCompatActivity
 //        } else if (id == R.id.nav_manage) {
 //
 //        } else
-        if (id == R.id.nav_refresh) {
+        if (id == R.id.nav_dashboard) {
+
+        } else if (id == R.id.nav_overdue) {
 
         } else if (id == R.id.nav_sign_in) {
             Intent iLoginScreen = new Intent(this, LoginActivity.class);
             startActivity(iLoginScreen);
+        } else if (id == R.id.nav_refresh) {
+
+        } else if (id == R.id.nav_about) {
+            Intent iAboutScreen = new Intent(this, AboutActivity.class);
+            startActivity(iAboutScreen);
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);

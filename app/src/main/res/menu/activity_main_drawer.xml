@@ -42,6 +42,10 @@
                 android:id="@+id/nav_refresh"
                 android:icon="@drawable/refresh"
                 android:title="@string/action_refresh" />
+            <item
+                android:id="@+id/nav_about"
+                android:title="@string/action_about"
+                android:icon="@drawable/about" />
         </menu>
     </item>
 

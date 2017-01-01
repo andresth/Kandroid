@@ -24,4 +24,7 @@
     <string name="action_refresh">Refresh</string>
     <string name="action_dashboard">Dashboard</string>
     <string name="action_overdue">Overdue Tasks</string>
+    <string name="action_about">About</string>
+    <string name="title_activity_about">About Kandroid</string>
+    <string name="txt_about" translatable="false">"<html>\n  <body>\n    <p><big><bold>About Kandroid</bold></big></p>\n    <p>A JSON RPC client for Kanboard.</p>\n    <p><small>(c) Thomas Andres</small></p>\n  </body>\n</html>"</string>
 </resources>
