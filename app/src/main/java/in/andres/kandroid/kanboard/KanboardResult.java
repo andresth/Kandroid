@@ -1,11 +1,15 @@
 package in.andres.kandroid.kanboard;
 
-public class KanboardResult {
-    public final String command;
-    public final String json;
+import org.json.JSONObject;
 
-    public KanboardResult(String command, String json) {
-        this.command = command;
-        this.json = json;
+public class KanboardResult {
+    public final String Command;
+    public final JSONObject JSON;
+    public final int ReturnCode;
+
+    public KanboardResult(String command, JSONObject json, int returnCode) {
+        this.Command = command;
+        this.JSON = json;
+        this.ReturnCode = returnCode;
     }
 }

@@ -12,17 +12,69 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.Menu;
 import android.view.MenuItem;
+import android.view.SubMenu;
 import android.view.View;
 import android.widget.TextView;
 
 import java.io.IOException;
 import java.net.Authenticator;
 import java.net.PasswordAuthentication;
+import java.util.ArrayDeque;
+import java.util.List;
+import java.util.Queue;
+import java.util.concurrent.Executor;
+import java.util.concurrent.ThreadPoolExecutor;
 
 import in.andres.kandroid.kanboard.KanboardAPI;
+import in.andres.kandroid.kanboard.KanboardProjectInfo;
+import in.andres.kandroid.kanboard.KanboardTask;
 import in.andres.kandroid.kanboard.KanboardUserInfo;
 import in.andres.kandroid.kanboard.KanbordEvents;
+
+class ThreadPerTaskExecutor implements Executor {
+    public void execute(Runnable r) {
+        new Thread(r).start();
+    }
+}
+
+class SerialExecutor implements Executor {
+    final Queue<Runnable> tasks = new ArrayDeque<>();
+    final Executor executor;
+    Runnable active;
+
+    SerialExecutor(Executor executor) {
+        this.executor = executor;
+    }
+
+    public synchronized void execute(final Runnable r) {
+        tasks.add(new Runnable() {
+            public void run() {
+                try {
+                    r.run();
+                } finally {
+                    scheduleNext();
+                }
+            }
+        });
+        if (active == null) {
+            scheduleNext();
+        }
+    }
+
+    protected synchronized void scheduleNext() {
+        if ((active = tasks.poll()) != null) {
+            executor.execute(active);
+        }
+    }
+}
+
+class DirectExecutor implements Executor {
+    public void execute(Runnable r) {
+        r.run();
+    }
+}
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -34,6 +86,8 @@ public class MainActivity extends AppCompatActivity
     TextView mInfotext;
     KanboardAPI kanboardAPI;
     KanboardUserInfo Me;
+    List<KanboardProjectInfo> Projects;
+    Executor mExecutor;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,8 +110,16 @@ public class MainActivity extends AppCompatActivity
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close) {
             public void onDrawerOpened(View drawerView) {
                 TextView mServerUrl = (TextView) findViewById(R.id.nav_serverurl);
-                if ((mServerUrl != null) && (Me != null))
+                if ((Me != null) && (mServerUrl != null))
                     mServerUrl.setText(Me.Name);
+//                if (Projects != null) {
+//                    NavigationView nav = (NavigationView) findViewById(R.id.nav_view);
+//                    SubMenu proj = nav.getMenu().findItem(R.id.projects).getSubMenu();
+//                    proj.clear();
+//                    for (KanboardProjectInfo item: Projects)
+//                        proj.add(Menu.NONE, item.ID, Menu.NONE, item.Name);
+//                    mInfotext.setText(Integer.toString(nav.getMenu().findItem(R.id.projects).getSubMenu().size()));
+//                }
             }
         };
         drawer.setDrawerListener(toggle);
@@ -90,24 +152,36 @@ public class MainActivity extends AppCompatActivity
             startActivity(iLoginScreen);
         }
 
-        Authenticator.setDefault(new Authenticator() {
-            @Override
-            protected PasswordAuthentication getPasswordAuthentication() {
-                return new PasswordAuthentication(username, password.toCharArray());
-            }
-        });
-
         mInfotext = (TextView) findViewById(R.id.infotext);
 
         try {
             kanboardAPI = new KanboardAPI(serverURL, username, password);
             kanboardAPI.addListener(new KanbordEvents() {
                 @Override
-                public void onGetMe(boolean succsess, KanboardUserInfo userInfo) {
+                public void onGetMe(boolean success, KanboardUserInfo userInfo) {
                     Me = userInfo;
+                }
+
+                @Override
+                public void onGetMyProjectsList(boolean success, List<KanboardProjectInfo> projects) {
+                    Projects = projects;
+                    NavigationView nav = (NavigationView) findViewById(R.id.nav_view);
+                    SubMenu proj = nav.getMenu().findItem(R.id.projects).getSubMenu();
+                    proj.clear();
+                    for (KanboardProjectInfo item: Projects) {
+                        MenuItem m =proj.add(Menu.NONE, item.ID, Menu.NONE, item.Name);
+                        m.setIcon(R.drawable.project);
+                    }
+                    mInfotext.setText(Integer.toString(nav.getMenu().findItem(R.id.projects).getSubMenu().size()));
+                }
+
+                @Override
+                public void onDebug(boolean success, String message) {
+                    mInfotext.setText(message);
                 }
             });
             kanboardAPI.getMe();
+            kanboardAPI.getMyProjectsList();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -159,11 +233,9 @@ public class MainActivity extends AppCompatActivity
 
         } else if (id == R.id.nav_manage) {
 
-        } else if (id == R.id.nav_share) {
+        } else if (id == R.id.nav_refresh) {
 
-        } else if (id == R.id.nav_send) {
-
-        } else if (id == R.id.nav_settings) {
+        } else if (id == R.id.nav_sign_in) {
             Intent iLoginScreen = new Intent(this, LoginActivity.class);
             startActivity(iLoginScreen);
         }
