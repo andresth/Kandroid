@@ -13,7 +13,7 @@ import java.util.List;
  */
 
 
-public class KanboardProject {
+public class KanboardProject implements Comparable<KanboardProject> {
     public final int ID;
     public final String Name;
     public final int OwnerID;
@@ -66,5 +66,10 @@ public class KanboardProject {
         if (cols != null)
             for (int i = 0; i < cols.length(); i++)
                 Columns.add(new KanboardColumn(cols.optJSONObject(i)));
+    }
+
+    @Override
+    public int compareTo(KanboardProject o) {
+        return this.Name.compareTo(o.Name);
     }
 }

@@ -6,7 +6,7 @@ import org.json.JSONObject;
  * Created by Thomas Andres on 01.01.17.
  */
 
-public class KanboardSubtask {
+public class KanboardSubtask implements Comparable<KanboardSubtask> {
     public final int ID;
     public final int TaskID;
     public final int Position;
@@ -42,5 +42,10 @@ public class KanboardSubtask {
         IsTimerStarted = KanboardAPI.StringToBoolean(json.optString("is_timer_started"));
         TimerStartDate = json.optInt("timer_start_date");
         ColorName = json.optString("color_id");
+    }
+
+    @Override
+    public int compareTo(KanboardSubtask o) {
+        return this.Title.compareTo(o.Title);
     }
 }

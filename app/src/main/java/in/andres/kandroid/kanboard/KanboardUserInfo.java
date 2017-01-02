@@ -2,7 +2,7 @@ package in.andres.kandroid.kanboard;
 
 import org.json.JSONObject;
 
-public class KanboardUserInfo {
+public class KanboardUserInfo implements Comparable<KanboardUserInfo> {
     public final int ID;
     public final String Username;
     public final String Role;
@@ -77,5 +77,10 @@ public class KanboardUserInfo {
         IsActive = json.optBoolean("is_active", false);
         AvatarPath = json.optString("avatar_path", "");
 
+    }
+
+    @Override
+    public int compareTo(KanboardUserInfo o) {
+        return this.Username.compareTo(o.Username);
     }
 }

@@ -6,7 +6,7 @@ import org.json.JSONObject;
  * Created by Thomas Andres on 01.01.17.
  */
 
-public class KanboardColumn {
+public class KanboardColumn implements Comparable<KanboardColumn> {
     public final int ID;
     public final int Position;
     public final int TaskLimit;
@@ -25,5 +25,10 @@ public class KanboardColumn {
         Description = json.optString("description");
         ProjectID = json.optInt("project_id");
         HideInDashboard = KanboardAPI.StringToBoolean(json.optString("hide_in_dashboard"));
+    }
+
+    @Override
+    public int compareTo(KanboardColumn o) {
+        return this.Title.compareTo(o.Title);
     }
 }

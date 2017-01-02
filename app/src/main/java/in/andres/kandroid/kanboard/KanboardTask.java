@@ -9,7 +9,7 @@ import java.net.URL;
  * Created by Thomas Andres on 01.01.17.
  */
 
-public class KanboardTask {
+public class KanboardTask implements Comparable<KanboardTask> {
     public final int ID;
     public final int ProjectID;
     public final int ColumnID;
@@ -46,5 +46,10 @@ public class KanboardTask {
         // Dashboard properties
         ProjectName = json.optString("project_name");
         ColumnTitle = json.optString("column_title");
+    }
+
+    @Override
+    public int compareTo(KanboardTask o) {
+        return this.Title.compareTo(o.Title);
     }
 }
