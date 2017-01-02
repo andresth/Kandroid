@@ -17,13 +17,12 @@ import android.view.MenuItem;
 import android.view.SubMenu;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.io.IOException;
-import java.util.ArrayDeque;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Queue;
-import java.util.concurrent.Executor;
 
 import in.andres.kandroid.kanboard.KanboardAPI;
 import in.andres.kandroid.kanboard.KanboardDashboard;
@@ -33,7 +32,7 @@ import in.andres.kandroid.kanboard.KanboardUserInfo;
 import in.andres.kandroid.kanboard.KanbordEvents;
 
 public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener, SharedPreferences.OnSharedPreferenceChangeListener {
+        implements NavigationView.OnNavigationItemSelectedListener {
 
     String serverURL;
     String apiKey;
@@ -44,6 +43,45 @@ public class MainActivity extends AppCompatActivity
     KanboardUserInfo Me;
     List<KanboardProjectInfo> mProjects;
     KanboardDashboard mDashboard;
+    KanbordEvents eventHandler = new KanbordEvents() {
+        @Override
+        public void onGetMe(boolean success, KanboardUserInfo userInfo) {
+            Me = userInfo;
+        }
+
+        @Override
+        public void onGetMyProjectsList(boolean success, List<KanboardProjectInfo> projects) {
+            mProjects = projects;
+            NavigationView nav = (NavigationView) findViewById(R.id.nav_view);
+            SubMenu proj = nav.getMenu().findItem(R.id.projects).getSubMenu();
+            proj.clear();
+            for (KanboardProjectInfo item: mProjects) {
+                MenuItem m =proj.add(Menu.NONE, item.ID, Menu.NONE, item.Name);
+                m.setIcon(R.drawable.project);
+            }
+        }
+
+        @Override
+        public void onGetMyDashboard(boolean success, KanboardDashboard dash) {
+            mDashboard = dash;
+            populateProjectsMenu();
+//                    SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+//                    if (preferences.getBoolean("projects_sort_alphabetic", false))
+//                        Collections.sort(mDashboard.Projects);
+//                    NavigationView nav = (NavigationView) findViewById(R.id.nav_view);
+//                    SubMenu proj = nav.getMenu().findItem(R.id.projects).getSubMenu();
+//                    proj.clear();
+//                    for (KanboardProject item: mDashboard.Projects) {
+//                        MenuItem m =proj.add(Menu.NONE, item.ID, Menu.NONE, item.Name);
+//                        m.setIcon(R.drawable.project);
+//                    }
+        }
+
+        @Override
+        public void onDebug(boolean success, String message) {
+            mInfotext.setText(message);
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -112,51 +150,32 @@ public class MainActivity extends AppCompatActivity
 
         try {
             kanboardAPI = new KanboardAPI(serverURL, username, password);
-            kanboardAPI.addListener(new KanbordEvents() {
-                @Override
-                public void onGetMe(boolean success, KanboardUserInfo userInfo) {
-                    Me = userInfo;
-                }
-
-                @Override
-                public void onGetMyProjectsList(boolean success, List<KanboardProjectInfo> projects) {
-                    mProjects = projects;
-                    NavigationView nav = (NavigationView) findViewById(R.id.nav_view);
-                    SubMenu proj = nav.getMenu().findItem(R.id.projects).getSubMenu();
-                    proj.clear();
-                    for (KanboardProjectInfo item: mProjects) {
-                        MenuItem m =proj.add(Menu.NONE, item.ID, Menu.NONE, item.Name);
-                        m.setIcon(R.drawable.project);
-                    }
-                    mInfotext.setText(Integer.toString(nav.getMenu().findItem(R.id.projects).getSubMenu().size()));
-                }
-
-                @Override
-                public void onGetMyDashboard(boolean success, KanboardDashboard dash) {
-                    mDashboard = dash;
-                    SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-                    if (preferences.getBoolean("projects_sort_alphabetic", false))
-                        Collections.sort(mDashboard.Projects);
-                    NavigationView nav = (NavigationView) findViewById(R.id.nav_view);
-                    SubMenu proj = nav.getMenu().findItem(R.id.projects).getSubMenu();
-                    proj.clear();
-                    for (KanboardProject item: mDashboard.Projects) {
-                        MenuItem m =proj.add(Menu.NONE, item.ID, Menu.NONE, item.Name);
-                        m.setIcon(R.drawable.project);
-                    }
-                }
-
-                @Override
-                public void onDebug(boolean success, String message) {
-                    mInfotext.setText(message);
-                }
-            });
+            kanboardAPI.addListener(eventHandler);
             kanboardAPI.getMe();
 //            kanboardAPI.getMyProjectsList();
             kanboardAPI.getMyDashboard();
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        populateProjectsMenu();
+//        Toast.makeText(getApplicationContext(), "Start", Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        populateProjectsMenu();
+//        Toast.makeText(getApplicationContext(), "Resume", Toast.LENGTH_SHORT).show();
     }
 
     @Override
@@ -215,8 +234,21 @@ public class MainActivity extends AppCompatActivity
         return true;
     }
 
-    @Override
-    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+    private void populateProjectsMenu() {
+        if (mDashboard == null) {
+            return;
+        }
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this.getApplicationContext());
+        List<KanboardProject> projList = new ArrayList<>(mDashboard.Projects);
+        if (preferences.getBoolean("projects_sort_alphabetic", false))
+            Collections.sort(projList);
+        NavigationView nav = (NavigationView) findViewById(R.id.nav_view);
+        SubMenu projMenu = nav.getMenu().findItem(R.id.projects).getSubMenu();
+        projMenu.clear();
+        for (KanboardProject item: projList) {
+            MenuItem m =projMenu.add(Menu.NONE, item.ID, Menu.NONE, item.Name);
+            m.setIcon(R.drawable.project);
+        }
 
     }
 }
