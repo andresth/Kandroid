@@ -20,6 +20,7 @@ import android.widget.TextView;
 
 import java.io.IOException;
 import java.util.ArrayDeque;
+import java.util.Collections;
 import java.util.List;
 import java.util.Queue;
 import java.util.concurrent.Executor;
@@ -31,51 +32,8 @@ import in.andres.kandroid.kanboard.KanboardProjectInfo;
 import in.andres.kandroid.kanboard.KanboardUserInfo;
 import in.andres.kandroid.kanboard.KanbordEvents;
 
-class ThreadPerTaskExecutor implements Executor {
-    public void execute(Runnable r) {
-        new Thread(r).start();
-    }
-}
-
-class SerialExecutor implements Executor {
-    final Queue<Runnable> tasks = new ArrayDeque<>();
-    final Executor executor;
-    Runnable active;
-
-    SerialExecutor(Executor executor) {
-        this.executor = executor;
-    }
-
-    public synchronized void execute(final Runnable r) {
-        tasks.add(new Runnable() {
-            public void run() {
-                try {
-                    r.run();
-                } finally {
-                    scheduleNext();
-                }
-            }
-        });
-        if (active == null) {
-            scheduleNext();
-        }
-    }
-
-    protected synchronized void scheduleNext() {
-        if ((active = tasks.poll()) != null) {
-            executor.execute(active);
-        }
-    }
-}
-
-class DirectExecutor implements Executor {
-    public void execute(Runnable r) {
-        r.run();
-    }
-}
-
 public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener {
+        implements NavigationView.OnNavigationItemSelectedListener, SharedPreferences.OnSharedPreferenceChangeListener {
 
     String serverURL;
     String apiKey;
@@ -176,6 +134,9 @@ public class MainActivity extends AppCompatActivity
                 @Override
                 public void onGetMyDashboard(boolean success, KanboardDashboard dash) {
                     mDashboard = dash;
+                    SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+                    if (preferences.getBoolean("projects_sort_alphabetic", false))
+                        Collections.sort(mDashboard.Projects);
                     NavigationView nav = (NavigationView) findViewById(R.id.nav_view);
                     SubMenu proj = nav.getMenu().findItem(R.id.projects).getSubMenu();
                     proj.clear();
@@ -236,24 +197,14 @@ public class MainActivity extends AppCompatActivity
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-//        if (id == R.id.nav_camera) {
-//            // Handle the camera action
-//        } else if (id == R.id.nav_gallery) {
-//
-//        } else if (id == R.id.nav_slideshow) {
-//
-//        } else if (id == R.id.nav_manage) {
-//
-//        } else
         if (id == R.id.nav_dashboard) {
 
         } else if (id == R.id.nav_overdue) {
 
         } else if (id == R.id.nav_sign_in) {
-            Intent iLoginScreen = new Intent(this, LoginActivity.class);
-            startActivity(iLoginScreen);
+            Intent iSetting = new Intent(this, SettingsActivity.class);
+            startActivity(iSetting);
         } else if (id == R.id.nav_refresh) {
-
         } else if (id == R.id.nav_about) {
             Intent iAboutScreen = new Intent(this, AboutActivity.class);
             startActivity(iAboutScreen);
@@ -262,5 +213,10 @@ public class MainActivity extends AppCompatActivity
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    @Override
+    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+
     }
 }

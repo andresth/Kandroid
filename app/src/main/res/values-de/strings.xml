@@ -27,4 +27,5 @@
     <string name="action_overdue">Überfällige Aufgaben</string>
     <string name="action_about">Über</string>
     <string name="title_activity_about">Über Kandroid</string>
+    <string name="title_activity_settings">Einstellungen</string>
 </resources>
