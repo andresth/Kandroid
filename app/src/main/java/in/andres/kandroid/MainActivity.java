@@ -19,17 +19,15 @@ import android.view.View;
 import android.widget.TextView;
 
 import java.io.IOException;
-import java.net.Authenticator;
-import java.net.PasswordAuthentication;
 import java.util.ArrayDeque;
 import java.util.List;
 import java.util.Queue;
 import java.util.concurrent.Executor;
-import java.util.concurrent.ThreadPoolExecutor;
 
 import in.andres.kandroid.kanboard.KanboardAPI;
+import in.andres.kandroid.kanboard.KanboardDashboard;
+import in.andres.kandroid.kanboard.KanboardProject;
 import in.andres.kandroid.kanboard.KanboardProjectInfo;
-import in.andres.kandroid.kanboard.KanboardTask;
 import in.andres.kandroid.kanboard.KanboardUserInfo;
 import in.andres.kandroid.kanboard.KanbordEvents;
 
@@ -86,8 +84,8 @@ public class MainActivity extends AppCompatActivity
     TextView mInfotext;
     KanboardAPI kanboardAPI;
     KanboardUserInfo Me;
-    List<KanboardProjectInfo> Projects;
-    Executor mExecutor;
+    List<KanboardProjectInfo> mProjects;
+    KanboardDashboard mDashboard;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -112,11 +110,11 @@ public class MainActivity extends AppCompatActivity
                 TextView mServerUrl = (TextView) findViewById(R.id.nav_serverurl);
                 if ((Me != null) && (mServerUrl != null))
                     mServerUrl.setText(Me.Name);
-//                if (Projects != null) {
+//                if (mProjects != null) {
 //                    NavigationView nav = (NavigationView) findViewById(R.id.nav_view);
 //                    SubMenu proj = nav.getMenu().findItem(R.id.projects).getSubMenu();
 //                    proj.clear();
-//                    for (KanboardProjectInfo item: Projects)
+//                    for (KanboardProjectInfo item: mProjects)
 //                        proj.add(Menu.NONE, item.ID, Menu.NONE, item.Name);
 //                    mInfotext.setText(Integer.toString(nav.getMenu().findItem(R.id.projects).getSubMenu().size()));
 //                }
@@ -164,15 +162,27 @@ public class MainActivity extends AppCompatActivity
 
                 @Override
                 public void onGetMyProjectsList(boolean success, List<KanboardProjectInfo> projects) {
-                    Projects = projects;
+                    mProjects = projects;
                     NavigationView nav = (NavigationView) findViewById(R.id.nav_view);
                     SubMenu proj = nav.getMenu().findItem(R.id.projects).getSubMenu();
                     proj.clear();
-                    for (KanboardProjectInfo item: Projects) {
+                    for (KanboardProjectInfo item: mProjects) {
                         MenuItem m =proj.add(Menu.NONE, item.ID, Menu.NONE, item.Name);
                         m.setIcon(R.drawable.project);
                     }
                     mInfotext.setText(Integer.toString(nav.getMenu().findItem(R.id.projects).getSubMenu().size()));
+                }
+
+                @Override
+                public void onGetMyDashboard(boolean success, KanboardDashboard dash) {
+                    mDashboard = dash;
+                    NavigationView nav = (NavigationView) findViewById(R.id.nav_view);
+                    SubMenu proj = nav.getMenu().findItem(R.id.projects).getSubMenu();
+                    proj.clear();
+                    for (KanboardProject item: mDashboard.Projects) {
+                        MenuItem m =proj.add(Menu.NONE, item.ID, Menu.NONE, item.Name);
+                        m.setIcon(R.drawable.project);
+                    }
                 }
 
                 @Override
@@ -181,7 +191,8 @@ public class MainActivity extends AppCompatActivity
                 }
             });
             kanboardAPI.getMe();
-            kanboardAPI.getMyProjectsList();
+//            kanboardAPI.getMyProjectsList();
+            kanboardAPI.getMyDashboard();
         } catch (IOException e) {
             e.printStackTrace();
         }

@@ -2,24 +2,19 @@ package in.andres.kandroid.kanboard;
 
 
 import android.os.AsyncTask;
+import android.text.TextUtils;
 
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.Authenticator;
-import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.PasswordAuthentication;
 import java.net.URL;
-import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Objects;
-import java.util.Queue;
-import java.util.concurrent.Executor;
-import java.util.concurrent.ThreadPoolExecutor;
 
 import javax.net.ssl.HttpsURLConnection;
 
@@ -29,9 +24,9 @@ import org.json.JSONObject;
 
 public class KanboardAPI {
 
-    class KanboardAsync extends AsyncTask<KanboardTask, Void, KanboardResult> {
+    class KanboardAsync extends AsyncTask<KanboardRequest, Void, KanboardResult> {
         @Override
-        protected KanboardResult doInBackground(KanboardTask... params) {
+        protected KanboardResult doInBackground(KanboardRequest... params) {
             HttpsURLConnection con = null;
             try {
                 con = (HttpsURLConnection) kanboardURL.openConnection();
@@ -67,7 +62,7 @@ public class KanboardAPI {
         @Override
         protected void onPostExecute(KanboardResult s) {
             boolean success = false;
-            if (s.Command =="getMe") {
+            if (s.Command == "getMe") {
                 KanboardUserInfo res = null;
                 try {
                     if (s.JSON.has("result") && (s.ReturnCode < 400)) {
@@ -83,7 +78,7 @@ public class KanboardAPI {
                 return;
             }
 
-            if (s.Command =="getMyProjectsList") {
+            if (s.Command == "getMyProjectsList") {
                 List<KanboardProjectInfo> res = null;
                 try {
                     if (s.JSON.has("result")) {
@@ -101,6 +96,21 @@ public class KanboardAPI {
                     for (KanbordEvents l: listeners)
                         l.onGetMyProjectsList(success, res);
                 return;
+            }
+
+            if (s.Command == "getMyDashboard") {
+                KanboardDashboard res = null;
+                try {
+                    if (s.JSON.has("result")) {
+                        success = true;
+                        JSONObject dash = s.JSON.getJSONObject("result");
+                        res = new KanboardDashboard(dash);
+                    }
+                } catch (JSONException | MalformedURLException e) {
+                    e.printStackTrace();
+                }
+                for (KanbordEvents l: listeners)
+                    l.onGetMyDashboard(success, res);
             }
         }
     }
@@ -128,10 +138,20 @@ public class KanboardAPI {
     }
 
     public void getMe() throws IOException {
-        new KanboardAsync().execute(KanboardTask.getMe());
+        new KanboardAsync().execute(KanboardRequest.getMe());
     }
 
     public void getMyProjectsList() {
-        new KanboardAsync().execute(KanboardTask.getMyProjectsList());
+        new KanboardAsync().execute(KanboardRequest.getMyProjectsList());
+    }
+
+    public void getMyDashboard() {
+        new KanboardAsync().execute(KanboardRequest.getMyDashboard());
+    }
+
+    // TODO: add API calls
+
+    public static boolean StringToBoolean(String s) {
+        return s.equalsIgnoreCase("true") | s.equalsIgnoreCase("yes") | s.equalsIgnoreCase("1");
     }
 }
