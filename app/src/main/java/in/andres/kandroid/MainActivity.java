@@ -78,6 +78,7 @@ public class MainActivity extends AppCompatActivity
                                 "Message: " + error.Message + "\n" +
                                 "HTTP Response: " + Integer.toString(error.HTTPReturnCode))
                     .setNeutralButton("Dismiss", null)
+                    .setIcon(android.R.drawable.ic_dialog_alert)
                     .show();
         }
 
