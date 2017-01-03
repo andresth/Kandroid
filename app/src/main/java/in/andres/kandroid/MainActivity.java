@@ -45,7 +45,7 @@ public class MainActivity extends AppCompatActivity
     List<KanboardProjectInfo> mProjects;
     KanboardDashboard mDashboard;
     MainActivity self;
-    
+
     KanbordEvents eventHandler = new KanbordEvents() {
         @Override
         public void onGetMe(boolean success, KanboardUserInfo userInfo) {

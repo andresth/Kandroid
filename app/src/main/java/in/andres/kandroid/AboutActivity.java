@@ -1,12 +1,9 @@
 package in.andres.kandroid;
 
+import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
-import android.text.Html;
 import android.view.MenuItem;
-import android.webkit.WebView;
-import android.widget.TextView;
 
 public class AboutActivity extends AppCompatActivity {
 
@@ -30,7 +27,6 @@ public class AboutActivity extends AppCompatActivity {
         int id = item.getItemId();
         if (id == android.R.id.home) {
             onBackPressed();
-//            NavUtils.navigateUpFromSameTask(this);
             return true;
         }
         return super.onOptionsItemSelected(item);
