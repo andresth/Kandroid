@@ -160,6 +160,6 @@ public class KanboardAPI {
     // TODO: add API calls
 
     public static boolean StringToBoolean(String s) {
-        return s.equalsIgnoreCase("true") | s.equalsIgnoreCase("yes") | s.equalsIgnoreCase("1");
+        return s.equalsIgnoreCase("true") || s.equalsIgnoreCase("yes") || s.equalsIgnoreCase("1");
     }
 }
