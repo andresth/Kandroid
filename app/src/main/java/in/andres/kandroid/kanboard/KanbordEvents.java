@@ -8,5 +8,6 @@ public interface KanbordEvents {
     void onGetMe(boolean success, KanboardUserInfo userInfo);
     void onGetMyProjectsList(boolean success, List<KanboardProjectInfo> projects);
     void onGetMyDashboard(boolean success, KanboardDashboard dash);
+    void onError(KanboardError error);
     void onDebug(boolean success, String message);
 }

@@ -26,6 +26,7 @@ import java.util.List;
 
 import in.andres.kandroid.kanboard.KanboardAPI;
 import in.andres.kandroid.kanboard.KanboardDashboard;
+import in.andres.kandroid.kanboard.KanboardError;
 import in.andres.kandroid.kanboard.KanboardProject;
 import in.andres.kandroid.kanboard.KanboardProjectInfo;
 import in.andres.kandroid.kanboard.KanboardUserInfo;
@@ -75,6 +76,11 @@ public class MainActivity extends AppCompatActivity
 //                        MenuItem m =proj.add(Menu.NONE, item.ID, Menu.NONE, item.Name);
 //                        m.setIcon(R.drawable.project);
 //                    }
+        }
+
+        @Override
+        public void onError(KanboardError error) {
+
         }
 
         @Override

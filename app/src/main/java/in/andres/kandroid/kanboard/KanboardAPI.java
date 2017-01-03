@@ -2,7 +2,6 @@ package in.andres.kandroid.kanboard;
 
 
 import android.os.AsyncTask;
-import android.text.TextUtils;
 
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
@@ -18,7 +17,6 @@ import java.util.List;
 
 import javax.net.ssl.HttpsURLConnection;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -53,7 +51,7 @@ public class KanboardAPI {
                     response = null;
                 }
 
-                return new KanboardResult(params[0].Command, response, con.getResponseCode());
+                return new KanboardResult(params[0], response, con.getResponseCode());
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -61,13 +59,22 @@ public class KanboardAPI {
         }
         @Override
         protected void onPostExecute(KanboardResult s) {
+            // Handle Errors
+            if (s.Result.has("error") || s.ReturnCode >= 400) {
+                JSONObject err = s.Result.optJSONObject("error");
+                KanboardError res = new KanboardError(s.Request, err, s.ReturnCode);
+                for (KanbordEvents l: listeners)
+                    l.onError(res);
+            }
+
+            // Handle Return Messages
             boolean success = false;
-            if (s.Command == "getMe") {
+            if (s.Request.Command.equalsIgnoreCase("getMe")) {
                 KanboardUserInfo res = null;
                 try {
-                    if (s.JSON.has("result") && (s.ReturnCode < 400)) {
+                    if (s.Result.has("result") && (s.ReturnCode < 400)) {
                         success = true;
-                        JSONObject jso = s.JSON.getJSONObject("result");
+                        JSONObject jso = s.Result.getJSONObject("result");
                         res = new KanboardUserInfo(jso);
                     }
                 } catch (JSONException e) {
@@ -78,13 +85,13 @@ public class KanboardAPI {
                 return;
             }
 
-            if (s.Command == "getMyProjectsList") {
+            if (s.Request.Command.equalsIgnoreCase("getMyProjectsList")) {
                 List<KanboardProjectInfo> res = null;
                 try {
-                    if (s.JSON.has("result")) {
+                    if (s.Result.has("result")) {
                         success = true;
                         res = new ArrayList<KanboardProjectInfo>();
-                        JSONObject jso = s.JSON.getJSONObject("result");
+                        JSONObject jso = s.Result.getJSONObject("result");
                         for (int i = 0; i < jso.names().length(); i++) {
                             String key = jso.names().getString(i);
                             res.add(new KanboardProjectInfo(Integer.parseInt(key), jso.optString(key, "")));
@@ -98,12 +105,12 @@ public class KanboardAPI {
                 return;
             }
 
-            if (s.Command == "getMyDashboard") {
+            if (s.Request.Command.equalsIgnoreCase("getMyDashboard")) {
                 KanboardDashboard res = null;
                 try {
-                    if (s.JSON.has("result")) {
+                    if (s.Result.has("result")) {
                         success = true;
-                        JSONObject dash = s.JSON.getJSONObject("result");
+                        JSONObject dash = s.Result.getJSONObject("result");
                         res = new KanboardDashboard(dash);
                     }
                 } catch (JSONException | MalformedURLException e) {
@@ -111,6 +118,7 @@ public class KanboardAPI {
                 }
                 for (KanbordEvents l: listeners)
                     l.onGetMyDashboard(success, res);
+                return;
             }
         }
     }

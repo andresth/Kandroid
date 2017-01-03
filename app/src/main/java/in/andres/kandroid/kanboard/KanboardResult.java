@@ -4,12 +4,14 @@ import org.json.JSONObject;
 
 public class KanboardResult {
     public final String Command;
-    public final JSONObject JSON;
+    public final JSONObject Result;
+    public final KanboardRequest Request;
     public final int ReturnCode;
 
-    public KanboardResult(String command, JSONObject json, int returnCode) {
-        this.Command = command;
-        this.JSON = json;
-        this.ReturnCode = returnCode;
+    public KanboardResult(KanboardRequest request, JSONObject json, int returnCode) {
+        Request = request;
+        Command = "";
+        Result = json;
+        ReturnCode = returnCode;
     }
 }
