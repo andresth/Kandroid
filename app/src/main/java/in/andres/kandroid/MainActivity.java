@@ -10,6 +10,7 @@ import android.support.design.widget.Snackbar;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
@@ -44,6 +45,7 @@ public class MainActivity extends AppCompatActivity
     KanboardUserInfo Me;
     List<KanboardProjectInfo> mProjects;
     KanboardDashboard mDashboard;
+    MainActivity self;
     KanbordEvents eventHandler = new KanbordEvents() {
         @Override
         public void onGetMe(boolean success, KanboardUserInfo userInfo) {
@@ -80,7 +82,13 @@ public class MainActivity extends AppCompatActivity
 
         @Override
         public void onError(KanboardError error) {
-
+            new AlertDialog.Builder(self)
+                    .setTitle("Error")
+                    .setMessage("Code: " + Integer.toString(error.Code) + "\n" +
+                                "Message: " + error.Message + "\n" +
+                                "HTTP Response: " + Integer.toString(error.HTTPReturnCode))
+                    .setNeutralButton("Dismiss", null)
+                    .show();
         }
 
         @Override
@@ -95,6 +103,8 @@ public class MainActivity extends AppCompatActivity
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        self = this;
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -251,10 +261,8 @@ public class MainActivity extends AppCompatActivity
         NavigationView nav = (NavigationView) findViewById(R.id.nav_view);
         SubMenu projMenu = nav.getMenu().findItem(R.id.projects).getSubMenu();
         projMenu.clear();
-        for (KanboardProject item: projList) {
-            MenuItem m =projMenu.add(Menu.NONE, item.ID, Menu.NONE, item.Name);
-            m.setIcon(R.drawable.project);
-        }
-
+        for (KanboardProject item: projList)
+            projMenu.add(Menu.NONE, item.ID, Menu.NONE, item.Name)
+                    .setIcon(R.drawable.project);
     }
 }
