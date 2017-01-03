@@ -18,7 +18,6 @@ import android.view.MenuItem;
 import android.view.SubMenu;
 import android.view.View;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -46,6 +45,7 @@ public class MainActivity extends AppCompatActivity
     List<KanboardProjectInfo> mProjects;
     KanboardDashboard mDashboard;
     MainActivity self;
+    
     KanbordEvents eventHandler = new KanbordEvents() {
         @Override
         public void onGetMe(boolean success, KanboardUserInfo userInfo) {
@@ -68,16 +68,6 @@ public class MainActivity extends AppCompatActivity
         public void onGetMyDashboard(boolean success, KanboardDashboard dash) {
             mDashboard = dash;
             populateProjectsMenu();
-//                    SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-//                    if (preferences.getBoolean("projects_sort_alphabetic", false))
-//                        Collections.sort(mDashboard.Projects);
-//                    NavigationView nav = (NavigationView) findViewById(R.id.nav_view);
-//                    SubMenu proj = nav.getMenu().findItem(R.id.projects).getSubMenu();
-//                    proj.clear();
-//                    for (KanboardProject item: mDashboard.Projects) {
-//                        MenuItem m =proj.add(Menu.NONE, item.ID, Menu.NONE, item.Name);
-//                        m.setIcon(R.drawable.project);
-//                    }
         }
 
         @Override
@@ -122,14 +112,6 @@ public class MainActivity extends AppCompatActivity
                 TextView mServerUrl = (TextView) findViewById(R.id.nav_serverurl);
                 if ((Me != null) && (mServerUrl != null))
                     mServerUrl.setText(Me.Name);
-//                if (mProjects != null) {
-//                    NavigationView nav = (NavigationView) findViewById(R.id.nav_view);
-//                    SubMenu proj = nav.getMenu().findItem(R.id.projects).getSubMenu();
-//                    proj.clear();
-//                    for (KanboardProjectInfo item: mProjects)
-//                        proj.add(Menu.NONE, item.ID, Menu.NONE, item.Name);
-//                    mInfotext.setText(Integer.toString(nav.getMenu().findItem(R.id.projects).getSubMenu().size()));
-//                }
             }
         };
         drawer.setDrawerListener(toggle);
@@ -179,7 +161,6 @@ public class MainActivity extends AppCompatActivity
     protected void onStart() {
         super.onStart();
         populateProjectsMenu();
-//        Toast.makeText(getApplicationContext(), "Start", Toast.LENGTH_SHORT).show();
     }
 
     @Override
@@ -191,7 +172,6 @@ public class MainActivity extends AppCompatActivity
     protected void onResume() {
         super.onResume();
         populateProjectsMenu();
-//        Toast.makeText(getApplicationContext(), "Resume", Toast.LENGTH_SHORT).show();
     }
 
     @Override

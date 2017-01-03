@@ -28,4 +28,6 @@
     <string name="action_about">Über</string>
     <string name="title_activity_about">Über Kandroid</string>
     <string name="title_activity_settings">Einstellungen</string>
+    <string name="settings_cat_projects">Projekte</string>
+    <string name="setting_sort_projects">Alphabetisch sortieren</string>
 </resources>
