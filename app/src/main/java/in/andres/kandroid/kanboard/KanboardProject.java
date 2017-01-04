@@ -72,4 +72,9 @@ public class KanboardProject implements Comparable<KanboardProject> {
     public int compareTo(KanboardProject o) {
         return this.Name.compareTo(o.Name);
     }
+
+    @Override
+    public String toString() {
+        return this.Name;
+    }
 }

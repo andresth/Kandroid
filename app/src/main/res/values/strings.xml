@@ -33,4 +33,9 @@
     <string name="setting_sort_projects">Sort projects alphabeticaly</string>
     <string name="title_activity_settings">Settings</string>
 
+    <!-- Strings related to Tabs -->
+    <string name="tab_projects">My Projects</string>
+    <string name="tab_tasks">My Tasks</string>
+    <string name="tab_subtasks">My Subtasks</string>
+
 </resources>

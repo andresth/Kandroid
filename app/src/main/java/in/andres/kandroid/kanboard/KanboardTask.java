@@ -52,4 +52,9 @@ public class KanboardTask implements Comparable<KanboardTask> {
     public int compareTo(KanboardTask o) {
         return this.Title.compareTo(o.Title);
     }
+
+    @Override
+    public String toString() {
+        return this.Title;
+    }
 }

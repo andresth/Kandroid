@@ -30,4 +30,7 @@
     <string name="title_activity_settings">Einstellungen</string>
     <string name="settings_cat_projects">Projekte</string>
     <string name="setting_sort_projects">Alphabetisch sortieren</string>
+    <string name="tab_projects">Meine Projekte</string>
+    <string name="tab_subtasks">Meine Unteraufgaben</string>
+    <string name="tab_tasks">Meine Aufgaben</string>
 </resources>

@@ -1,5 +1,6 @@
 package in.andres.kandroid;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -8,6 +9,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
 import android.support.v4.view.GravityCompat;
+import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AlertDialog;
@@ -39,12 +41,14 @@ public class MainActivity extends AppCompatActivity
     String apiKey;
     String username;
     String password;
-    TextView mInfotext;
+//    TextView mInfotext;
     KanboardAPI kanboardAPI;
     KanboardUserInfo Me;
     List<KanboardProjectInfo> mProjects;
     KanboardDashboard mDashboard;
-    MainActivity self;
+    Context self;
+    ViewPager mViewPager;
+    DashPagerAdapter mDashPager;
 
     KanbordEvents eventHandler = new KanbordEvents() {
         @Override
@@ -68,6 +72,7 @@ public class MainActivity extends AppCompatActivity
         public void onGetMyDashboard(boolean success, KanboardDashboard dash) {
             mDashboard = dash;
             populateProjectsMenu();
+            showDashboard();
         }
 
         @Override
@@ -84,7 +89,7 @@ public class MainActivity extends AppCompatActivity
 
         @Override
         public void onDebug(boolean success, String message) {
-            mInfotext.setText(message);
+
         }
     };
 
@@ -94,6 +99,8 @@ public class MainActivity extends AppCompatActivity
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        mViewPager = (ViewPager) findViewById(R.id.pager);
 
         self = this;
 
@@ -145,7 +152,7 @@ public class MainActivity extends AppCompatActivity
             startActivity(iLoginScreen);
         }
 
-        mInfotext = (TextView) findViewById(R.id.infotext);
+//        mInfotext = (TextView) findViewById(R.id.infotext);
 
         try {
             kanboardAPI = new KanboardAPI(serverURL, username, password);
@@ -214,7 +221,7 @@ public class MainActivity extends AppCompatActivity
         int id = item.getItemId();
 
         if (id == R.id.nav_dashboard) {
-
+            showDashboard();
         } else if (id == R.id.nav_overdue) {
 
         } else if (id == R.id.nav_sign_in) {
@@ -245,5 +252,11 @@ public class MainActivity extends AppCompatActivity
         for (KanboardProject item: projList)
             projMenu.add(Menu.NONE, item.ID, Menu.NONE, item.Name)
                     .setIcon(R.drawable.project);
+    }
+
+    private void showDashboard() {
+        getSupportActionBar().setTitle("Dashboard");
+        mDashPager = new DashPagerAdapter(getSupportFragmentManager(), mDashboard, this);
+        mViewPager.setAdapter(mDashPager);
     }
 }

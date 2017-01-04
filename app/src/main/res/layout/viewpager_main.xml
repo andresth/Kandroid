@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"-->
+    <!--android:orientation="vertical"-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="match_parent">-->
+
+    <!--<android.support.v7.widget.Toolbar-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:background="?attr/colorPrimary"-->
+        <!--android:theme="?attr/actionBarTheme"-->
+        <!--android:minHeight="?attr/actionBarSize"-->
+        <!--android:id="@+id/toolbar2" />-->
+    <android.support.v4.view.ViewPager xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/pager2"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+    <android.support.v4.view.PagerTitleStrip
+        android:id="@+id/pager_title_strip2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="top"
+        android:paddingTop="4dp"
+        android:paddingBottom="4dp" />
+
+</android.support.v4.view.ViewPager>
+<!--</LinearLayout>-->
+

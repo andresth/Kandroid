@@ -48,4 +48,9 @@ public class KanboardSubtask implements Comparable<KanboardSubtask> {
     public int compareTo(KanboardSubtask o) {
         return this.Title.compareTo(o.Title);
     }
+
+    @Override
+    public String toString() {
+        return this.Title;
+    }
 }
