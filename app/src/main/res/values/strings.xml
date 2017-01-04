@@ -34,8 +34,8 @@
     <string name="title_activity_settings">Settings</string>
 
     <!-- Strings related to Tabs -->
-    <string name="tab_projects">My Projects</string>
-    <string name="tab_tasks">My Tasks</string>
-    <string name="tab_subtasks">My Subtasks</string>
+    <string name="tab_projects">Projects</string>
+    <string name="tab_tasks">Tasks</string>
+    <string name="tab_subtasks">Subtasks</string>
 
 </resources>

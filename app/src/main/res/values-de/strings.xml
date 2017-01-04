@@ -23,14 +23,14 @@
     </string>
     <string name="action_projects">Projekte</string>
     <string name="action_refresh">Aktualisieren</string>
-    <string name="action_dashboard">Dashboard</string>
+    <string name="action_dashboard">Pinnwand</string>
     <string name="action_overdue">Überfällige Aufgaben</string>
     <string name="action_about">Über</string>
     <string name="title_activity_about">Über Kandroid</string>
     <string name="title_activity_settings">Einstellungen</string>
     <string name="settings_cat_projects">Projekte</string>
     <string name="setting_sort_projects">Alphabetisch sortieren</string>
-    <string name="tab_projects">Meine Projekte</string>
-    <string name="tab_subtasks">Meine Unteraufgaben</string>
-    <string name="tab_tasks">Meine Aufgaben</string>
+    <string name="tab_projects">Projekte</string>
+    <string name="tab_subtasks">Unteraufgaben</string>
+    <string name="tab_tasks">Aufgaben</string>
 </resources>

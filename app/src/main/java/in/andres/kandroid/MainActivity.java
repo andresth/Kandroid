@@ -255,7 +255,7 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void showDashboard() {
-        getSupportActionBar().setTitle("Dashboard");
+        getSupportActionBar().setTitle(getString(R.string.action_dashboard));
         mDashPager = new DashPagerAdapter(getSupportFragmentManager(), mDashboard, this);
         mViewPager.setAdapter(mDashPager);
     }
