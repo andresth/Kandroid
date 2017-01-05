@@ -136,7 +136,7 @@ public class MainActivity extends AppCompatActivity
                     mServerUrl.setText(Me.Name);
             }
         };
-        drawer.setDrawerListener(toggle);
+        drawer.addDrawerListener(toggle);
 
         toggle.syncState();
 
