@@ -17,8 +17,8 @@ public class KanboardError {
             Code = json.optInt("code");
             Message = json.optString("message");
         } else {
-            Code = 0;
-            Message = "";
+            Code = -2;
+            Message = "Null Object";
         }
         Request = request;
         HTTPReturnCode = httpreturcode;

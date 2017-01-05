@@ -10,6 +10,7 @@ import java.io.InputStreamReader;
 import java.net.Authenticator;
 import java.net.MalformedURLException;
 import java.net.PasswordAuthentication;
+import java.net.SocketTimeoutException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -29,6 +30,8 @@ public class KanboardAPI {
             try {
                 con = (HttpsURLConnection) kanboardURL.openConnection();
                 con.setRequestMethod("POST");
+                con.setConnectTimeout(120000);
+                con.setReadTimeout(120000);
                 con.setDoOutput(true);
                 con.setDoInput(true);
                 DataOutputStream out = new DataOutputStream(con.getOutputStream());
@@ -52,14 +55,25 @@ public class KanboardAPI {
                 }
 
                 return new KanboardResult(params[0], response, con.getResponseCode());
-            } catch (IOException e) {
-                e.printStackTrace();
+            } catch (SocketTimeoutException e) {
+                try {
+                    return new KanboardResult(params[0], new JSONObject("{\"jsonrpc\":\"2.0\",\"error\":{\"code\":0,\"message\":\"Network Timeout\"},\"id\":null}"), 0);
+                } catch (JSONException e1) {}
+            } catch (Exception e) {
+                try {
+                    return new KanboardResult(params[0], new JSONObject("{\"jsonrpc\":\"2.0\",\"error\":{\"code\":-1,\"message\":\"" + e.getMessage() + "\"},\"id\":null}"), 0);
+                } catch (JSONException e1) {}
             }
             return null;
         }
         @Override
         protected void onPostExecute(KanboardResult s) {
             // Handle Errors
+            if (s == null) {
+                KanboardError res = new KanboardError(null, null, 0);
+                for (KanbordEvents l: listeners)
+                    l.onError(res);
+            }
             if (s.Result.has("error") || s.ReturnCode >= 400) {
                 JSONObject err = s.Result.optJSONObject("error");
                 KanboardError res = new KanboardError(s.Request, err, s.ReturnCode);
@@ -145,7 +159,7 @@ public class KanboardAPI {
         listeners.remove(listener);
     }
 
-    public void getMe() throws IOException {
+    public void getMe() {
         new KanboardAsync().execute(KanboardRequest.getMe());
     }
 
