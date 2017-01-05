@@ -7,6 +7,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * Created by Thomas Andres on 01.01.17.
@@ -40,7 +41,8 @@ public class KanboardProject implements Comparable<KanboardProject> {
         ID = json.optInt("id");
         Name = json.optString("name");
         OwnerID = json.optInt("owner_id");
-        Description = json.optString("description");
+        Object desc = json.opt("description");
+        Description = desc.equals(null) ? null : desc.toString();
         Identifier = json.optString("identifier");
         Token = json.optString("token");
         IsActive = KanboardAPI.StringToBoolean(json.optString("is_active"));
