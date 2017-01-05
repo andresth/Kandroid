@@ -9,6 +9,7 @@ import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.provider.Settings;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
@@ -19,6 +20,7 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.SubMenu;
@@ -148,9 +150,11 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     protected void onStart() {
+//        refresh();
+//        populateProjectsMenu();
+        if (mDashboard == null)
+            Log.d("onStart", "mDashboard is null");
         super.onStart();
-        refresh();
-        populateProjectsMenu();
     }
 
     @Override
@@ -161,6 +165,7 @@ public class MainActivity extends AppCompatActivity
     @Override
     protected void onResume() {
         super.onResume();
+        refresh();
         populateProjectsMenu();
     }
 
@@ -238,7 +243,13 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void showDashboard() {
-        getSupportActionBar().setTitle(getString(R.string.action_dashboard));
+        try {
+            getSupportActionBar().setTitle(getString(R.string.action_dashboard));
+        } catch (NullPointerException e) {
+
+        }
+        if (mDashboard == null)
+            return;
         mDashPager = new DashPagerAdapter(getSupportFragmentManager(), mDashboard, this);
         mViewPager.setAdapter(mDashPager);
     }

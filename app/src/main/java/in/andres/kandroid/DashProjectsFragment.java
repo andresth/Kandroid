@@ -29,7 +29,8 @@ public class DashProjectsFragment extends ListFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_dash_projects, container, false);
-        ArrayAdapter<KanboardProject> listAdapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_list_item_1, mProjects);
+        DashProjectArrayAdapter listAdapter = new DashProjectArrayAdapter(getActivity(), mProjects);
+//        ArrayAdapter<KanboardProject> listAdapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_list_item_1, mProjects);
         setListAdapter(listAdapter);
         return rootView;
     }

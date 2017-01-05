@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="5dp"
+    android:orientation="vertical">
+
+    <TextView
+        android:text="#251"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentStart="true"
+        android:id="@+id/project_id"
+        android:fontFamily="monospace"
+        android:textSize="28sp" />
+    <ImageView
+        android:layout_alignParentEnd="true"
+        android:layout_alignBottom="@+id/project_name"
+        android:layout_alignParentTop="true"
+        android:src="@drawable/project_public"
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:id="@+id/project_private" />
+    <TextView
+        android:text="Projekname"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_toEndOf="@id/project_id"
+        android:layout_toStartOf="@id/project_private"
+        android:layout_marginStart="5dp"
+        android:id="@+id/project_name"
+        android:textSize="18sp"/>
+    <TextView
+        android:text="Beschreibung"
+        android:id="@+id/project_description"
+        android:layout_toEndOf="@id/project_id"
+        android:layout_below="@id/project_name"
+        android:layout_alignParentEnd="true"
+        android:layout_alignStart="@id/project_name"
+        android:textSize="12sp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+    <TextView
+        android:text="TextView"
+        android:id="@+id/project_columns"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:gravity="center"
+        android:layout_below="@+id/project_description" />
+
+    <!--<LinearLayout-->
+        <!--android:id="@+id/project_columns"-->
+        <!--android:orientation="horizontal"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="match_parent"-->
+        <!--android:layout_below="@+id/project_description"-->
+        <!--android:layout_centerHorizontal="true"-->
+        <!--android:layout_marginTop="5dp">-->
+
+    <!--</LinearLayout>-->
+</RelativeLayout>
