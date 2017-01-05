@@ -4,8 +4,10 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:gravity="center_horizontal"
     android:fitsSystemWindows="true"
-    tools:context="in.andres.kandroid.MainActivity">
+    tools:context="in.andres.kandroid.MainActivity"
+    android:id="@+id/main_view" >
 
     <android.support.design.widget.AppBarLayout
         android:layout_width="match_parent"
@@ -20,6 +22,21 @@
             app:popupTheme="@style/AppTheme.PopupOverlay" />
 
     </android.support.design.widget.AppBarLayout>
+
+    <LinearLayout
+        android:id="@+id/main_progress"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"
+        android:gravity="center"
+        android:background="@android:color/darker_gray"
+        android:visibility="gone">
+        <ProgressBar
+            style="?android:attr/progressBarStyleLarge"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="0dp" />
+    </LinearLayout>
 
     <android.support.v4.view.ViewPager
         android:id="@+id/pager"

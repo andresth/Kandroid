@@ -1,8 +1,12 @@
 package in.andres.kandroid;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
+import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.design.widget.FloatingActionButton;
@@ -41,23 +45,29 @@ public class MainActivity extends AppCompatActivity
     String apiKey;
     String username;
     String password;
-//    TextView mInfotext;
+
+    Context self;
+    ViewPager mViewPager;
+    DashPagerAdapter mDashPager;
+    View mMainView;
+    View mProgress;
+    int progressBarCount = 0;
+
     KanboardAPI kanboardAPI;
     KanboardUserInfo Me;
     List<KanboardProjectInfo> mProjects;
     KanboardDashboard mDashboard;
-    Context self;
-    ViewPager mViewPager;
-    DashPagerAdapter mDashPager;
 
     KanbordEvents eventHandler = new KanbordEvents() {
         @Override
         public void onGetMe(boolean success, KanboardUserInfo userInfo) {
+            showProgress(false);
             Me = userInfo;
         }
 
         @Override
         public void onGetMyProjectsList(boolean success, List<KanboardProjectInfo> projects) {
+//            showProgress(false);
             mProjects = projects;
             NavigationView nav = (NavigationView) findViewById(R.id.nav_view);
             SubMenu proj = nav.getMenu().findItem(R.id.projects).getSubMenu();
@@ -70,6 +80,7 @@ public class MainActivity extends AppCompatActivity
 
         @Override
         public void onGetMyDashboard(boolean success, KanboardDashboard dash) {
+            showProgress(false);
             mDashboard = dash;
             populateProjectsMenu();
             showDashboard();
@@ -99,6 +110,9 @@ public class MainActivity extends AppCompatActivity
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        mMainView = findViewById(R.id.pager);
+        mProgress = findViewById(R.id.main_progress);
 
         mViewPager = (ViewPager) findViewById(R.id.pager);
 
@@ -152,22 +166,19 @@ public class MainActivity extends AppCompatActivity
             startActivity(iLoginScreen);
         }
 
-//        mInfotext = (TextView) findViewById(R.id.infotext);
-
         try {
             kanboardAPI = new KanboardAPI(serverURL, username, password);
             kanboardAPI.addListener(eventHandler);
-            kanboardAPI.getMe();
-//            kanboardAPI.getMyProjectsList();
-            kanboardAPI.getMyDashboard();
         } catch (IOException e) {
             e.printStackTrace();
         }
+
     }
 
     @Override
     protected void onStart() {
         super.onStart();
+        refresh();
         populateProjectsMenu();
     }
 
@@ -228,6 +239,7 @@ public class MainActivity extends AppCompatActivity
             Intent iSetting = new Intent(this, SettingsActivity.class);
             startActivity(iSetting);
         } else if (id == R.id.nav_refresh) {
+            refresh();
         } else if (id == R.id.nav_about) {
             Intent iAboutScreen = new Intent(this, AboutActivity.class);
             startActivity(iAboutScreen);
@@ -258,5 +270,52 @@ public class MainActivity extends AppCompatActivity
         getSupportActionBar().setTitle(getString(R.string.action_dashboard));
         mDashPager = new DashPagerAdapter(getSupportFragmentManager(), mDashboard, this);
         mViewPager.setAdapter(mDashPager);
+    }
+
+    @TargetApi(Build.VERSION_CODES.HONEYCOMB_MR2)
+    private void showProgress(final boolean show) {
+        // On Honeycomb MR2 we have the ViewPropertyAnimator APIs, which allow
+        // for very easy animations. If available, use these APIs to fade-in
+        // the progress spinner.
+        if (show)
+            progressBarCount++;
+        else
+            progressBarCount -= progressBarCount > 0 ? 1 : 0;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB_MR2) {
+            int shortAnimTime = getResources().getInteger(android.R.integer.config_shortAnimTime);
+            mMainView.setVisibility(progressBarCount > 0 ? View.GONE : View.VISIBLE);
+            mMainView.animate().setDuration(shortAnimTime).alpha(progressBarCount > 0 ? 0 : 1)
+                    .setListener(new AnimatorListenerAdapter() {
+                        @Override
+                        public void onAnimationEnd(Animator animation) {
+                            mMainView.setVisibility(progressBarCount > 0 ? View.GONE : View.VISIBLE);
+                        }
+                    });
+
+            mProgress.setVisibility(progressBarCount > 0 ? View.VISIBLE: View.GONE);
+            mProgress.animate().setDuration(shortAnimTime).alpha(progressBarCount > 0 ? 1 : 0)
+                    .setListener(new AnimatorListenerAdapter() {
+                        @Override
+                        public void onAnimationEnd(Animator animation) {
+                            mProgress.setVisibility(progressBarCount > 0 ? View.VISIBLE : View.GONE);
+                        }
+                    });
+
+        } else {
+            // The ViewPropertyAnimator APIs are not available, so simply show
+            // and hide the relevant UI components.
+            mProgress.setVisibility(progressBarCount > 0 ? View.VISIBLE : View.GONE);
+            mMainView.setVisibility(progressBarCount > 0 ? View.GONE : View.VISIBLE);
+        }
+    }
+
+    private void refresh() {
+        showProgress(true);
+        kanboardAPI.getMe();
+
+//        kanboardAPI.getMyProjectsList();
+
+        showProgress(true);
+        kanboardAPI.getMyDashboard();
     }
 }
