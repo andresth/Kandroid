@@ -67,7 +67,7 @@ public class MainActivity extends AppCompatActivity
 
         @Override
         public void onGetMyProjectsList(boolean success, List<KanboardProjectInfo> projects) {
-//            showProgress(false);
+            showProgress(false);
             mProjects = projects;
             NavigationView nav = (NavigationView) findViewById(R.id.nav_view);
             SubMenu proj = nav.getMenu().findItem(R.id.projects).getSubMenu();
@@ -143,35 +143,6 @@ public class MainActivity extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this.getApplicationContext());
-        boolean showLoginScreen = false;
-        if (!preferences.contains("serverurl"))
-            showLoginScreen = true;
-        serverURL = preferences.getString("serverurl", "");
-
-        if (!preferences.contains("apikey"))
-            showLoginScreen = true;
-        apiKey = preferences.getString("apikey", "");
-
-        if (!preferences.contains("serverurl"))
-            showLoginScreen = true;
-        username = preferences.getString("username", "");
-
-        if (!preferences.contains("password"))
-            showLoginScreen = true;
-        password = preferences.getString("password", "");
-
-        if (showLoginScreen) {
-            Intent iLoginScreen = new Intent(this, LoginActivity.class);
-            startActivity(iLoginScreen);
-        }
-
-        try {
-            kanboardAPI = new KanboardAPI(serverURL, username, password);
-            kanboardAPI.addListener(eventHandler);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
 
     }
 
@@ -309,7 +280,45 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
+    private boolean createKandoardAPI() {
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this.getApplicationContext());
+        boolean showLoginScreen = false;
+        if (!preferences.contains("serverurl"))
+            showLoginScreen = true;
+        serverURL = preferences.getString("serverurl", "");
+
+        if (!preferences.contains("apikey"))
+            showLoginScreen = true;
+        apiKey = preferences.getString("apikey", "");
+
+        if (!preferences.contains("serverurl"))
+            showLoginScreen = true;
+        username = preferences.getString("username", "");
+
+        if (!preferences.contains("password"))
+            showLoginScreen = true;
+        password = preferences.getString("password", "");
+
+        if (showLoginScreen) {
+            Intent iLoginScreen = new Intent(this, LoginActivity.class);
+            startActivity(iLoginScreen);
+            return false;
+        } else {
+            try {
+                kanboardAPI = new KanboardAPI(serverURL, username, password);
+                kanboardAPI.addListener(eventHandler);
+                return true;
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        return false;
+    }
+
     private void refresh() {
+        if (!createKandoardAPI())
+            return;
+
         showProgress(true);
         kanboardAPI.getMe();
 
