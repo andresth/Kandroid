@@ -1,7 +1,6 @@
 package in.andres.kandroid;
 
 import android.content.Context;
-import android.content.res.Resources;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
@@ -24,20 +23,13 @@ public class DashPagerAdapter extends FragmentPagerAdapter {
 
     @Override
     public Fragment getItem(int position) {
-        Fragment fragment = null;
         switch (position) {
             case 0:
-                fragment = DashProjectsFragment.newInstance();
-//                ((DashProjectsFragment)fragment).setProjects(mDashboard.Projects);
-                return fragment;
+                return DashProjectsFragment.newInstance();
             case 1:
-                fragment = DashTasksFragment.newInstance();
-//                ((DashTasksFragment)fragment).setTasks(mDashboard.Tasks);
-                return fragment;
+                return DashTasksFragment.newInstance();
             case 2:
-                fragment = DashSubtasksFragment.newInstance();
-//                ((DashSubtasksFragment)fragment).setSubtasks(mDashboard.Subtasks);
-                return fragment;
+                return DashSubtasksFragment.newInstance();
         }
         return TextFragment.newInstance((String) this.getPageTitle(position));
     }
