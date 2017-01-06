@@ -20,22 +20,22 @@ import in.andres.kandroid.kanboard.KanboardTask;
  */
 
 public class DashSubtasksFragment extends ListFragment {
-    private List<KanboardSubtask> mSubtasks = null;
-
-    public static final String ARG_VALUES = "fragment_dashboard_subtasks";
+//    private List<KanboardSubtask> mSubtasks = null;
+//
+//    public static final String ARG_VALUES = "fragment_dashboard_subtasks";
 
     public DashSubtasksFragment() {
-        setRetainInstance(true);
+//        setRetainInstance(true);
     }
 
     public static DashSubtasksFragment newInstance() {
         return new DashSubtasksFragment();
     }
 
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-    }
+//    @Override
+//    public void onCreate(Bundle savedInstanceState) {
+//        super.onCreate(savedInstanceState);
+//    }
 
     @Nullable
     @Override
@@ -45,9 +45,27 @@ public class DashSubtasksFragment extends ListFragment {
 //            Log.d("SubtasksFragment", "Load instance");
 //            mSubtasks = (List<KanboardSubtask>) savedInstanceState.getSerializable(DashProjectsFragment.ARG_VALUES);
 //        }
-        ArrayAdapter<KanboardSubtask> listAdapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_list_item_1, mSubtasks);
-        setListAdapter(listAdapter);
+//        ArrayAdapter<KanboardSubtask> listAdapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_list_item_1, mSubtasks);
+//        setListAdapter(listAdapter);
         return rootView;
+    }
+
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+//        if (savedInstanceState != null) {
+//            Log.d("ProjectsFragment", "Load instance");
+//            mProjects = (List<KanboardProject>) savedInstanceState.getSerializable(DashProjectsFragment.ARG_VALUES);
+//            Log.d("ProjectsFragment", Integer.toString(mProjects.size()));
+//        } else {
+//            Log.d("ProjectsFragment", "No instance");
+//        }
+        if (((MainActivity)getActivity()).getDashboard() != null) {
+            ArrayAdapter<KanboardSubtask> listAdapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_list_item_1, ((MainActivity)getActivity()).getDashboard().Subtasks);
+            setListAdapter(listAdapter);
+        } else {
+            // TODO: show some kind of error
+        }
     }
 
 //    @Override
@@ -57,7 +75,7 @@ public class DashSubtasksFragment extends ListFragment {
 //        super.onSaveInstanceState(savedInstanceState);
 //    }
 
-    public void setSubtasks(List<KanboardSubtask> subtasks) {
-        mSubtasks = subtasks;
-    }
+//    public void setSubtasks(List<KanboardSubtask> subtasks) {
+//        mSubtasks = subtasks;
+//    }
 }

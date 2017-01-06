@@ -110,6 +110,7 @@ public class MainActivity extends AppCompatActivity
         }
     };
 
+    //region overrides
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -250,7 +251,9 @@ public class MainActivity extends AppCompatActivity
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
+    //endregion
 
+    //region private methods
     private void populateProjectsMenu() {
         if (mDashboard == null) {
             return;
@@ -363,4 +366,12 @@ public class MainActivity extends AppCompatActivity
         showProgress(true);
         kanboardAPI.getMyDashboard();
     }
+    //endregion
+
+    //region public methods
+    public KanboardDashboard getDashboard() {
+        return mDashboard;
+    }
+    //endregion
+
 }
