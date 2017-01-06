@@ -27,8 +27,8 @@ public class DashPagerAdapter extends FragmentPagerAdapter {
         Fragment fragment = null;
         switch (position) {
             case 0:
-                fragment = DashProjectsFragment.newInstance();
-                ((DashProjectsFragment)fragment).setProjects(mDashboard.Projects);
+                fragment = DashProjectsFragment.newInstance(mDashboard.Projects);
+//                ((DashProjectsFragment)fragment).setProjects(mDashboard.Projects);
                 return fragment;
             case 1:
                 fragment = DashTasksFragment.newInstance();

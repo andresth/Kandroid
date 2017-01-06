@@ -27,7 +27,11 @@ import android.view.SubMenu;
 import android.view.View;
 import android.widget.TextView;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.IOException;
+import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -113,10 +117,27 @@ public class MainActivity extends AppCompatActivity
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        if ((savedInstanceState != null)) {
+            Log.d("onCreate", "Restore Saved Instance");
+            mDashboard = (KanboardDashboard) savedInstanceState.getSerializable("dashboard");
+            if (mDashboard != null)
+              Log.d("onCreate", String.format("Found: %1d/%2d/%3d", mDashboard.Projects.size(), mDashboard.Tasks.size(), mDashboard.Subtasks.size()));
+//            try {
+//                mDashboard = new KanboardDashboard(new JSONObject(savedInstanceState.getString("dashboard")));
+//            } catch (MalformedURLException e) {
+//                e.printStackTrace();
+//            } catch (JSONException e) {
+//                e.printStackTrace();
+//            }
+        } else {
+            Log.d("onCreate", "No data to restore");
+        }
+
         mMainView = findViewById(R.id.pager);
         mProgress = findViewById(R.id.main_progress);
 
         mViewPager = (ViewPager) findViewById(R.id.pager);
+//        mViewPager.setAdapter(null);
 
         self = this;
 
@@ -149,11 +170,25 @@ public class MainActivity extends AppCompatActivity
     }
 
     @Override
+    public void onSaveInstanceState(Bundle savedInstanceState) {
+        Log.d("Insatnce Sate", "Save instance");
+//        savedInstanceState.putString("dashboard", mDashboard.Json);
+        savedInstanceState.putSerializable("dashboard", mDashboard);
+        super.onSaveInstanceState(savedInstanceState);
+    }
+
+    @Override
+    public void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        Log.d("Insatnce Sate", "Restore instance");
+        mDashboard = (KanboardDashboard) savedInstanceState.getSerializable("dashboard");
+        showDashboard();
+    }
+
+    @Override
     protected void onStart() {
 //        refresh();
 //        populateProjectsMenu();
-        if (mDashboard == null)
-            Log.d("onStart", "mDashboard is null");
         super.onStart();
     }
 
@@ -165,7 +200,7 @@ public class MainActivity extends AppCompatActivity
     @Override
     protected void onResume() {
         super.onResume();
-        refresh();
+//        refresh();
         populateProjectsMenu();
     }
 

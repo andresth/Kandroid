@@ -3,11 +3,12 @@ package in.andres.kandroid;
 import android.support.v4.app.ListFragment;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 
+import java.io.Serializable;
 import java.util.List;
 
 import in.andres.kandroid.kanboard.KanboardProject;
@@ -19,10 +20,25 @@ import in.andres.kandroid.kanboard.KanboardProject;
 public class DashProjectsFragment extends ListFragment {
     private List<KanboardProject> mProjects = null;
 
-    public DashProjectsFragment() {}
+    public static final String ARG_VALUES = "fragment_dashboard_projects";
 
-    public static DashProjectsFragment newInstance() {
-        return new DashProjectsFragment();
+    public DashProjectsFragment() {
+        setRetainInstance(true);
+    }
+
+    public static DashProjectsFragment newInstance(List<KanboardProject> values) {
+        DashProjectsFragment fragment = new DashProjectsFragment();
+        fragment.setProjects(values);
+        Bundle args = new Bundle();
+        args.putSerializable(DashProjectsFragment.ARG_VALUES, (Serializable) values);
+        fragment.setArguments(args);
+        return fragment;
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        Log.i("ProjectsFragment", Boolean.toString(getRetainInstance()));
     }
 
     @Nullable
@@ -30,10 +46,30 @@ public class DashProjectsFragment extends ListFragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_dash_projects, container, false);
         DashProjectArrayAdapter listAdapter = new DashProjectArrayAdapter(getActivity(), mProjects);
-//        ArrayAdapter<KanboardProject> listAdapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_list_item_1, mProjects);
         setListAdapter(listAdapter);
         return rootView;
     }
+
+//    @Override
+//    public void onActivityCreated(Bundle savedInstanceState) {
+//        super.onActivityCreated(savedInstanceState);
+//        if (savedInstanceState != null) {
+//            Log.d("ProjectsFragment", "Load instance");
+//            mProjects = (List<KanboardProject>) savedInstanceState.getSerializable(DashProjectsFragment.ARG_VALUES);
+//            Log.d("ProjectsFragment", Integer.toString(mProjects.size()));
+//        } else {
+//            Log.d("ProjectsFragment", "No instance");
+//        }
+//        DashProjectArrayAdapter listAdapter = new DashProjectArrayAdapter(getActivity(), mProjects);
+//        setListAdapter(listAdapter);
+//    }
+
+//    @Override
+//    public void onSaveInstanceState(Bundle savedInstanceState) {
+//        Log.d("ProjectsFragment", "Save instance");
+//        savedInstanceState.putSerializable(DashProjectsFragment.ARG_VALUES, (Serializable) mProjects);
+//        super.onSaveInstanceState(savedInstanceState);
+//    }
 
     public void setProjects(List<KanboardProject> projects) {
         mProjects = projects;
