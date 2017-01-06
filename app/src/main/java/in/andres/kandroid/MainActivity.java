@@ -117,21 +117,6 @@ public class MainActivity extends AppCompatActivity
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        if ((savedInstanceState != null)) {
-            Log.d("onCreate", "Restore Saved Instance");
-            mDashboard = (KanboardDashboard) savedInstanceState.getSerializable("dashboard");
-            if (mDashboard != null)
-              Log.d("onCreate", String.format("Found: %1d/%2d/%3d", mDashboard.Projects.size(), mDashboard.Tasks.size(), mDashboard.Subtasks.size()));
-//            try {
-//                mDashboard = new KanboardDashboard(new JSONObject(savedInstanceState.getString("dashboard")));
-//            } catch (MalformedURLException e) {
-//                e.printStackTrace();
-//            } catch (JSONException e) {
-//                e.printStackTrace();
-//            }
-        } else {
-            Log.d("onCreate", "No data to restore");
-        }
 
         mMainView = findViewById(R.id.pager);
         mProgress = findViewById(R.id.main_progress);
@@ -167,20 +152,25 @@ public class MainActivity extends AppCompatActivity
         navigationView.setNavigationItemSelectedListener(this);
 
 
+        if ((savedInstanceState != null)) {
+            // App was restarted by System, load saved instance
+            mDashboard = (KanboardDashboard) savedInstanceState.getSerializable("dashboard");
+        } else {
+            // Fresh start of the App, get data from server
+            refresh();
+        }
     }
 
     @Override
     public void onSaveInstanceState(Bundle savedInstanceState) {
-        Log.d("Insatnce Sate", "Save instance");
-//        savedInstanceState.putString("dashboard", mDashboard.Json);
-        savedInstanceState.putSerializable("dashboard", mDashboard);
         super.onSaveInstanceState(savedInstanceState);
+        savedInstanceState.putSerializable("dashboard", mDashboard);
     }
 
     @Override
     public void onRestoreInstanceState(Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
-        Log.d("Insatnce Sate", "Restore instance");
+        // User rotated the screen or something
         mDashboard = (KanboardDashboard) savedInstanceState.getSerializable("dashboard");
         showDashboard();
     }
