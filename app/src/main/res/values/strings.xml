@@ -38,4 +38,6 @@
     <string name="tab_tasks">Tasks</string>
     <string name="tab_subtasks">Subtasks</string>
 
+    <string name="error_no_list_data">No data available!\nPlease hit refresh.</string>
+
 </resources>

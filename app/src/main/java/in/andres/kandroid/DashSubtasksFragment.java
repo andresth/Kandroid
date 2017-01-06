@@ -32,10 +32,13 @@ public class DashSubtasksFragment extends ListFragment {
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         if (((MainActivity)getActivity()).getDashboard() != null) {
+            getView().findViewById(R.id.fragment_dash_errortext).setVisibility(View.GONE);
+            getView().findViewById(android.R.id.list).setVisibility(View.VISIBLE);
             ArrayAdapter<KanboardSubtask> listAdapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_list_item_1, ((MainActivity)getActivity()).getDashboard().Subtasks);
             setListAdapter(listAdapter);
         } else {
-            // TODO: show some kind of error
+            getView().findViewById(R.id.fragment_dash_errortext).setVisibility(View.VISIBLE);
+            getView().findViewById(android.R.id.list).setVisibility(View.GONE);
         }
     }
 }

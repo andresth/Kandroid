@@ -37,10 +37,13 @@ public class DashProjectsFragment extends ListFragment {
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         if (((MainActivity)getActivity()).getDashboard() != null) {
+            getView().findViewById(R.id.fragment_dash_errortext).setVisibility(View.GONE);
+            getView().findViewById(android.R.id.list).setVisibility(View.VISIBLE);
             DashProjectArrayAdapter listAdapter = new DashProjectArrayAdapter(getActivity(), ((MainActivity)getActivity()).getDashboard().Projects);
             setListAdapter(listAdapter);
         } else {
-            // TODO: show some kind of error
+            getView().findViewById(R.id.fragment_dash_errortext).setVisibility(View.VISIBLE);
+            getView().findViewById(android.R.id.list).setVisibility(View.GONE);
         }
     }
 }

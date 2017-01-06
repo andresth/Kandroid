@@ -33,4 +33,5 @@
     <string name="tab_projects">Projekte</string>
     <string name="tab_subtasks">Unteraufgaben</string>
     <string name="tab_tasks">Aufgaben</string>
+    <string name="error_no_list_data">Keine Daten verfügbar!\nBitte Aktualisieren drücken.</string>
 </resources>
