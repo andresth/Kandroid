@@ -3,6 +3,9 @@ package in.andres.kandroid.kanboard;
 
 import android.os.AsyncTask;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -17,9 +20,6 @@ import java.util.HashSet;
 import java.util.List;
 
 import javax.net.ssl.HttpsURLConnection;
-
-import org.json.JSONException;
-import org.json.JSONObject;
 
 public class KanboardAPI {
 
@@ -148,7 +148,13 @@ public class KanboardAPI {
             }
 
         });
-        kanboardURL = new URL(serverURL);
+        String tmpURL = serverURL;
+        if (!serverURL.endsWith("jsonrpc.php")) {
+            if (!serverURL.endsWith("/"))
+                tmpURL += "/";
+            tmpURL += "jsonrpc.php";
+        }
+        kanboardURL = new URL(tmpURL);
     }
 
     public void addListener(KanbordEvents listener) {
