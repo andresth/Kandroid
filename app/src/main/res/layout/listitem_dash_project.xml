@@ -31,7 +31,8 @@
         android:layout_toStartOf="@id/project_private"
         android:layout_marginStart="5dp"
         android:id="@+id/project_name"
-        android:textSize="18sp"/>
+        android:textSize="18sp"
+        android:textStyle="bold"/>
     <TextView
         android:text="Beschreibung"
         android:id="@+id/project_description"

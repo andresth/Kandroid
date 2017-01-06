@@ -46,7 +46,7 @@ public class DashProjectArrayAdapter extends ArrayAdapter<KanboardProject> {
         TextView projectColumns = (TextView) rootView.findViewById(R.id.project_columns);
         ImageView projectPrivate = (ImageView) rootView.findViewById(R.id.project_private);
 
-        projectID.setText(String.format("#%1s", Integer.toString(mValues.get(position).ID)));
+        projectID.setText(Html.fromHtml(String.format("#<b>%1s</b>", Integer.toString(mValues.get(position).ID))));
         projectName.setText(mValues.get(position).Name);
         projectPrivate.setImageDrawable(mContext.getDrawable(mValues.get(position).IsPrivate ? R.drawable.project_private : R.drawable.project_public));
         projectDescription.setText(mValues.get(position).Description);
