@@ -3,6 +3,7 @@ package in.andres.kandroid.kanboard;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.io.Serializable;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -14,7 +15,7 @@ import java.util.Objects;
  */
 
 
-public class KanboardProject implements Comparable<KanboardProject> {
+public class KanboardProject implements Comparable<KanboardProject>, Serializable {
     public final int ID;
     public final String Name;
     public final int OwnerID;

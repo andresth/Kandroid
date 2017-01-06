@@ -2,11 +2,13 @@ package in.andres.kandroid.kanboard;
 
 import org.json.JSONObject;
 
+import java.io.Serializable;
+
 /**
  * Created by Thomas Andres on 01.01.17.
  */
 
-public class KanboardSubtask implements Comparable<KanboardSubtask> {
+public class KanboardSubtask implements Comparable<KanboardSubtask>, Serializable {
     public final int ID;
     public final int TaskID;
     public final int Position;

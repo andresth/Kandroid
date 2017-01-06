@@ -2,11 +2,13 @@ package in.andres.kandroid.kanboard;
 
 import org.json.JSONObject;
 
+import java.io.Serializable;
+
 /**
  * Created by Thomas Andres on 01.01.17.
  */
 
-public class KanboardColumn implements Comparable<KanboardColumn> {
+public class KanboardColumn implements Comparable<KanboardColumn>, Serializable {
     public final int ID;
     public final int Position;
     public final int TaskLimit;

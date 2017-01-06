@@ -2,6 +2,7 @@ package in.andres.kandroid.kanboard;
 
 import org.json.JSONObject;
 
+import java.io.Serializable;
 import java.net.MalformedURLException;
 import java.net.URL;
 
@@ -9,7 +10,7 @@ import java.net.URL;
  * Created by Thomas Andres on 01.01.17.
  */
 
-public class KanboardTask implements Comparable<KanboardTask> {
+public class KanboardTask implements Comparable<KanboardTask>, Serializable {
     public final int ID;
     public final int ProjectID;
     public final int ColumnID;

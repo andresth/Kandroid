@@ -3,6 +3,7 @@ package in.andres.kandroid.kanboard;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.io.Serializable;
 import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.List;
@@ -11,12 +12,15 @@ import java.util.List;
  * Created by Thomas Andres on 01.01.17.
  */
 
-public class KanboardDashboard {
+public class KanboardDashboard implements Serializable {
     public final List<KanboardProject> Projects;
     public final List<KanboardTask> Tasks;
     public final List<KanboardSubtask> Subtasks;
 
+    public final String Json;
+
     public KanboardDashboard(JSONObject json) throws MalformedURLException {
+        Json = json.toString();
         Projects = new ArrayList<>();
         JSONArray projects = json.optJSONArray("projects");
         if (projects != null)
