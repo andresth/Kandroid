@@ -7,17 +7,14 @@
     <string name="title_activity_login">Anmeldedaten</string>
 
     <!-- Strings related to login -->
-    <string name="prompt_email">Email</string>
-    <string name="prompt_serverurl">URL to Kanboard server</string>
+    <string name="prompt_serverurl">URL zum Kanboard Server</string>
     <string name="prompt_apikey">API Key for Kanboard server</string>
     <string name="prompt_username">Benutzername</string>
     <string name="prompt_password">Passwort</string>
-    <string name="action_sign_in">Sign in or register</string>
-    <string name="action_sign_in_short">Anmelden</string>
-    <string name="error_invalid_email">This email address is invalid</string>
-    <string name="error_invalid_password">This password is too short</string>
-    <string name="error_incorrect_password">This password is incorrect</string>
-    <string name="error_field_required">This field is required</string>
+    <string name="action_sign">Anmelden</string>
+    <string name="error_invalid_password">Das Passwort ist zu kurz</string>
+    <string name="error_incorrect_password">Das Passwort ist ungültig</string>
+    <string name="error_field_required">Diese Angabe ist notwendig</string>
     <string name="permission_rationale">"Contacts permissions are needed for providing email
         completions."
     </string>
