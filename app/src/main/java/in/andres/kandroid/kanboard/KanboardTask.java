@@ -41,7 +41,10 @@ public class KanboardTask implements Comparable<KanboardTask>, Serializable {
         IsActive = KanboardAPI.StringToBoolean(json.optString("is_active"));
         Title = json.optString("title");
         Description = json.optString("description");
-        Url = new URL(json.optString("url"));
+        if (json.has("url"))
+            Url = new URL(json.optString("url"));
+        else
+            Url = null;
         TimeEstimated = json.optDouble("time_estimated");
         TimeSpent = json.optDouble("time_spent");
         // Dashboard properties

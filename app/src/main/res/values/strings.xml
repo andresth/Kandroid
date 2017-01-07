@@ -36,7 +36,7 @@
     <!-- Strings related to Tabs -->
     <string name="tab_projects">My Projects &amp; Tasks</string>
     <string name="tab_overdue_tasks">Overdue Tasks</string>
-    <string name="tab_notifications">Notifications</string>
+    <string name="tab_activity">Activities</string>
 
     <string name="error_no_list_data">No data available!\nPlease hit refresh.</string>
 

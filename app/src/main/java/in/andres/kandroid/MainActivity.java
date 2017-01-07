@@ -352,7 +352,8 @@ public class MainActivity extends AppCompatActivity
 //        kanboardAPI.getMyProjectsList();
 
         showProgress(true);
-        kanboardAPI.getMyDashboard();
+        kanboardAPI.KB_getDashboard();
+//        kanboardAPI.getMyDashboard();
     }
     //endregion
 

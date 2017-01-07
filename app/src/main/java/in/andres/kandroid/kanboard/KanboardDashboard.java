@@ -1,5 +1,8 @@
 package in.andres.kandroid.kanboard;
 
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -19,14 +22,20 @@ public class KanboardDashboard implements Serializable {
     public final List<KanboardTask> Tasks;
     public final List<KanboardSubtask> Subtasks;
     public final Dictionary<Integer, List<KanboardTask>> GroupedTasks;
+    public final List<KanboardTask> OverdueTasks;
 
     public final String Json;
 
-    public KanboardDashboard(JSONObject json) throws MalformedURLException {
-        Json = json.toString();
+    public KanboardDashboard(@NonNull JSONObject dashboard) throws MalformedURLException {
+        this(dashboard, null, null);
+    }
+
+    public KanboardDashboard(@NonNull JSONObject dashboard, @Nullable JSONArray overdue, @Nullable JSONArray notifications) throws MalformedURLException {
+
+        Json = dashboard.toString();
         GroupedTasks = new Hashtable<>();
         Projects = new ArrayList<>();
-        JSONArray projects = json.optJSONArray("projects");
+        JSONArray projects = dashboard.optJSONArray("projects");
         if (projects != null)
             for (int i = 0; i < projects.length(); i++) {
                 KanboardProject tmpProject = new KanboardProject(projects.optJSONObject(i));
@@ -34,7 +43,7 @@ public class KanboardDashboard implements Serializable {
                 GroupedTasks.put(tmpProject.ID, new ArrayList<KanboardTask>());
             }
         Tasks = new ArrayList<>();
-        JSONArray tasks = json.optJSONArray("tasks");
+        JSONArray tasks = dashboard.optJSONArray("tasks");
         if (tasks != null)
             for (int i = 0; i < tasks.length(); i++) {
                 KanboardTask tmpTask = new KanboardTask(tasks.optJSONObject(i));
@@ -42,9 +51,18 @@ public class KanboardDashboard implements Serializable {
                 GroupedTasks.get(tmpTask.ProjectID).add(tmpTask);
             }
         Subtasks = new ArrayList<>();
-        JSONArray subtasks = json.optJSONArray("subtasks");
+        JSONArray subtasks = dashboard.optJSONArray("subtasks");
         if (subtasks != null)
             for (int i = 0; i < subtasks.length(); i++)
                 Subtasks.add(new KanboardSubtask(subtasks.optJSONObject(i)));
+
+        if (overdue != null) {
+            OverdueTasks = new ArrayList<>();
+            for (int i = 0; i < overdue.length(); i++) {
+                OverdueTasks.add(new KanboardTask(overdue.optJSONObject(i)));
+            }
+        } else {
+            OverdueTasks = null;
+        }
     }
 }

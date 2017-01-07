@@ -2,6 +2,7 @@ package in.andres.kandroid.kanboard;
 
 
 import android.os.AsyncTask;
+import android.util.Log;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -138,6 +139,21 @@ public class KanboardAPI {
                     l.onGetMyDashboard(success, res);
                 return;
             }
+
+            if (s.Request.Command.equalsIgnoreCase("KD_getDashboard")) {
+                KanboardDashboard res = null;
+                try {
+                    if (s.Result[0].has("result") && s.Result[1].has("result") && s.Result[2].has("result")) {
+                        success = true;
+                        res = new KanboardDashboard(s.Result[0].getJSONObject("result"), s.Result[1].getJSONArray("result"), s.Result[2].getJSONArray("result"));
+                    }
+                } catch (JSONException | MalformedURLException e) {
+                    e.printStackTrace();
+                }
+                for (KanbordEvents l: listeners)
+                    l.onGetMyDashboard(success, res);
+                return;
+            }
         }
     }
 
@@ -179,6 +195,10 @@ public class KanboardAPI {
 
     public void getMyDashboard() {
         new KanboardAsync().execute(KanboardRequest.getMyDashboard());
+    }
+
+    public void KB_getDashboard() {
+        new KanboardAsync().execute(KanboardRequest.KD_getDashboard());
     }
 
     // TODO: add API calls
