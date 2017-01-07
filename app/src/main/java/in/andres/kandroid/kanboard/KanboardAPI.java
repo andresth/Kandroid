@@ -28,40 +28,44 @@ public class KanboardAPI {
         protected KanboardResult doInBackground(KanboardRequest... params) {
             HttpsURLConnection con = null;
             try {
-                con = (HttpsURLConnection) kanboardURL.openConnection();
-                con.setRequestMethod("POST");
-                con.setConnectTimeout(120000);
-                con.setReadTimeout(120000);
-                con.setDoOutput(true);
-                con.setDoInput(true);
-                DataOutputStream out = new DataOutputStream(con.getOutputStream());
-                out.writeBytes(params[0].JSON);
-                out.flush();
-                out.close();
+                List<JSONObject> responseList = new ArrayList<>();
+                for (String s: params[0].JSON) {
+                    con = (HttpsURLConnection) kanboardURL.openConnection();
+                    con.setRequestMethod("POST");
+                    con.setConnectTimeout(120000);
+                    con.setReadTimeout(120000);
+                    con.setDoOutput(true);
+                    con.setDoInput(true);
+                    DataOutputStream out = new DataOutputStream(con.getOutputStream());
+                    out.writeBytes(s);
+                    out.flush();
+                    out.close();
 
-                BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
-                String line;
-                StringBuilder responseStr = new StringBuilder();
-                while ((line = in.readLine()) != null) {
-                    responseStr.append(line);
+                    BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
+                    String line;
+                    StringBuilder responseStr = new StringBuilder();
+                    while ((line = in.readLine()) != null) {
+                        responseStr.append(line);
+                    }
+                    in.close();
+
+                    JSONObject response = null;
+                    try {
+                        response = new JSONObject(responseStr.toString());
+                    } catch (JSONException e) {
+                        response = null;
+                    }
+                    responseList.add(response);
                 }
-                in.close();
 
-                JSONObject response = null;
-                try {
-                    response = new JSONObject(responseStr.toString());
-                } catch (JSONException e) {
-                    response = null;
-                }
-
-                return new KanboardResult(params[0], response, con.getResponseCode());
+                return new KanboardResult(params[0], responseList.toArray(new JSONObject[] {}), con.getResponseCode());
             } catch (SocketTimeoutException e) {
                 try {
-                    return new KanboardResult(params[0], new JSONObject("{\"jsonrpc\":\"2.0\",\"error\":{\"code\":0,\"message\":\"Network Timeout\"},\"id\":null}"), 0);
+                    return new KanboardResult(params[0], new JSONObject[] {new JSONObject("{\"jsonrpc\":\"2.0\",\"error\":{\"code\":0,\"message\":\"Network Timeout\"},\"id\":null}")}, 0);
                 } catch (JSONException e1) {}
             } catch (Exception e) {
                 try {
-                    return new KanboardResult(params[0], new JSONObject("{\"jsonrpc\":\"2.0\",\"error\":{\"code\":-1,\"message\":\"" + e.getMessage() + "\"},\"id\":null}"), 0);
+                    return new KanboardResult(params[0], new JSONObject[] {new JSONObject("{\"jsonrpc\":\"2.0\",\"error\":{\"code\":-1,\"message\":\"" + e.getMessage() + "\"},\"id\":null}")}, 0);
                 } catch (JSONException e1) {}
             }
             return null;
@@ -74,8 +78,8 @@ public class KanboardAPI {
                 for (KanbordEvents l: listeners)
                     l.onError(res);
             }
-            if (s.Result.has("error") || s.ReturnCode >= 400) {
-                JSONObject err = s.Result.optJSONObject("error");
+            if (s.Result[0].has("error") || s.ReturnCode >= 400) {
+                JSONObject err = s.Result[0].optJSONObject("error");
                 KanboardError res = new KanboardError(s.Request, err, s.ReturnCode);
                 for (KanbordEvents l: listeners)
                     l.onError(res);
@@ -86,9 +90,9 @@ public class KanboardAPI {
             if (s.Request.Command.equalsIgnoreCase("getMe")) {
                 KanboardUserInfo res = null;
                 try {
-                    if (s.Result.has("result") && (s.ReturnCode < 400)) {
+                    if (s.Result[0].has("result") && (s.ReturnCode < 400)) {
                         success = true;
-                        JSONObject jso = s.Result.getJSONObject("result");
+                        JSONObject jso = s.Result[0].getJSONObject("result");
                         res = new KanboardUserInfo(jso);
                     }
                 } catch (JSONException e) {
@@ -102,10 +106,10 @@ public class KanboardAPI {
             if (s.Request.Command.equalsIgnoreCase("getMyProjectsList")) {
                 List<KanboardProjectInfo> res = null;
                 try {
-                    if (s.Result.has("result")) {
+                    if (s.Result[0].has("result")) {
                         success = true;
                         res = new ArrayList<KanboardProjectInfo>();
-                        JSONObject jso = s.Result.getJSONObject("result");
+                        JSONObject jso = s.Result[0].getJSONObject("result");
                         for (int i = 0; i < jso.names().length(); i++) {
                             String key = jso.names().getString(i);
                             res.add(new KanboardProjectInfo(Integer.parseInt(key), jso.optString(key, "")));
@@ -122,9 +126,9 @@ public class KanboardAPI {
             if (s.Request.Command.equalsIgnoreCase("getMyDashboard")) {
                 KanboardDashboard res = null;
                 try {
-                    if (s.Result.has("result")) {
+                    if (s.Result[0].has("result")) {
                         success = true;
-                        JSONObject dash = s.Result.getJSONObject("result");
+                        JSONObject dash = s.Result[0].getJSONObject("result");
                         res = new KanboardDashboard(dash);
                     }
                 } catch (JSONException | MalformedURLException e) {
