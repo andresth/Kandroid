@@ -208,11 +208,11 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             cancel = true;
         }
 
-        if (TextUtils.isEmpty(apikey)) {
-            mAPIKeyView.setError(getString(R.string.error_field_required));
-            focusView = mAPIKeyView;
-            cancel = true;
-        }
+//        if (TextUtils.isEmpty(apikey)) {
+//            mAPIKeyView.setError(getString(R.string.error_field_required));
+//            focusView = mAPIKeyView;
+//            cancel = true;
+//        }
 
         if (TextUtils.isEmpty(serverurl)) {
             mServerURLView.setError(getString(R.string.error_field_required));

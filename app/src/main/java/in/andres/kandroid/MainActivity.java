@@ -314,9 +314,9 @@ public class MainActivity extends AppCompatActivity
             showLoginScreen = true;
         serverURL = preferences.getString("serverurl", "");
 
-        if (!preferences.contains("apikey"))
-            showLoginScreen = true;
-        apiKey = preferences.getString("apikey", "");
+//        if (!preferences.contains("apikey"))
+//            showLoginScreen = true;
+//        apiKey = preferences.getString("apikey", "");
 
         if (!preferences.contains("serverurl"))
             showLoginScreen = true;
