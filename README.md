@@ -1,5 +1,5 @@
 # Kandroid
-Android App for [Kanboard](http://kandboard.net).
+Android App for [Kanboard](http://kanboard.net).
 
 ![Login](screenshots/login.png)
 ## Build
