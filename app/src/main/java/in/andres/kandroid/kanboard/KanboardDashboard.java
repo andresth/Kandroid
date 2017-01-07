@@ -23,6 +23,7 @@ public class KanboardDashboard implements Serializable {
     public final List<KanboardSubtask> Subtasks;
     public final Dictionary<Integer, List<KanboardTask>> GroupedTasks;
     public final List<KanboardTask> OverdueTasks;
+    public final List<KanboardActivity> Activities;
 
     public final String Json;
 
@@ -30,7 +31,7 @@ public class KanboardDashboard implements Serializable {
         this(dashboard, null, null);
     }
 
-    public KanboardDashboard(@NonNull JSONObject dashboard, @Nullable JSONArray overdue, @Nullable JSONArray notifications) throws MalformedURLException {
+    public KanboardDashboard(@NonNull JSONObject dashboard, @Nullable JSONArray overdue, @Nullable JSONArray activities) throws MalformedURLException {
 
         Json = dashboard.toString();
         GroupedTasks = new Hashtable<>();
@@ -63,6 +64,15 @@ public class KanboardDashboard implements Serializable {
             }
         } else {
             OverdueTasks = null;
+        }
+
+        if (activities != null) {
+            Activities = new ArrayList<>();
+            for (int i = 0; i < activities.length(); i++) {
+                Activities.add(new KanboardActivity(activities.optJSONObject(i)));
+            }
+        } else {
+            Activities = null;
         }
     }
 }
