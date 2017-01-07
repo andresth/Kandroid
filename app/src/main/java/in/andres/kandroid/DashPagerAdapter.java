@@ -28,6 +28,8 @@ public class DashPagerAdapter extends FragmentPagerAdapter {
                 return DashProjectsFragment.newInstance();
             case 1:
                 return DashOverdueFragment.newInstance();
+            case 2:
+                return DashActivitiesFragment.newInstance();
         }
         return TextFragment.newInstance((String) this.getPageTitle(position));
     }

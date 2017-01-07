@@ -2,13 +2,14 @@ package in.andres.kandroid.kanboard;
 
 import org.json.JSONObject;
 
+import java.io.Serializable;
 import java.util.Date;
 
 /**
  * Created by Thomas Andres on 07.01.17.
  */
 
-public class KanboardActivity {
+public class KanboardActivity implements Serializable {
     public final String Title;
     public final String Content;
     public final String Creator;
@@ -28,6 +29,11 @@ public class KanboardActivity {
         ID = json.optInt("id");
         ProjectID = json.optInt("project_id");
         TaskID = json.optInt("task_id");
-        CreationDate = new Date(json.optLong("creation_date"));
+        CreationDate = new Date(json.optLong("date_creation") * 1000);
+    }
+
+    @Override
+    public String toString() {
+        return this.Title + " " + this.CreationDate.toString();
     }
 }
