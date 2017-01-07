@@ -6,6 +6,7 @@ import android.support.v4.app.ListFragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ExpandableListView;
 
 /**
  * Created by Thomas Andres on 04.01.17.
@@ -30,7 +31,7 @@ public class DashProjectsFragment extends ListFragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_dash_projects, container, false);
+        return inflater.inflate(R.layout.fragment_expandable_list, container, false);
     }
 
     @Override
@@ -39,8 +40,8 @@ public class DashProjectsFragment extends ListFragment {
         if (((MainActivity)getActivity()).getDashboard() != null) {
             getView().findViewById(R.id.fragment_dash_errortext).setVisibility(View.GONE);
             getView().findViewById(android.R.id.list).setVisibility(View.VISIBLE);
-            DashProjectArrayAdapter listAdapter = new DashProjectArrayAdapter(getActivity(), ((MainActivity)getActivity()).getDashboard().Projects);
-            setListAdapter(listAdapter);
+            DashProjectsAdapter listAdapter = new DashProjectsAdapter(getActivity(), ((MainActivity)getActivity()).getDashboard());
+            ((ExpandableListView) getView().findViewById(android.R.id.list)).setAdapter(listAdapter);
         } else {
             getView().findViewById(R.id.fragment_dash_errortext).setVisibility(View.VISIBLE);
             getView().findViewById(android.R.id.list).setVisibility(View.GONE);

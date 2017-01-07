@@ -34,10 +34,12 @@
     <string name="title_activity_settings">Settings</string>
 
     <!-- Strings related to Tabs -->
-    <string name="tab_projects">Projects</string>
-    <string name="tab_tasks">Tasks</string>
-    <string name="tab_subtasks">Subtasks</string>
+    <string name="tab_projects">My Projects &amp; Tasks</string>
+    <string name="tab_overdue_tasks">Overdue Tasks</string>
+    <string name="tab_notifications">Notifications</string>
 
     <string name="error_no_list_data">No data available!\nPlease hit refresh.</string>
+
+    <string name="format_nb_tasks">%d Task(s)</string>
 
 </resources>

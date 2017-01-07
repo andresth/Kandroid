@@ -30,8 +30,9 @@
     <string name="title_activity_settings">Einstellungen</string>
     <string name="settings_cat_projects">Projekte</string>
     <string name="setting_sort_projects">Alphabetisch sortieren</string>
-    <string name="tab_projects">Projekte</string>
-    <string name="tab_subtasks">Unteraufgaben</string>
-    <string name="tab_tasks">Aufgaben</string>
+    <string name="tab_projects">Meine Projekte &amp; Aufgaben</string>
+    <string name="tab_notifications">Benachrichtigungen</string>
+    <string name="tab_overdue_tasks">Überfällige Aufgaben</string>
     <string name="error_no_list_data">Keine Daten verfügbar!\nBitte Aktualisieren drücken.</string>
+    <string name="format_nb_tasks">%d Aufgabe(n)</string>
 </resources>

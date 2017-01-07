@@ -26,10 +26,6 @@ public class DashPagerAdapter extends FragmentPagerAdapter {
         switch (position) {
             case 0:
                 return DashProjectsFragment.newInstance();
-            case 1:
-                return DashTasksFragment.newInstance();
-            case 2:
-                return DashSubtasksFragment.newInstance();
         }
         return TextFragment.newInstance((String) this.getPageTitle(position));
     }
@@ -45,9 +41,9 @@ public class DashPagerAdapter extends FragmentPagerAdapter {
             case 0:
                 return mContext.getString(R.string.tab_projects);
             case 1:
-                return mContext.getString(R.string.tab_tasks);
+                return mContext.getString(R.string.tab_overdue_tasks);
             case 2:
-                return mContext.getString(R.string.tab_subtasks);
+                return mContext.getString(R.string.tab_notifications);
         }
         return  null;
     }
