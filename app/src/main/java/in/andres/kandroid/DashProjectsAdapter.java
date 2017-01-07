@@ -100,24 +100,17 @@ public class DashProjectsAdapter extends BaseExpandableListAdapter {
 
     @Override
     public View getGroupView(int groupPosition, boolean isExpanded, View convertView, ViewGroup parent) {
-        String groupTitle = ((KanboardProject) getGroup(groupPosition)).Name;
         KanboardProject proj = (KanboardProject) getGroup(groupPosition);
 
         if (convertView == null)
             convertView = mInflater.inflate(R.layout.listitem_dash_project_header, null);
-//            convertView = mInflater.inflate(R.layout.listitem_task_group, null);
 
-
-//        TextView projectID = (TextView) convertView.findViewById(R.id.project_id);
         TextView projectName = (TextView) convertView.findViewById(R.id.project_name);
         TextView projectDescription = (TextView) convertView.findViewById(R.id.project_description);
         TextView projectColumns = (TextView) convertView.findViewById(R.id.project_columns);
-//        ImageView projectPrivate = (ImageView) convertView.findViewById(R.id.project_private);
         TextView projectNbTasks = (TextView) convertView.findViewById(R.id.project_nb_own_tasks);
 
-//        projectID.setText(Html.fromHtml(String.format("#<b>%1s</b>", Integer.toString(proj.ID))));
         projectName.setText(proj.Name);
-//        projectPrivate.setImageDrawable(mContext.getDrawable(proj.IsPrivate ? R.drawable.project_private : R.drawable.project_public));
         if ((proj.Description == null) || proj.Description.contentEquals(""))
             projectDescription.setVisibility(View.GONE);
         projectDescription.setText(proj.Description);
@@ -126,12 +119,6 @@ public class DashProjectsAdapter extends BaseExpandableListAdapter {
             columns.add(String.format("<big><b>%1s</b></big> %2s", c.NumberTasks, c.Title));
         projectColumns.setText(Html.fromHtml(TextUtils.join(" <big><b>|</b></big> ", columns)));
         projectNbTasks.setText(String.format(Locale.getDefault(), mContext.getString(R.string.format_nb_tasks), getChildrenCount(groupPosition)));
-
-//        TextView text1 = (TextView) convertView.findViewById(android.R.id.text1);
-//        text1.setText(groupTitle);
-//
-//        TextView text2 = (TextView) convertView.findViewById(android.R.id.text2);
-//        text2.setText(String.format(Locale.getDefault(), mContext.getString(R.string.format_nb_tasks), getChildrenCount(groupPosition)));
 
         return convertView;
     }

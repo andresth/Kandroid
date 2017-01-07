@@ -25,10 +25,6 @@ public class TextFragment extends Fragment {
 
     private static final String ARG_SECTION_NAME = "section_name";
 
-    private List<KanboardProject> mProjects = null;
-    private List<KanboardTask> mTasks = null;
-    private List<KanboardSubtask> mSubtasks = null;
-
     public TextFragment() {}
 
     public static TextFragment newInstance(String sectionName) {
@@ -39,43 +35,12 @@ public class TextFragment extends Fragment {
         return fragment;
     }
 
-    public void setProjects(List<KanboardProject> projects) {
-        mProjects = projects;
-    }
-
-    public void setTasks(List<KanboardTask> tasks) {
-        mTasks = tasks;
-    }
-
-    public void setSubtasks(List<KanboardSubtask> subtasks) {
-        mSubtasks = subtasks;
-    }
-
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_text, container, false);
         TextView textView = (TextView) rootView.findViewById(R.id.fragmentTextView);
-        StringBuilder text = new StringBuilder();
-        if (mProjects != null) {
-            for (KanboardProject p: mProjects) {
-                text.append(p.Name);
-                text.append("\n");
-            }
-            textView.setText(text.toString());
-        } else if (mTasks != null) {
-            for (KanboardTask t: mTasks) {
-                text.append(t.Title);
-                text.append("\n");
-            }
-            textView.setText(text.toString());
-        } else if (mSubtasks != null) {
-            for (KanboardSubtask s: mSubtasks) {
-                text.append(s.Title);
-                text.append("\n");
-            }
-            textView.setText(text.toString());
-        }
+        textView.setText(getArguments().getString(TextFragment.ARG_SECTION_NAME));
         return rootView;
     }
 }
