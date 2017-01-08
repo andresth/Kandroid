@@ -3,20 +3,12 @@ package in.andres.kandroid;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
-import android.app.LoaderManager.LoaderCallbacks;
-import android.content.CursorLoader;
-import android.content.Loader;
 import android.content.SharedPreferences;
-import android.content.pm.PackageManager;
-import android.database.Cursor;
-import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.provider.ContactsContract;
 import android.support.annotation.NonNull;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.view.KeyEvent;
@@ -24,16 +16,24 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.inputmethod.EditorInfo;
-import android.widget.ArrayAdapter;
-import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import java.util.ArrayList;
-import java.util.List;
+import org.json.JSONObject;
 
-import static android.Manifest.permission.READ_CONTACTS;
+import java.io.BufferedReader;
+import java.io.DataOutputStream;
+import java.io.InputStreamReader;
+import java.net.Authenticator;
+import java.net.MalformedURLException;
+import java.net.PasswordAuthentication;
+import java.net.ProtocolException;
+import java.net.SocketTimeoutException;
+import java.net.URL;
+import java.net.UnknownHostException;
+
+import javax.net.ssl.HttpsURLConnection;
 
 /**
  * A login screen that offers login via email/password.
@@ -228,16 +228,20 @@ public class LoginActivity extends AppCompatActivity //implements LoaderCallback
         } else {
             // Show a progress spinner, and kick off a background task to
             // perform the user login attempt.
-            showProgress(true);
-            mAuthTask = new UserLoginTask(username, password);
-            mAuthTask.execute((Void) null);
-            SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this.getApplicationContext());
-            SharedPreferences.Editor editor = preferences.edit();
-            editor.putString("serverurl", serverurl);
-            editor.putString("apikey", apikey);
-            editor.putString("username", username);
-            editor.putString("password", password);
-            editor.commit();
+            try {
+                mAuthTask = new UserLoginTask(serverurl, username, password);
+                mAuthTask.execute();
+                showProgress(true);
+            } catch (MalformedURLException e) {
+                e.printStackTrace();
+            }
+//            SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this.getApplicationContext());
+//            SharedPreferences.Editor editor = preferences.edit();
+//            editor.putString("serverurl", serverurl);
+//            editor.putString("apikey", apikey);
+//            editor.putString("username", username);
+//            editor.putString("password", password);
+//            editor.commit();
         }
     }
 
@@ -332,63 +336,114 @@ public class LoginActivity extends AppCompatActivity //implements LoaderCallback
 //    }
 
 
-    private interface ProfileQuery {
-        String[] PROJECTION = {
-                ContactsContract.CommonDataKinds.Email.ADDRESS,
-                ContactsContract.CommonDataKinds.Email.IS_PRIMARY,
-        };
-
-        int ADDRESS = 0;
-        int IS_PRIMARY = 1;
-    }
+//    private interface ProfileQuery {
+//        String[] PROJECTION = {
+//                ContactsContract.CommonDataKinds.Email.ADDRESS,
+//                ContactsContract.CommonDataKinds.Email.IS_PRIMARY,
+//        };
+//
+//        int ADDRESS = 0;
+//        int IS_PRIMARY = 1;
+//    }
 
     /**
      * Represents an asynchronous login/registration task used to authenticate
      * the user.
      */
-    public class UserLoginTask extends AsyncTask<Void, Void, Boolean> {
+    public class UserLoginTask extends AsyncTask<Void, Void, Integer> {
 
-        private final String mEmail;
+        private final URL mUrl;
+        private final String mServerUrl;
+        private final String mUsername;
         private final String mPassword;
 
-        UserLoginTask(String email, String password) {
-            mEmail = email;
+        UserLoginTask(String serverurl, final String username, final String password) throws MalformedURLException {
+            String tmpURL = serverurl;
+            if (!serverurl.endsWith("jsonrpc.php")) {
+                if (!serverurl.endsWith("/"))
+                    tmpURL += "/";
+                tmpURL += "jsonrpc.php";
+            }
+            mUrl = new URL(tmpURL);
+            mServerUrl = serverurl;
+            mUsername = username;
             mPassword = password;
-        }
 
-        @Override
-        protected Boolean doInBackground(Void... params) {
-            // TODO: attempt authentication against a network service.
-
-            try {
-                // Simulate network access.
-                Thread.sleep(2000);
-            } catch (InterruptedException e) {
-                return false;
-            }
-
-            for (String credential : DUMMY_CREDENTIALS) {
-                String[] pieces = credential.split(":");
-                if (pieces[0].equals(mEmail)) {
-                    // Account exists, return true if the password matches.
-                    return pieces[1].equals(mPassword);
+            Authenticator.setDefault(new Authenticator() {
+                @Override
+                protected PasswordAuthentication getPasswordAuthentication() {
+                    return new PasswordAuthentication(username, password.toCharArray());
                 }
-            }
 
-            // TODO: register the new account here.
-            return true;
+            });
         }
 
         @Override
-        protected void onPostExecute(final Boolean success) {
+        protected Integer doInBackground(Void... params) {
+            // TODO: attempt authentication against a network service.
+            HttpsURLConnection con = null;
+            try {
+                con = (HttpsURLConnection) mUrl.openConnection();
+                con.setRequestMethod("POST");
+                con.setConnectTimeout(120000);
+                con.setReadTimeout(120000);
+                con.setDoOutput(true);
+                con.setDoInput(true);
+                DataOutputStream out = new DataOutputStream(con.getOutputStream());
+                out.writeBytes("{\"jsonrpc\": \"2.0\", \"method\": \"getMe\", \"id\": 1}");
+                out.flush();
+                out.close();
+
+                BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
+                String line;
+                StringBuilder responseStr = new StringBuilder();
+                while ((line = in.readLine()) != null) {
+                    responseStr.append(line);
+                }
+                in.close();
+
+                JSONObject response = new JSONObject(responseStr.toString());
+
+                if (response.has("error"))
+                    return response.optJSONObject("error").optInt("code");
+                else
+                    return con.getResponseCode();
+            } catch (UnknownHostException e) {
+                return -1;
+            } catch (ProtocolException e) {
+                return -2;
+            } catch (SocketTimeoutException e) {
+                return -3;
+            } catch (Exception e) {
+                e.printStackTrace();
+                return Integer.MIN_VALUE;
+            }
+        }
+
+        @Override
+        protected void onPostExecute(final Integer success) {
             mAuthTask = null;
             showProgress(false);
 
-            if (success) {
-                finish();
-            } else {
+            if ((success >= 400) || success == -2) {
+                mUsernameView.setError(getString(R.string.error_incorrect_username));
                 mPasswordView.setError(getString(R.string.error_incorrect_password));
                 mPasswordView.requestFocus();
+            } else if (success == -3) {
+                mServerURLView.setError(getString(R.string.error_server_url));
+                mServerURLView.requestFocus();
+            } else if (success == -1) {
+                mServerURLView.setError(getString(R.string.error_host_unknown));
+                mServerURLView.requestFocus();
+            } else if (success == 200) {
+                SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+                SharedPreferences.Editor editor = preferences.edit();
+                editor.putString("serverurl", mServerUrl);
+//                editor.putString("apikey", apikey);
+                editor.putString("username", mUsername);
+                editor.putString("password", mPassword);
+                editor.apply();
+                finish();
             }
         }
 

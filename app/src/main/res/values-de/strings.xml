@@ -32,4 +32,7 @@
     <string name="tab_overdue_tasks">Überfällige Aufgaben</string>
     <string name="error_no_list_data">Keine Daten verfügbar!\nBitte Aktualisieren drücken.</string>
     <string name="format_nb_tasks">%d Aufgabe(n)</string>
+    <string name="error_server_url">Konnte Server nicht kontaktieren</string>
+    <string name="error_host_unknown">Unbekanter Host</string>
+    <string name="error_incorrect_username">Der Bentzername ist ungültig</string>
 </resources>
