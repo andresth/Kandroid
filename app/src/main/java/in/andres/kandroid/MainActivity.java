@@ -19,6 +19,7 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.SubMenu;
@@ -56,7 +57,7 @@ public class MainActivity extends AppCompatActivity
     KanboardAPI kanboardAPI;
     KanboardUserInfo Me;
     List<KanboardProjectInfo> mProjects;
-    private KanboardDashboard mDashboard;
+    private KanboardDashboard mDashboard = null;
 
     KanbordEvents eventHandler = new KanbordEvents() {
         @Override
@@ -144,26 +145,31 @@ public class MainActivity extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-        if ((savedInstanceState != null)) {
+        if ((savedInstanceState != null) && savedInstanceState.containsKey("dashboard")) {
             // App was restarted by System, load saved instance
             mDashboard = (KanboardDashboard) savedInstanceState.getSerializable("dashboard");
-        } else {
-            // Fresh start of the App, get data from server
-            refresh();
         }
+//        if (mDashboard == null) {
+//            // Fresh start of the App, get data from server
+//            refresh();
+//        }
     }
 
     @Override
     public void onSaveInstanceState(Bundle savedInstanceState) {
         super.onSaveInstanceState(savedInstanceState);
-        savedInstanceState.putSerializable("dashboard", mDashboard);
+        if (mDashboard != null)
+            savedInstanceState.putSerializable("dashboard", mDashboard);
     }
 
     @Override
     public void onRestoreInstanceState(Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
         // User rotated the screen or something
-        mDashboard = (KanboardDashboard) savedInstanceState.getSerializable("dashboard");
+        if (savedInstanceState.containsKey("dashboard"))
+            mDashboard = (KanboardDashboard) savedInstanceState.getSerializable("dashboard");
+//        if (mDashboard == null)
+//            refresh();
         showDashboard();
     }
 
@@ -180,7 +186,9 @@ public class MainActivity extends AppCompatActivity
     @Override
     protected void onResume() {
         super.onResume();
-        populateProjectsMenu();
+        if (mDashboard == null && (progressBarCount <= 0))
+            refresh();
+//        populateProjectsMenu();
     }
 
     @Override
@@ -318,7 +326,7 @@ public class MainActivity extends AppCompatActivity
 //            showLoginScreen = true;
 //        apiKey = preferences.getString("apikey", "");
 
-        if (!preferences.contains("serverurl"))
+        if (!preferences.contains("username"))
             showLoginScreen = true;
         username = preferences.getString("username", "");
 
