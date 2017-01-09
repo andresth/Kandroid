@@ -44,7 +44,7 @@ public class DashOverdueFragment extends ListFragment {
         private LayoutInflater mInflater;
         private List<KanboardTask> mValues;
 
-        public DashOverdueAdapter(Context context, List<KanboardTask> values) {
+        DashOverdueAdapter(Context context, List<KanboardTask> values) {
             super(context, R.layout.listitem_dash_overdue, values);
             mContext = context;
             mInflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
