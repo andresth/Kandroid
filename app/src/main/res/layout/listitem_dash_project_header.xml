@@ -15,7 +15,8 @@
         android:gravity="center_vertical"
         android:layout_height="wrap_content"
         android:layout_width="wrap_content"
-        android:id="@+id/project_nb_own_tasks" />
+        android:id="@+id/project_nb_own_tasks"
+        android:layout_marginEnd="6dp"/>
     <TextView
         android:text="Projekname"
         android:layout_width="match_parent"
@@ -43,7 +44,8 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="5dp"
         android:gravity="center"
-        android:layout_below="@+id/project_description" />
+        android:layout_below="@+id/project_description"
+        android:layout_marginEnd="6dp"/>
     <TextView
         android:layout_width="3dp"
         android:layout_height="wrap_content"
