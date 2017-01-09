@@ -2,7 +2,6 @@ package in.andres.kandroid.kanboard;
 
 
 import android.os.AsyncTask;
-import android.util.Log;
 
 import org.json.JSONException;
 import org.json.JSONObject;

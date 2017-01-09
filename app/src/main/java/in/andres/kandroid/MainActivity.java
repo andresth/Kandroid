@@ -19,7 +19,6 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.SubMenu;
@@ -149,10 +148,6 @@ public class MainActivity extends AppCompatActivity
             // App was restarted by System, load saved instance
             mDashboard = (KanboardDashboard) savedInstanceState.getSerializable("dashboard");
         }
-//        if (mDashboard == null) {
-//            // Fresh start of the App, get data from server
-//            refresh();
-//        }
     }
 
     @Override
@@ -168,8 +163,6 @@ public class MainActivity extends AppCompatActivity
         // User rotated the screen or something
         if (savedInstanceState.containsKey("dashboard"))
             mDashboard = (KanboardDashboard) savedInstanceState.getSerializable("dashboard");
-//        if (mDashboard == null)
-//            refresh();
         showDashboard();
     }
 
@@ -188,7 +181,6 @@ public class MainActivity extends AppCompatActivity
         super.onResume();
         if (mDashboard == null && (progressBarCount <= 0))
             refresh();
-//        populateProjectsMenu();
     }
 
     @Override
