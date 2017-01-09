@@ -223,8 +223,8 @@ public class MainActivity extends AppCompatActivity
 
         if (id == R.id.nav_dashboard) {
             showDashboard();
-        } else if (id == R.id.nav_overdue) {
-
+//        } else if (id == R.id.nav_overdue) {
+//
         } else if (id == R.id.nav_sign_in) {
             Intent iSetting = new Intent(this, SettingsActivity.class);
             startActivity(iSetting);
