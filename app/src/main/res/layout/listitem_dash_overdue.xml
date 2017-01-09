@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="4dp"
+    android:paddingStart="8dp"
+    android:paddingEnd="8dp">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Aufgabe"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:id="@+id/task_name"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentStart="true"
+        android:layout_toStartOf="@+id/task_overdue"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Seit 5 Tagen fällig"
+        android:id="@+id/task_overdue"
+        android:layout_alignBottom="@id/task_name"
+        android:layout_alignTop="@id/task_name"
+        android:gravity="center_vertical"
+        android:layout_alignParentEnd="true"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/task_project"
+        android:layout_below="@id/task_name"
+        android:text="Projekt"
+        android:layout_marginTop="4dp"/>
+
+</RelativeLayout>

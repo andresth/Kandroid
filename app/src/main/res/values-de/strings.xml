@@ -35,4 +35,6 @@
     <string name="error_server_url">Konnte Server nicht kontaktieren</string>
     <string name="error_host_unknown">Unbekanter Host</string>
     <string name="error_incorrect_username">Der Bentzername ist ungültig</string>
+    <string name="format_overdue_days">Seit %d Tagen fällig</string>
+    <string name="format_overdue_hours">Seit %d Stunden fällig</string>
 </resources>

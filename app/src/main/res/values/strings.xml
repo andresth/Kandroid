@@ -41,5 +41,7 @@
     <string name="error_no_list_data">No data available!\nPlease hit refresh.</string>
 
     <string name="format_nb_tasks">%d Task(s)</string>
+    <string name="format_overdue_days">%d days overdue</string>
+    <string name="format_overdue_hours">%d hours overdue</string>
 
 </resources>

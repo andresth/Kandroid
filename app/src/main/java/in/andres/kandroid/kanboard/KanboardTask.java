@@ -5,6 +5,7 @@ import org.json.JSONObject;
 import java.io.Serializable;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.Date;
 
 /**
  * Created by Thomas Andres on 01.01.17.
@@ -27,6 +28,8 @@ public class KanboardTask implements Comparable<KanboardTask>, Serializable {
     // Dashboard properties
     public final String ProjectName;
     public final String ColumnTitle;
+    public final Date DueDate;
+    public final Date CreationDate;
     // TODO: getTaskByID has additional properties
     // TODO: add color
 
@@ -50,6 +53,17 @@ public class KanboardTask implements Comparable<KanboardTask>, Serializable {
         // Dashboard properties
         ProjectName = json.optString("project_name");
         ColumnTitle = json.optString("column_title");
+        long tmpTime = json.optLong("date_due");
+        // Kanboard returns 0 when there was no time set
+        if (tmpTime > 0)
+            DueDate = new Date(tmpTime * 1000);
+        else
+            DueDate = null;
+        tmpTime = json.optLong("creation_date");
+        if (tmpTime > 0)
+            CreationDate = new Date(tmpTime * 1000);
+        else
+            CreationDate = null;
     }
 
     @Override
