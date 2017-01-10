@@ -153,6 +153,10 @@ public class KanboardAPI {
                     l.onGetMyDashboard(success, res);
                 return;
             }
+
+            if (s.Request.Command.equalsIgnoreCase("KD_getProjectById")) {
+                return;
+            }
         }
     }
 

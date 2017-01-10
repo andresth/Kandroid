@@ -29,6 +29,79 @@ public class KanboardRequest {
     public static KanboardRequest getMyActivityStream() {
         return new KanboardRequest("getMyActivityStream", new String[] {"{\"jsonrpc\": \"2.0\", \"method\": \"getMyActivityStream\", \"id\": 1}"});
     }
+
+    public static KanboardRequest getProjectById(int projectid) {
+        return new KanboardRequest("getProjectById", new String[] {String.format(
+                "{\n" +
+                "    \"jsonrpc\": \"2.0\",\n" +
+                "    \"method\": \"getProjectById\",\n" +
+                "    \"id\": 1,\n" +
+                "    \"params\": {\n" +
+                "        \"project_id\": %d\n" +
+                "    }\n" +
+                "}", projectid)});
+    }
+
+    public static KanboardRequest getAllTasks(int projectid, int status) {
+        return new KanboardRequest("getAllTasks", new String[] {String.format(
+                "{\n" +
+                "    \"jsonrpc\": \"2.0\",\n" +
+                "    \"method\": \"getAllTasks\",\n" +
+                "    \"id\": 1,\n" +
+                "    \"params\": {\n" +
+                "        \"project_id\": %d,\n" +
+                "        \"status_id\": %d\n" +
+                "    }\n" +
+                "}", projectid, status)});
+    }
+
+    public static KanboardRequest getOverdueTasksByProject(int projectid) {
+        return new KanboardRequest("getOverdueTasksByProject", new String[] {String.format(
+                "{\n" +
+                "    \"jsonrpc\": \"2.0\",\n" +
+                "    \"method\": \"getOverdueTasksByProject\",\n" +
+                "    \"id\": 133280317,\n" +
+                "    \"params\": {\n" +
+                "        \"project_id\": %d\n" +
+                "    }\n" +
+                "}", projectid)});
+    }
+
+    public static KanboardRequest getColumns(int projectid) {
+        return new KanboardRequest("getColumns", new String[] {String.format(
+                "{\n" +
+                "    \"jsonrpc\": \"2.0\",\n" +
+                "    \"method\": \"getColumns\",\n" +
+                "    \"id\": 1,\n" +
+                "    \"params\": [\n" +
+                "        %d\n" +
+                "    ]\n" +
+                "}", projectid)});
+    }
+
+    public static KanboardRequest getActiveSwimlanes(int projectid) {
+        return new KanboardRequest("getActiveSwimlanes", new String[] {String.format(
+                "{\n" +
+                "    \"jsonrpc\": \"2.0\",\n" +
+                "    \"method\": \"getActiveSwimlanes\",\n" +
+                "    \"id\": 934789422,\n" +
+                "    \"params\": [\n" +
+                "        %d\n" +
+                "    ]\n" +
+                "}", projectid)});
+    }
+
+    public static KanboardRequest getAllCategories(int projectid) {
+        return new KanboardRequest("getAllCategories", new String[] {String.format(
+                "{\n" +
+                "    \"jsonrpc\": \"2.0\",\n" +
+                "    \"method\": \"getAllCategories\",\n" +
+                "    \"id\": 1,\n" +
+                "    \"params\": {\n" +
+                "        \"project_id\": %d\n" +
+                "    }\n" +
+                "}", projectid)});
+    }
     //endregion
 
     //region Custom API
@@ -36,6 +109,16 @@ public class KanboardRequest {
         return new KanboardRequest("KD_getDashboard", new String[] {KanboardRequest.getMyDashboard().JSON[0],
                                                                     KanboardRequest.getMyOverdueTasks().JSON[0],
                                                                     KanboardRequest.getMyActivityStream().JSON[0]});
+    }
+
+    public static KanboardRequest KD_getProjectById(int projectid) {
+        return new KanboardRequest("KD_getProjectById", new String[] {KanboardRequest.getProjectById(projectid).JSON[0],
+                                                                      KanboardRequest.getColumns(projectid).JSON[0],
+                                                                      KanboardRequest.getActiveSwimlanes(projectid).JSON[0],
+                                                                      KanboardRequest.getAllCategories(projectid).JSON[0],
+                                                                      KanboardRequest.getAllTasks(projectid, 1).JSON[0],
+                                                                      KanboardRequest.getAllTasks(projectid, 0).JSON[0],
+                                                                      KanboardRequest.getOverdueTasksByProject(projectid).JSON[0]});
     }
     //endregion
 }
