@@ -11,6 +11,8 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Dictionary;
+import java.util.Hashtable;
 import java.util.List;
 
 /**
@@ -37,8 +39,10 @@ public class KanboardProject implements Comparable<KanboardProject>, Serializabl
     public final URL BoardURL;
     public final URL CalendarURL;
     public final List<KanboardColumn> Columns;
+    public final List<KanboardCategory> Categories;
     public final List<KanboardSwimlane> Swimlanes;
     public final List<KanboardTask> ActiveTasks;
+    public final Dictionary<Integer, Dictionary<Integer, List<KanboardTask>>> GroupedActiveTasks;
     public final List<KanboardTask> InactiveTasks;
     public final List<KanboardTask> OverdueTasks;
     // TODO: add priority values to project details
@@ -55,7 +59,7 @@ public class KanboardProject implements Comparable<KanboardProject>, Serializabl
         Name = project.optString("name");
         OwnerID = project.optInt("owner_id");
         Object desc = project.opt("description");
-        Description = desc == null ? null : desc.toString();
+        Description = desc.equals(null) ? null : desc.toString();
         Identifier = project.optString("identifier");
         Token = project.optString("token");
         IsActive = KanboardAPI.StringToBoolean(project.optString("is_active"));
@@ -88,28 +92,47 @@ public class KanboardProject implements Comparable<KanboardProject>, Serializabl
             BoardURL = null;
             CalendarURL = null;
         }
+
+        GroupedActiveTasks = new Hashtable<Integer, Dictionary<Integer, List<KanboardTask>>>();
+
         Columns = new ArrayList<>();
         JSONArray cols = project.optJSONArray("columns");
-        if (columns != null)
-            for (int i = 0; i < columns.length(); i++)
-                Columns.add(new KanboardColumn(columns.optJSONObject(i)));
-        else if (cols != null)
+        if (columns != null) {
+            for (int i = 0; i < columns.length(); i++) {
+                KanboardColumn tmpCol = new KanboardColumn(columns.optJSONObject(i));
+                Columns.add(tmpCol);
+                GroupedActiveTasks.put(tmpCol.ID, new Hashtable<Integer, List<KanboardTask>>());
+            }
+        }
+        else if (cols != null) {
             for (int i = 0; i < cols.length(); i++)
                 Columns.add(new KanboardColumn(cols.optJSONObject(i)));
+        }
 
         Swimlanes = new ArrayList<>();
-        if (swimlanes != null)
-            for (int i = 0; i < swimlanes.length(); i++)
-                Swimlanes.add(new KanboardSwimlane(swimlanes.optJSONObject(i)));
+        if (swimlanes != null) {
+            for (int i = 0; i < swimlanes.length(); i++) {
+                KanboardSwimlane tmpSwim = new KanboardSwimlane(swimlanes.optJSONObject(i));
+                Swimlanes.add(tmpSwim);
+                for (KanboardColumn c: Columns) {
+                    GroupedActiveTasks.get(c.ID).put(tmpSwim.ID, new ArrayList<KanboardTask>());
+                }
+            }
+        }
 
+        Categories = new ArrayList<>();
         if (categories != null) {
-
+            for (int i = 0; i < categories.length(); i++)
+                Categories.add(new KanboardCategory(categories.optJSONObject(i)));
         }
 
         ActiveTasks = new ArrayList<>();
         if (activetasks != null)
-            for (int i = 0; i < activetasks.length(); i++)
-                ActiveTasks.add(new KanboardTask(activetasks.optJSONObject(i)));
+            for (int i = 0; i < activetasks.length(); i++) {
+                KanboardTask tmpActiveTask = new KanboardTask(activetasks.optJSONObject(i));
+                ActiveTasks.add(tmpActiveTask);
+                GroupedActiveTasks.get(tmpActiveTask.ColumnID).get(tmpActiveTask.SwimlaneID).add(tmpActiveTask);
+            }
 
         InactiveTasks = new ArrayList<>();
         if (inactivetasks != null)
