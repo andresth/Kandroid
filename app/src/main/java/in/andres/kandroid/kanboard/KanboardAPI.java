@@ -155,6 +155,21 @@ public class KanboardAPI {
             }
 
             if (s.Request.Command.equalsIgnoreCase("KD_getProjectById")) {
+                KanboardProject res = null;
+                try {
+                    if (s.Result[0].has("result") && s.Result[1].has("result") && s.Result[2].has("result") && s.Result[3].has("result") && s.Result[4].has("result") && s.Result[5].has("result") && s.Result[6].has("result")) {
+                        success = true;
+                        res = new KanboardProject(s.Result[0].optJSONObject("result"),
+                                                  s.Result[1].optJSONArray("result"),
+                                                  s.Result[2].optJSONArray("result"),
+                                                  s.Result[3].optJSONArray("result"),
+                                                  s.Result[4].optJSONArray("result"),
+                                                  s.Result[5].optJSONArray("result"),
+                                                  s.Result[6].optJSONArray("result"));
+                    }
+                } catch (MalformedURLException e) {
+                    e.printStackTrace();
+                }
                 return;
             }
         }
