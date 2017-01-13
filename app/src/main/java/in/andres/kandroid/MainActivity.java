@@ -13,12 +13,14 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
 import android.support.v4.view.GravityCompat;
+import android.support.v4.view.PagerTitleStrip;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.SubMenu;
@@ -48,14 +50,19 @@ public class MainActivity extends AppCompatActivity
 
     Context self;
     ViewPager mViewPager;
+    PagerTitleStrip mTitleStrip;
     DashPagerAdapter mDashPager;
+    ProjectPagerAdapter mProjectPager;
     View mMainView;
     View mProgress;
     int progressBarCount = 0;
 
+    private int mode = 0;
+
     KanboardAPI kanboardAPI;
     KanboardUserInfo Me;
     List<KanboardProjectInfo> mProjects;
+    private KanboardProject mProject = null;
     private KanboardDashboard mDashboard = null;
 
     KanbordEvents eventHandler = new KanbordEvents() {
@@ -84,6 +91,13 @@ public class MainActivity extends AppCompatActivity
             mDashboard = dash;
             populateProjectsMenu();
             showDashboard();
+        }
+
+        public void onGetProjectById(boolean success, KanboardProject project) {
+            showProgress(false);
+            mProject = project;
+            Log.d("Event", String.format("Received Project %s", mProject.Name));
+            showProject();
         }
 
         @Override
@@ -116,6 +130,7 @@ public class MainActivity extends AppCompatActivity
         mProgress = findViewById(R.id.main_progress);
 
         mViewPager = (ViewPager) findViewById(R.id.pager);
+        mTitleStrip = (PagerTitleStrip) mViewPager.findViewById(R.id.pager_title_strip);
 
         self = this;
 
@@ -161,6 +176,7 @@ public class MainActivity extends AppCompatActivity
     public void onRestoreInstanceState(Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
         // User rotated the screen or something
+        Log.d("Lifecycle", "onRestoreInstance");
         if (savedInstanceState.containsKey("dashboard"))
             mDashboard = (KanboardDashboard) savedInstanceState.getSerializable("dashboard");
         showDashboard();
@@ -178,9 +194,12 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     protected void onResume() {
+        Log.d("Lifecycle", "onResume");
         super.onResume();
-        if (mDashboard == null && (progressBarCount <= 0))
+        if (mDashboard == null && (progressBarCount <= 0) && (mode == 0))
             refresh();
+        if (mProject == null && progressBarCount <= 0 && mode == 1)
+            showProject();
     }
 
     @Override
@@ -222,6 +241,7 @@ public class MainActivity extends AppCompatActivity
         int id = item.getItemId();
 
         if (id == R.id.nav_dashboard) {
+            mode = 0;
             showDashboard();
 //        } else if (id == R.id.nav_overdue) {
 //
@@ -233,6 +253,11 @@ public class MainActivity extends AppCompatActivity
         } else if (id == R.id.nav_about) {
             Intent iAboutScreen = new Intent(this, AboutActivity.class);
             startActivity(iAboutScreen);
+        } else {
+            showProgress(true);
+            Log.d("Drawer Menu", String.format("Project %d selected", id));
+            mode = 1;
+            kanboardAPI.KB_getProjectById(id);
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -259,15 +284,60 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void showDashboard() {
+        if (mDashboard == null)
+            return;
+
         try {
             getSupportActionBar().setTitle(getString(R.string.action_dashboard));
         } catch (NullPointerException e) {
-
+            e.printStackTrace();
         }
-        if (mDashboard == null)
-            return;
+
+        if (mProjectPager != null) {
+            mProjectPager.clearAll();
+            mProjectPager = null;
+        }
+
+        mViewPager.removeAllViews();
+        mViewPager.addView(mTitleStrip);
+//        for (int i = mViewPager.getChildCount(); i > 0; i--) {
+//            if (mViewPager.getChildAt(i - 1).getId() != R.id.pager_title_strip)
+//                mViewPager.removeView(mViewPager.getChildAt(i - 1));
+//        }
+        mViewPager.setAdapter(null);
+
         mDashPager = new DashPagerAdapter(getSupportFragmentManager(), mDashboard, this);
         mViewPager.setAdapter(mDashPager);
+        mDashPager.notifyDataSetChanged();
+    }
+
+    private void showProject() {
+        if (mProject == null)
+            return;
+
+        try {
+            getSupportActionBar().setTitle(mProject.Name);
+        } catch (NullPointerException e) {
+            e.printStackTrace();;
+        }
+
+        if (mDashPager != null) {
+            mDashPager.clearAll();
+            mDashPager = null;
+        }
+
+        mViewPager.removeAllViews();
+        mViewPager.addView(mTitleStrip);
+//        for (int i = mViewPager.getChildCount(); i > 0; i--) {
+//            if (mViewPager.getChildAt(i - 1).getId() != R.id.pager_title_strip)
+//                mViewPager.removeView(mViewPager.getChildAt(i - 1));
+//        }
+        mViewPager.setAdapter(null);
+
+        mProjectPager = new ProjectPagerAdapter(getSupportFragmentManager(), mProject);
+        mViewPager.setAdapter(mProjectPager);
+        mProjectPager.notifyDataSetChanged();
+        Log.d("showProject", Integer.toString(mProjectPager.getCount()));
     }
 
     @TargetApi(Build.VERSION_CODES.HONEYCOMB_MR2)
@@ -360,6 +430,10 @@ public class MainActivity extends AppCompatActivity
     //region public methods
     public KanboardDashboard getDashboard() {
         return mDashboard;
+    }
+
+    public KanboardProject getProject() {
+        return mProject;
     }
     //endregion
 

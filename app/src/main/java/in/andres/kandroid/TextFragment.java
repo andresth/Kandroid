@@ -39,8 +39,15 @@ public class TextFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_text, container, false);
-        TextView textView = (TextView) rootView.findViewById(R.id.fragmentTextView);
-        textView.setText(getArguments().getString(TextFragment.ARG_SECTION_NAME));
+//        TextView textView = (TextView) rootView.findViewById(R.id.fragmentTextView);
+//        textView.setText(getArguments().getString(TextFragment.ARG_SECTION_NAME));
         return rootView;
+    }
+
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        TextView textView = (TextView) getView().findViewById(R.id.fragmentTextView);
+        textView.setText(getArguments().getString(TextFragment.ARG_SECTION_NAME));
     }
 }

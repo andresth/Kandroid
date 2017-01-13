@@ -170,6 +170,8 @@ public class KanboardAPI {
                 } catch (MalformedURLException e) {
                     e.printStackTrace();
                 }
+                for (KanbordEvents l: listeners)
+                    l.onGetProjectById(success, res);
                 return;
             }
         }
@@ -217,6 +219,10 @@ public class KanboardAPI {
 
     public void KB_getDashboard() {
         new KanboardAsync().execute(KanboardRequest.KD_getDashboard());
+    }
+
+    public void KB_getProjectById(int projectid) {
+        new KanboardAsync().execute(KanboardRequest.KD_getProjectById(projectid));
     }
 
     // TODO: add API calls
