@@ -2,7 +2,9 @@ package in.andres.kandroid;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.ListFragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,7 +14,7 @@ import android.widget.ExpandableListView;
  * Created by Thomas Andres on 04.01.17.
  */
 
-public class DashProjectsFragment extends ListFragment {
+public class DashProjectsFragment extends Fragment {
 
     public DashProjectsFragment() {}
 
@@ -31,12 +33,14 @@ public class DashProjectsFragment extends ListFragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        Log.d("ProjectsFragment", "onCreateView");
         return inflater.inflate(R.layout.fragment_expandable_list, container, false);
     }
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+        Log.d("ProjectsFragment", "onActivityCreated");
         if (((MainActivity)getActivity()).getDashboard() != null) {
             getView().findViewById(R.id.fragment_dash_errortext).setVisibility(View.GONE);
             getView().findViewById(android.R.id.list).setVisibility(View.VISIBLE);

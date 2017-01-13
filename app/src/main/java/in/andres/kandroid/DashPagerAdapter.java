@@ -5,6 +5,9 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import in.andres.kandroid.kanboard.KanboardDashboard;
 
 /**
@@ -12,26 +15,44 @@ import in.andres.kandroid.kanboard.KanboardDashboard;
  */
 
 public class DashPagerAdapter extends FragmentPagerAdapter {
-    KanboardDashboard mDashboard;
-    Context mContext;
+    private KanboardDashboard mDashboard;
+    private Context mContext;
+    private FragmentManager mFragmentManager;
+    private List<Fragment> fragments;
 
     public DashPagerAdapter(FragmentManager fm, KanboardDashboard dash, Context context) {
         super(fm);
         mDashboard = dash;
         mContext = context;
+        mFragmentManager = fm;
+        fragments = new ArrayList<>();
     }
 
+    public void clearAll() {
+        for (Fragment fragment: fragments)
+            mFragmentManager.beginTransaction().remove(fragment).commit();
+        fragments.clear();
+    }
     @Override
     public Fragment getItem(int position) {
+        Fragment frag;
         switch (position) {
             case 0:
-                return DashProjectsFragment.newInstance();
+                frag = DashProjectsFragment.newInstance();
+                fragments.add(frag);
+                return frag;
             case 1:
-                return DashOverdueFragment.newInstance();
+                frag = DashOverdueFragment.newInstance();
+                fragments.add(frag);
+                return frag;
             case 2:
-                return DashActivitiesFragment.newInstance();
+                frag = DashActivitiesFragment.newInstance();
+                fragments.add(frag);
+                return frag;
         }
-        return TextFragment.newInstance((String) this.getPageTitle(position));
+        frag = TextFragment.newInstance((String) this.getPageTitle(position));
+        fragments.add(frag);
+        return frag;
     }
 
     @Override
@@ -50,5 +71,10 @@ public class DashPagerAdapter extends FragmentPagerAdapter {
                 return mContext.getString(R.string.tab_activity);
         }
         return  null;
+    }
+
+    @Override
+    public int getItemPosition(Object object) {
+        return POSITION_NONE;
     }
 }

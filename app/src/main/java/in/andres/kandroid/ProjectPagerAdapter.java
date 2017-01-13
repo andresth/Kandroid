@@ -4,6 +4,9 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import in.andres.kandroid.kanboard.KanboardProject;
 
 /**
@@ -12,23 +15,45 @@ import in.andres.kandroid.kanboard.KanboardProject;
 
 public class ProjectPagerAdapter extends FragmentPagerAdapter {
     private KanboardProject mProject;
+    private FragmentManager mFragmentManager;
+    private List<Fragment> fragments;
 
     public ProjectPagerAdapter(FragmentManager fm, KanboardProject project) {
         super(fm);
         mProject = project;
+        mFragmentManager = fm;
+        fragments = new ArrayList<>();
+    }
+
+    public void clearAll() {
+        for (Fragment fragment: fragments)
+            mFragmentManager.beginTransaction().remove(fragment).commit();
+        fragments.clear();
     }
 
     @Override
     public Fragment getItem(int position) {
-        if (position == 0)
-            return TextFragment.newInstance(mProject.Description);
-        else if ((position > 0) && (position < this.getCount()))
-            return TextFragment.newInstance(mProject.Columns.get(position).Title);
-        else if (position == this.getCount())
-            return TextFragment.newInstance(Integer.toString(mProject.OverdueTasks.size()));
-        else if (position == this.getCount() + 1)
-            return TextFragment.newInstance(Integer.toString(mProject.InactiveTasks.size()));
-        return TextFragment.newInstance((String) this.getPageTitle(position));
+        Fragment frag;
+        if (position == 0) {
+            frag = TextFragment.newInstance(mProject.Description);
+            fragments.add(frag);
+            return frag;
+        } else if ((position > 0) && (position <= mProject.Columns.size())) {
+            frag = TextFragment.newInstance(mProject.Columns.get(position - 1).Title);
+            fragments.add(frag);
+            return frag;
+        } else if (position == this.getCount() - 2) {
+            frag = TextFragment.newInstance(Integer.toString(mProject.OverdueTasks.size()));
+            fragments.add(frag);
+            return frag;
+        } else if (position == this.getCount() - 1) {
+            frag = TextFragment.newInstance(Integer.toString(mProject.InactiveTasks.size()));
+            fragments.add(frag);
+            return frag;
+        }
+        frag = TextFragment.newInstance((String) this.getPageTitle(position));
+        fragments.add(frag);
+        return frag;
     }
 
     @Override
@@ -41,13 +66,18 @@ public class ProjectPagerAdapter extends FragmentPagerAdapter {
     public CharSequence getPageTitle(int position) {
         if (position == 0) {
             return "Overview";
-        } else if ((position > 0) && (position < this.getCount())) {
+        } else if ((position > 0) && (position <= mProject.Columns.size())) {
             return mProject.Columns.get(position - 1).Title;
-        } else if (position == this.getCount()) {
+        } else if (position == this.getCount() - 2) {
             return "Overdue Tasks";
-        } else if (position == this.getCount() + 1) {
+        } else if (position == this.getCount() -1 ) {
             return "Inactive Tasks";
         }
         return null;
+    }
+
+    @Override
+    public int getItemPosition(Object object) {
+        return POSITION_NONE;
     }
 }
