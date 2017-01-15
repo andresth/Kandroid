@@ -31,6 +31,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Locale;
 
 import in.andres.kandroid.kanboard.KanboardAPI;
 import in.andres.kandroid.kanboard.KanboardColumn;
@@ -38,7 +39,6 @@ import in.andres.kandroid.kanboard.KanboardDashboard;
 import in.andres.kandroid.kanboard.KanboardError;
 import in.andres.kandroid.kanboard.KanboardProject;
 import in.andres.kandroid.kanboard.KanboardProjectInfo;
-import in.andres.kandroid.kanboard.KanboardSwimlane;
 import in.andres.kandroid.kanboard.KanboardUserInfo;
 import in.andres.kandroid.kanboard.KanbordEvents;
 
@@ -367,15 +367,12 @@ public class MainActivity extends AppCompatActivity
 //        mProjectPager.notifyDataSetChanged();
 //        Log.d("showProject", Integer.toString(mProjectPager.getCount()));
         mArrayPager.removeAllFragments();
-        mArrayPager.addFragment(TextFragment.newInstance(mProject.Description), "Overview");
+        mArrayPager.addFragment(ProjectOverviewFragment.newInstance(), getString(R.string.tab_overview));
         for (KanboardColumn column: mProject.Columns) {
-            int taskcount = 0;
-            for (KanboardSwimlane swimlane: mProject.Swimlanes)
-                taskcount += mProject.GroupedActiveTasks.get(column.ID).get(swimlane.ID).size();
             mArrayPager.addFragment(ProjectTasksFragment.newInstance(column), column.Title);
         }
-        mArrayPager.addFragment(TextFragment.newInstance(String.format("%d Overdue Tasks", mProject.OverdueTasks.size())), getString(R.string.tab_overdue_tasks));
-        mArrayPager.addFragment(TextFragment.newInstance(String.format("%d Inactive Tasks", mProject.InactiveTasks.size())), "Inactive Tasks");
+        mArrayPager.addFragment(TextFragment.newInstance(String.format(Locale.getDefault(), "%d Overdue Tasks", mProject.OverdueTasks.size())), getString(R.string.tab_overdue_tasks));
+        mArrayPager.addFragment(TextFragment.newInstance(String.format(Locale.getDefault(), "%d Inactive Tasks", mProject.InactiveTasks.size())), getString(R.string.tab_inactive_tasks));
         mArrayPager.notifyDataSetChanged();
 //        mViewPager.setCurrentItem(0);
     }

@@ -51,6 +51,25 @@
         <item quantity="one">Seit einer Stunde fällig</item>
         <item quantity="other">Seit %d Stunden fällig</item>
     </plurals>
-    <string name="tab_inactive_tasks">Nicht aktive Aufgaben</string>
+    <plurals name="format_nb_active_tasks">
+        <item quantity="one">Eine aktive Aufgabe</item>
+        <item quantity="other">%d aktive Aufgaben</item>
+    </plurals>
+    <plurals name="format_nb_inactive_tasks">
+        <item quantity="one">Eine inaktive Aufgabe</item>
+        <item quantity="other">%d inaktive Aufgaben</item>
+    </plurals>
+    <plurals name="format_nb_overdue_tasks">
+        <item quantity="one">Eine überfällige Aufgabe</item>
+        <item quantity="other">%d überfällige Aufgaben</item>
+    </plurals>
+    <plurals name="format_nb_total_tasks">
+        <item quantity="one">Eine Aufgabe insgesamt</item>
+        <item quantity="other">%d Aufgaben insgesamt</item>
+    </plurals>
+    <string name="tab_inactive_tasks">Inaktive Aufgaben</string>
+    <string name="caption_columns">Spalten:</string>
+    <string name="caption_tasks">Aufgaben:</string>
+    <string name="caption_modify_date">Geändert am:</string>
 
 </resources>
