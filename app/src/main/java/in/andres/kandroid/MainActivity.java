@@ -33,10 +33,12 @@ import java.util.Collections;
 import java.util.List;
 
 import in.andres.kandroid.kanboard.KanboardAPI;
+import in.andres.kandroid.kanboard.KanboardColumn;
 import in.andres.kandroid.kanboard.KanboardDashboard;
 import in.andres.kandroid.kanboard.KanboardError;
 import in.andres.kandroid.kanboard.KanboardProject;
 import in.andres.kandroid.kanboard.KanboardProjectInfo;
+import in.andres.kandroid.kanboard.KanboardSwimlane;
 import in.andres.kandroid.kanboard.KanboardUserInfo;
 import in.andres.kandroid.kanboard.KanbordEvents;
 
@@ -53,6 +55,7 @@ public class MainActivity extends AppCompatActivity
     PagerTitleStrip mTitleStrip;
     DashPagerAdapter mDashPager;
     ProjectPagerAdapter mProjectPager;
+    private ArrayPagerAdapter mArrayPager;
     View mMainView;
     View mProgress;
     int progressBarCount = 0;
@@ -131,6 +134,8 @@ public class MainActivity extends AppCompatActivity
 
         mViewPager = (ViewPager) findViewById(R.id.pager);
         mTitleStrip = (PagerTitleStrip) mViewPager.findViewById(R.id.pager_title_strip);
+        mArrayPager = new ArrayPagerAdapter(getSupportFragmentManager());
+        mViewPager.setAdapter(mArrayPager);
 
         self = this;
 
@@ -162,6 +167,8 @@ public class MainActivity extends AppCompatActivity
         if ((savedInstanceState != null) && savedInstanceState.containsKey("dashboard")) {
             // App was restarted by System, load saved instance
             mDashboard = (KanboardDashboard) savedInstanceState.getSerializable("dashboard");
+        if ((savedInstanceState != null) && savedInstanceState.containsKey("project"))
+            mProject = (KanboardProject) savedInstanceState.getSerializable("project");
         }
     }
 
@@ -170,6 +177,10 @@ public class MainActivity extends AppCompatActivity
         super.onSaveInstanceState(savedInstanceState);
         if (mDashboard != null)
             savedInstanceState.putSerializable("dashboard", mDashboard);
+        if (mProject != null)
+            savedInstanceState.putSerializable("project", mProject);
+
+        savedInstanceState.putInt("mode", mode);
     }
 
     @Override
@@ -177,9 +188,19 @@ public class MainActivity extends AppCompatActivity
         super.onRestoreInstanceState(savedInstanceState);
         // User rotated the screen or something
         Log.d("Lifecycle", "onRestoreInstance");
-        if (savedInstanceState.containsKey("dashboard"))
+        if (savedInstanceState.containsKey("dashboard")) {
             mDashboard = (KanboardDashboard) savedInstanceState.getSerializable("dashboard");
-        showDashboard();
+            populateProjectsMenu();
+        }
+        if (savedInstanceState.containsKey("project"))
+            mProject = (KanboardProject) savedInstanceState.getSerializable("project");
+        mode = savedInstanceState.getInt("mode");
+
+        if (mDashboard != null && (progressBarCount <= 0) && (mode == 0))
+            showDashboard();
+        if (mProject != null && progressBarCount <= 0 && mode == 1)
+            showProject();
+//        showDashboard();
     }
 
     @Override
@@ -196,9 +217,10 @@ public class MainActivity extends AppCompatActivity
     protected void onResume() {
         Log.d("Lifecycle", "onResume");
         super.onResume();
+        createKandoardAPI();
         if (mDashboard == null && (progressBarCount <= 0) && (mode == 0))
             refresh();
-        if (mProject == null && progressBarCount <= 0 && mode == 1)
+        if (mProject != null && progressBarCount <= 0 && mode == 1)
             showProject();
     }
 
@@ -298,17 +320,23 @@ public class MainActivity extends AppCompatActivity
             mProjectPager = null;
         }
 
-        mViewPager.removeAllViews();
-        mViewPager.addView(mTitleStrip);
+//        mViewPager.removeAllViews();
+//        mViewPager.addView(mTitleStrip);
 //        for (int i = mViewPager.getChildCount(); i > 0; i--) {
 //            if (mViewPager.getChildAt(i - 1).getId() != R.id.pager_title_strip)
 //                mViewPager.removeView(mViewPager.getChildAt(i - 1));
 //        }
-        mViewPager.setAdapter(null);
-
-        mDashPager = new DashPagerAdapter(getSupportFragmentManager(), mDashboard, this);
-        mViewPager.setAdapter(mDashPager);
-        mDashPager.notifyDataSetChanged();
+//        mViewPager.setAdapter(null);
+//
+//        mDashPager = new DashPagerAdapter(getSupportFragmentManager(), mDashboard, this);
+//        mViewPager.setAdapter(mDashPager);
+//        mDashPager.notifyDataSetChanged();
+        mArrayPager.removeAllFragments();
+        mArrayPager.addFragment(new DashProjectsFragment(), getString(R.string.tab_projects));
+        mArrayPager.addFragment(new DashOverdueFragment(),getString(R.string.tab_overdue_tasks));
+        mArrayPager.addFragment(new DashActivitiesFragment(), getString(R.string.tab_activity));
+        mArrayPager.notifyDataSetChanged();
+//        mViewPager.setCurrentItem(0);
     }
 
     private void showProject() {
@@ -326,18 +354,30 @@ public class MainActivity extends AppCompatActivity
             mDashPager = null;
         }
 
-        mViewPager.removeAllViews();
-        mViewPager.addView(mTitleStrip);
+//        mViewPager.removeAllViews();
+//        mViewPager.addView(mTitleStrip);
 //        for (int i = mViewPager.getChildCount(); i > 0; i--) {
 //            if (mViewPager.getChildAt(i - 1).getId() != R.id.pager_title_strip)
 //                mViewPager.removeView(mViewPager.getChildAt(i - 1));
 //        }
-        mViewPager.setAdapter(null);
-
-        mProjectPager = new ProjectPagerAdapter(getSupportFragmentManager(), mProject);
-        mViewPager.setAdapter(mProjectPager);
-        mProjectPager.notifyDataSetChanged();
-        Log.d("showProject", Integer.toString(mProjectPager.getCount()));
+//        mViewPager.setAdapter(null);
+//
+//        mProjectPager = new ProjectPagerAdapter(getSupportFragmentManager(), mProject);
+//        mViewPager.setAdapter(mProjectPager);
+//        mProjectPager.notifyDataSetChanged();
+//        Log.d("showProject", Integer.toString(mProjectPager.getCount()));
+        mArrayPager.removeAllFragments();
+        mArrayPager.addFragment(TextFragment.newInstance(mProject.Description), "Overview");
+        for (KanboardColumn column: mProject.Columns) {
+            int taskcount = 0;
+            for (KanboardSwimlane swimlane: mProject.Swimlanes)
+                taskcount += mProject.GroupedActiveTasks.get(column.ID).get(swimlane.ID).size();
+            mArrayPager.addFragment(ProjectTasksFragment.newInstance(column), column.Title);
+        }
+        mArrayPager.addFragment(TextFragment.newInstance(String.format("%d Overdue Tasks", mProject.OverdueTasks.size())), getString(R.string.tab_overdue_tasks));
+        mArrayPager.addFragment(TextFragment.newInstance(String.format("%d Inactive Tasks", mProject.InactiveTasks.size())), "Inactive Tasks");
+        mArrayPager.notifyDataSetChanged();
+//        mViewPager.setCurrentItem(0);
     }
 
     @TargetApi(Build.VERSION_CODES.HONEYCOMB_MR2)

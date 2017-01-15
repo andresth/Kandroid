@@ -3,8 +3,6 @@ package in.andres.kandroid;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.ListFragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -33,22 +31,22 @@ public class DashProjectsFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        Log.d("ProjectsFragment", "onCreateView");
+//        Log.d("ProjectsFragment", "onCreateView");
         return inflater.inflate(R.layout.fragment_expandable_list, container, false);
     }
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        Log.d("ProjectsFragment", "onActivityCreated");
+//        Log.d("ProjectsFragment", "onActivityCreated");
         if (((MainActivity)getActivity()).getDashboard() != null) {
             getView().findViewById(R.id.fragment_dash_errortext).setVisibility(View.GONE);
-            getView().findViewById(android.R.id.list).setVisibility(View.VISIBLE);
+            getView().findViewById(R.id.expandable_list).setVisibility(View.VISIBLE);
             DashProjectsAdapter listAdapter = new DashProjectsAdapter(getActivity(), ((MainActivity)getActivity()).getDashboard());
-            ((ExpandableListView) getView().findViewById(android.R.id.list)).setAdapter(listAdapter);
+            ((ExpandableListView) getView().findViewById(R.id.expandable_list)).setAdapter(listAdapter);
         } else {
             getView().findViewById(R.id.fragment_dash_errortext).setVisibility(View.VISIBLE);
-            getView().findViewById(android.R.id.list).setVisibility(View.GONE);
+            getView().findViewById(R.id.expandable_list).setVisibility(View.GONE);
         }
     }
 }

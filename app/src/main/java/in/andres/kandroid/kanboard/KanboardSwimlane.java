@@ -11,6 +11,7 @@ import java.io.Serializable;
 public class KanboardSwimlane implements Serializable {
     public final int ID;
     public final String Name;
+    public final String Description;
     public final int Position;
     public final int ProjectID;
     public final boolean IsActive;
@@ -18,6 +19,7 @@ public class KanboardSwimlane implements Serializable {
     public KanboardSwimlane(JSONObject swimlane) {
         ID = swimlane.optInt("id");
         Name = swimlane.optString("name");
+        Description = swimlane.optString("description");
         Position = swimlane.optInt("position");
         ProjectID = swimlane.optInt("project_id");
         IsActive = KanboardAPI.StringToBoolean(swimlane.optString("is_active"));

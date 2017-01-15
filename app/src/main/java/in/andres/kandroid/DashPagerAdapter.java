@@ -14,6 +14,8 @@ import in.andres.kandroid.kanboard.KanboardDashboard;
  * Created by Thomas Andres on 03.01.17.
  */
 
+//TODO: Obsolete, remove
+
 public class DashPagerAdapter extends FragmentPagerAdapter {
     private KanboardDashboard mDashboard;
     private Context mContext;
