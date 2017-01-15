@@ -1,21 +1,19 @@
 package in.andres.kandroid;
 
 import android.content.Context;
-import android.text.Html;
-import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Locale;
 
 import in.andres.kandroid.kanboard.KanboardColumn;
 import in.andres.kandroid.kanboard.KanboardDashboard;
 import in.andres.kandroid.kanboard.KanboardProject;
+import in.andres.kandroid.kanboard.KanboardSwimlane;
 import in.andres.kandroid.kanboard.KanboardTask;
 
 ;
@@ -24,60 +22,46 @@ import in.andres.kandroid.kanboard.KanboardTask;
  * Created by Thomas Andres on 06.01.17.
  */
 
-public class DashProjectsAdapter extends BaseExpandableListAdapter {
+public class ProjectTaskAdapter extends BaseExpandableListAdapter {
     private Context mContext;
     private LayoutInflater mInflater;
     private KanboardDashboard mDashboard;
     private KanboardProject mProject;
+    private KanboardColumn mColumn;
 
-    public DashProjectsAdapter(Context context, KanboardDashboard values) {
+    public ProjectTaskAdapter(Context context, KanboardDashboard values) {
         mContext = context;
         mInflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         mDashboard = values;
         mProject = null;
     }
 
-    public DashProjectsAdapter(Context context, KanboardProject values) {
+    public ProjectTaskAdapter(Context context, KanboardProject values, KanboardColumn column) {
         mContext = context;
         mInflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         mDashboard = null;
         mProject = values;
+        mColumn = column;
     }
 
     @Override
     public int getGroupCount() {
-        if (mDashboard != null)
-          return mDashboard.GroupedTasks.size();
-        // TODO: Add Swimlanes
-
-        return 0;
+        return mProject.Swimlanes.size();
     }
 
     @Override
     public int getChildrenCount(int groupPosition) {
-        if (mDashboard != null)
-            return mDashboard.GroupedTasks.get(mDashboard.Projects.get(groupPosition).ID).size();
-        // TODO: Add Swimlanes
-
-        return 0;
+        return mProject.GroupedActiveTasks.get(mColumn.ID).get(mProject.Swimlanes.get(groupPosition).ID).size();
     }
 
     @Override
     public Object getGroup(int groupPosition) {
-        if (mDashboard != null)
-            return mDashboard.Projects.get(groupPosition);
-        // TODO: Add Swimlanes
-
-        return null;
+        return mProject.Swimlanes.get(groupPosition);
     }
 
     @Override
     public Object getChild(int groupPosition, int childPosition) {
-        if (mDashboard != null)
-            return mDashboard.GroupedTasks.get(mDashboard.Projects.get(groupPosition).ID).get(childPosition);
-        // TODO: Add Swimlanes
-
-        return null;
+        return mProject.GroupedActiveTasks.get(mColumn.ID).get(mProject.Swimlanes.get(groupPosition).ID).get(childPosition);
     }
 
     @Override
@@ -97,7 +81,7 @@ public class DashProjectsAdapter extends BaseExpandableListAdapter {
 
     @Override
     public View getGroupView(int groupPosition, boolean isExpanded, View convertView, ViewGroup parent) {
-        KanboardProject proj = (KanboardProject) getGroup(groupPosition);
+        KanboardSwimlane swimlane = (KanboardSwimlane) getGroup(groupPosition);
 
         if (convertView == null)
             convertView = mInflater.inflate(R.layout.listitem_dash_project_header, null);
@@ -106,16 +90,22 @@ public class DashProjectsAdapter extends BaseExpandableListAdapter {
         TextView projectDescription = (TextView) convertView.findViewById(R.id.project_description);
         TextView projectColumns = (TextView) convertView.findViewById(R.id.project_columns);
         TextView projectNbTasks = (TextView) convertView.findViewById(R.id.project_nb_own_tasks);
+        TextView sidebar = (TextView) convertView.findViewById(R.id.sidebar);
 
-        projectName.setText(proj.Name);
-        if ((proj.Description == null) || proj.Description.contentEquals(""))
-            projectDescription.setVisibility(View.GONE);
-        projectDescription.setText(proj.Description);
-        List<String> columns = new ArrayList<>();
-        for (KanboardColumn c: proj.Columns)
-            columns.add(String.format("<big><b>%1s</b></big> %2s", c.NumberTasks, c.Title));
-        projectColumns.setText(Html.fromHtml(TextUtils.join(" <big><b>|</b></big> ", columns)));
-        projectNbTasks.setText(String.format(Locale.getDefault(), mContext.getString(R.string.format_nb_tasks), getChildrenCount(groupPosition)));
+        projectName.setText(swimlane.Name);
+        projectNbTasks.setText(String.format(Locale.getDefault(), mContext.getString(R.string.format_nb_tasks),
+                mProject.GroupedActiveTasks.get(mColumn.ID).get(swimlane.ID).size()));
+        RelativeLayout.LayoutParams lp = (RelativeLayout.LayoutParams) sidebar.getLayoutParams();
+        lp.removeRule(RelativeLayout.ALIGN_BOTTOM);
+//        if (!swimlane.Description.contentEquals("") && swimlane.Description != null) {
+            projectDescription.setText(swimlane.Description);
+            lp.addRule(RelativeLayout.ALIGN_BOTTOM, projectDescription.getId());
+//        } else {
+//            projectDescription.setVisibility(View.GONE);
+//            lp.addRule(RelativeLayout.ALIGN_BOTTOM, projectName.getId());
+//        }
+        sidebar.setLayoutParams(lp);
+        projectColumns.setVisibility(View.GONE);
 
         return convertView;
     }

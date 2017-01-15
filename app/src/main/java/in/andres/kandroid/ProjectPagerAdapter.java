@@ -13,6 +13,8 @@ import in.andres.kandroid.kanboard.KanboardProject;
  * Created by thomas on 11.01.17.
  */
 
+//TODO: Obsolete, remove
+
 public class ProjectPagerAdapter extends FragmentPagerAdapter {
     private KanboardProject mProject;
     private FragmentManager mFragmentManager;
