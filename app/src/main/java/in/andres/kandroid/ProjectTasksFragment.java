@@ -62,4 +62,12 @@ public class ProjectTasksFragment extends Fragment {
         super.onViewStateRestored(savedInstanceState);
 //        mColumn = (KanboardColumn) savedInstanceState.getSerializable("column");
     }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        ExpandableListView lv = (ExpandableListView) getView().findViewById(R.id.expandable_list);
+        for (int i = 0; i < lv.getExpandableListAdapter().getGroupCount(); i++)
+            lv.expandGroup(i);
+    }
 }
