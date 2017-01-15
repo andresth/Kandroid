@@ -11,7 +11,6 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 
 import in.andres.kandroid.kanboard.KanboardColumn;
 import in.andres.kandroid.kanboard.KanboardDashboard;
@@ -115,7 +114,7 @@ public class DashProjectsAdapter extends BaseExpandableListAdapter {
         for (KanboardColumn c: proj.Columns)
             columns.add(String.format("<big><b>%1s</b></big> %2s", c.NumberTasks, c.Title));
         projectColumns.setText(Html.fromHtml(TextUtils.join(" <big><b>|</b></big> ", columns)));
-        projectNbTasks.setText(String.format(Locale.getDefault(), mContext.getString(R.string.format_nb_tasks), getChildrenCount(groupPosition)));
+        projectNbTasks.setText(mContext.getResources().getQuantityString(R.plurals.format_nb_tasks, getChildrenCount(groupPosition), getChildrenCount(groupPosition)));
 
         return convertView;
     }

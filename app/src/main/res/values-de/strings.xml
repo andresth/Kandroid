@@ -31,10 +31,26 @@
     <string name="tab_activity">Aktivitäten</string>
     <string name="tab_overdue_tasks">Überfällige Aufgaben</string>
     <string name="error_no_list_data">Keine Daten verfügbar!\nBitte Aktualisieren drücken.</string>
-    <string name="format_nb_tasks">%d Aufgabe(n)</string>
     <string name="error_server_url">Konnte Server nicht kontaktieren</string>
     <string name="error_host_unknown">Unbekanter Host</string>
     <string name="error_incorrect_username">Der Bentzername ist ungültig</string>
-    <string name="format_overdue_days">Seit %d Tagen fällig</string>
-    <string name="format_overdue_hours">Seit %d Stunden fällig</string>
+    <string name="tab_overview">Übersicht</string>
+    <string name="caption_description">Beschreibung:</string>
+    <string name="caption_name">Name:</string>
+
+
+    <plurals name="format_nb_tasks">
+        <item quantity="one">%d Aufgabe</item>
+        <item quantity="other">%d Aufgaben</item>
+    </plurals>
+    <plurals name="format_overdue_days">
+        <item quantity="one">Seit einem Tag fällig</item>
+        <item quantity="other">Seit %d Tagen fällig</item>
+    </plurals>
+    <plurals name="format_overdue_hours">
+        <item quantity="one">Seit einer Stunde fällig</item>
+        <item quantity="other">Seit %d Stunden fällig</item>
+    </plurals>
+    <string name="tab_inactive_tasks">Nicht aktive Aufgaben</string>
+
 </resources>

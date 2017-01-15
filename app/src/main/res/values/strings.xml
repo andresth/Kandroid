@@ -37,11 +37,25 @@
     <string name="tab_projects">My Projects &amp; Tasks</string>
     <string name="tab_overdue_tasks">Overdue Tasks</string>
     <string name="tab_activity">Activities</string>
+    <string name="tab_overview">Overview</string>
+    <string name="tab_inactive_tasks">Inactive Tasks</string>
+
+    <string name="caption_name">Name:</string>
+    <string name="caption_description">Description:</string>
 
     <string name="error_no_list_data">No data available!\nPlease hit refresh.</string>
 
-    <string name="format_nb_tasks">%d Task(s)</string>
-    <string name="format_overdue_days">%d days overdue</string>
-    <string name="format_overdue_hours">%d hours overdue</string>
+    <plurals name="format_nb_tasks">
+        <item quantity="one">%d Task</item>
+        <item quantity="other">%d Tasks</item>
+    </plurals>
+    <plurals name="format_overdue_days">
+        <item quantity="one">%d day overdue</item>
+        <item quantity="other">%d days overdue</item>
+    </plurals>
+    <plurals name="format_overdue_hours">
+        <item quantity="one">%d hour overdue</item>
+        <item quantity="other">%d hours overdue</item>
+    </plurals>
 
 </resources>
