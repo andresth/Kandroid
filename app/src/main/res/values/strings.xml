@@ -42,6 +42,9 @@
 
     <string name="caption_name">Name:</string>
     <string name="caption_description">Description:</string>
+    <string name="caption_tasks">Tasks:</string>
+    <string name="caption_columns">Columns:</string>
+    <string name="caption_modify_date">Last modified:</string>
 
     <string name="error_no_list_data">No data available!\nPlease hit refresh.</string>
 
@@ -56,6 +59,22 @@
     <plurals name="format_overdue_hours">
         <item quantity="one">%d hour overdue</item>
         <item quantity="other">%d hours overdue</item>
+    </plurals>
+    <plurals name="format_nb_active_tasks">
+        <item quantity="one">%d active task</item>
+        <item quantity="other">%d active tasks</item>
+    </plurals>
+    <plurals name="format_nb_inactive_tasks">
+        <item quantity="one">%d inactive task</item>
+        <item quantity="other">%d inactive tasks</item>
+    </plurals>
+    <plurals name="format_nb_overdue_tasks">
+        <item quantity="one">%d overdue task</item>
+        <item quantity="other">%d overdue tasks</item>
+    </plurals>
+    <plurals name="format_nb_total_tasks">
+        <item quantity="one">%d task total</item>
+        <item quantity="other">%d tasks total</item>
     </plurals>
 
 </resources>
