@@ -8,8 +8,6 @@ import android.widget.BaseExpandableListAdapter;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import java.util.Locale;
-
 import in.andres.kandroid.kanboard.KanboardColumn;
 import in.andres.kandroid.kanboard.KanboardDashboard;
 import in.andres.kandroid.kanboard.KanboardProject;
@@ -93,8 +91,8 @@ public class ProjectTaskAdapter extends BaseExpandableListAdapter {
         TextView sidebar = (TextView) convertView.findViewById(R.id.sidebar);
 
         projectName.setText(swimlane.Name);
-        projectNbTasks.setText(String.format(Locale.getDefault(), mContext.getString(R.string.format_nb_tasks),
-                mProject.GroupedActiveTasks.get(mColumn.ID).get(swimlane.ID).size()));
+        int taskCount = mProject.GroupedActiveTasks.get(mColumn.ID).get(swimlane.ID).size();
+        projectNbTasks.setText(mContext.getResources().getQuantityString(R.plurals.format_nb_tasks, taskCount, taskCount));
         RelativeLayout.LayoutParams lp = (RelativeLayout.LayoutParams) sidebar.getLayoutParams();
         lp.removeRule(RelativeLayout.ALIGN_BOTTOM);
 //        if (!swimlane.Description.contentEquals("") && swimlane.Description != null) {

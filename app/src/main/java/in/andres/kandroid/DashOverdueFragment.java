@@ -13,7 +13,6 @@ import android.widget.TextView;
 
 import java.util.Date;
 import java.util.List;
-import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 
 import in.andres.kandroid.kanboard.KanboardTask;
@@ -68,9 +67,9 @@ public class DashOverdueFragment extends ListFragment {
             long days = TimeUnit.MILLISECONDS.toDays(overdue);
 
             if (days == 0)
-                textOverdue.setText(Html.fromHtml(String.format(Locale.getDefault(), getString(R.string.format_overdue_hours), hours)));
+                textOverdue.setText(Html.fromHtml(mContext.getResources().getQuantityString(R.plurals.format_overdue_hours, (int) hours, hours)));
             else
-                textOverdue.setText(Html.fromHtml(String.format(Locale.getDefault(), getString(R.string.format_overdue_days), days)));
+                textOverdue.setText(Html.fromHtml(mContext.getResources().getQuantityString(R.plurals.format_overdue_days, (int) days, days)));
 
             return convertView;
         }
