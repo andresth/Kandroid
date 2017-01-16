@@ -44,7 +44,10 @@ public class KanboardProject implements Comparable<KanboardProject>, Serializabl
     public final List<KanboardTask> ActiveTasks;
     public final Dictionary<Integer, Dictionary<Integer, List<KanboardTask>>> GroupedActiveTasks;
     public final List<KanboardTask> InactiveTasks;
+    public final Dictionary<Integer, List<KanboardTask>> GroupedInactiveTasks;
     public final List<KanboardTask> OverdueTasks;
+    public final Dictionary<Integer, List<KanboardTask>> GroupedOverdueTasks;
+    public final Dictionary<Integer, KanboardTask> TaskHashtable;
     // TODO: add priority values to project details
     // TODO: getProjectById might have additional properties!
 
@@ -94,6 +97,9 @@ public class KanboardProject implements Comparable<KanboardProject>, Serializabl
         }
 
         GroupedActiveTasks = new Hashtable<Integer, Dictionary<Integer, List<KanboardTask>>>();
+        GroupedInactiveTasks = new Hashtable<>();
+        GroupedOverdueTasks = new Hashtable<>();
+        TaskHashtable = new Hashtable<>();
 
         Columns = new ArrayList<>();
         JSONArray cols = project.optJSONArray("columns");
@@ -116,6 +122,9 @@ public class KanboardProject implements Comparable<KanboardProject>, Serializabl
                 Swimlanes.add(tmpSwim);
                 for (KanboardColumn c: Columns) {
                     GroupedActiveTasks.get(c.ID).put(tmpSwim.ID, new ArrayList<KanboardTask>());
+
+                GroupedInactiveTasks.put(tmpSwim.ID, new ArrayList<KanboardTask>());
+                GroupedOverdueTasks.put(tmpSwim.ID, new ArrayList<KanboardTask>());
                 }
             }
         }
@@ -130,19 +139,27 @@ public class KanboardProject implements Comparable<KanboardProject>, Serializabl
         if (activetasks != null)
             for (int i = 0; i < activetasks.length(); i++) {
                 KanboardTask tmpActiveTask = new KanboardTask(activetasks.optJSONObject(i));
+                TaskHashtable.put(tmpActiveTask.ID, tmpActiveTask);
                 ActiveTasks.add(tmpActiveTask);
                 GroupedActiveTasks.get(tmpActiveTask.ColumnID).get(tmpActiveTask.SwimlaneID).add(tmpActiveTask);
             }
 
         InactiveTasks = new ArrayList<>();
         if (inactivetasks != null)
-            for (int i = 0; i < inactivetasks.length(); i++)
-                InactiveTasks.add(new KanboardTask(inactivetasks.optJSONObject(i)));
+            for (int i = 0; i < inactivetasks.length(); i++) {
+                KanboardTask tmpInactiveTask = new KanboardTask(inactivetasks.optJSONObject(i));
+                TaskHashtable.put(tmpInactiveTask.ID, tmpInactiveTask);
+                InactiveTasks.add(tmpInactiveTask);
+                GroupedInactiveTasks.get(tmpInactiveTask.SwimlaneID).add(tmpInactiveTask);
+            }
 
         OverdueTasks = new ArrayList<>();
         if (overduetasks != null)
-            for (int i = 0; i < overduetasks.length(); i++)
-                OverdueTasks.add(new KanboardTask(overduetasks.optJSONObject(i)));
+            for (int i = 0; i < overduetasks.length(); i++) {
+                KanboardTask tmpOverdueTask = new KanboardTask(overduetasks.optJSONObject(i));
+                OverdueTasks.add(TaskHashtable.get(tmpOverdueTask.ID));
+                GroupedOverdueTasks.get(TaskHashtable.get(tmpOverdueTask.ID).SwimlaneID).add(TaskHashtable.get(tmpOverdueTask.ID));
+            }
     }
 
     @Override
