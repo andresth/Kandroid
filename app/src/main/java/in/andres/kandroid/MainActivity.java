@@ -31,7 +31,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Locale;
 
 import in.andres.kandroid.kanboard.KanboardAPI;
 import in.andres.kandroid.kanboard.KanboardColumn;
@@ -371,8 +370,8 @@ public class MainActivity extends AppCompatActivity
         for (KanboardColumn column: mProject.Columns) {
             mArrayPager.addFragment(ProjectTasksFragment.newInstance(column), column.Title);
         }
-        mArrayPager.addFragment(TextFragment.newInstance(String.format(Locale.getDefault(), "%d Overdue Tasks", mProject.OverdueTasks.size())), getString(R.string.tab_overdue_tasks));
-        mArrayPager.addFragment(TextFragment.newInstance(String.format(Locale.getDefault(), "%d Inactive Tasks", mProject.InactiveTasks.size())), getString(R.string.tab_inactive_tasks));
+        mArrayPager.addFragment(ProjectOverdueTasksFragment.newInstance(), getString(R.string.tab_overdue_tasks));
+        mArrayPager.addFragment(ProjectInactiveTasksFragment.newInstance(), getString(R.string.tab_inactive_tasks));
         mArrayPager.notifyDataSetChanged();
 //        mViewPager.setCurrentItem(0);
     }
