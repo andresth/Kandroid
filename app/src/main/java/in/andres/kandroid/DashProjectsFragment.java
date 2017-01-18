@@ -1,5 +1,6 @@
 package in.andres.kandroid;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -7,6 +8,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ExpandableListView;
+
+import in.andres.kandroid.kanboard.KanboardDashboard;
+import in.andres.kandroid.kanboard.KanboardTask;
 
 /**
  * Created by Thomas Andres on 04.01.17.
@@ -44,6 +48,17 @@ public class DashProjectsFragment extends Fragment {
             getView().findViewById(R.id.expandable_list).setVisibility(View.VISIBLE);
             DashProjectsAdapter listAdapter = new DashProjectsAdapter(getActivity(), ((MainActivity)getActivity()).getDashboard());
             ((ExpandableListView) getView().findViewById(R.id.expandable_list)).setAdapter(listAdapter);
+            ((ExpandableListView) getView().findViewById(R.id.expandable_list)).setOnChildClickListener(new ExpandableListView.OnChildClickListener() {
+                @Override
+                public boolean onChildClick(ExpandableListView parent, View v, int groupPosition, int childPosition, long id) {
+                    KanboardDashboard dashboard = ((MainActivity)getActivity()).getDashboard();
+                    KanboardTask clickedTask = dashboard.GroupedTasks.get(dashboard.Projects.get(groupPosition).ID).get(childPosition);
+                    Intent taskIntent = new Intent(getContext(), TaskDetailActivity.class);
+                    taskIntent.putExtra("task", clickedTask);
+                    startActivity(taskIntent);
+                    return true;
+                }
+            });
         } else {
             getView().findViewById(R.id.fragment_dash_errortext).setVisibility(View.VISIBLE);
             getView().findViewById(R.id.expandable_list).setVisibility(View.GONE);

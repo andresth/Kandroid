@@ -1,6 +1,7 @@
 package in.andres.kandroid;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ListFragment;
@@ -9,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import java.util.Date;
@@ -38,9 +40,19 @@ public class DashOverdueFragment extends ListFragment {
         }
     }
 
+    @Override
+    public void onListItemClick(ListView l, View v, int position, long id) {
+        super.onListItemClick(l, v, position, id);
+        KanboardTask clickedTask = ((MainActivity)getActivity()).getDashboard().OverdueTasks.get(position);
+        Intent taskIntent = new Intent(getContext(), TaskDetailActivity.class);
+        taskIntent.putExtra("task", clickedTask);
+        startActivity(taskIntent);
+    }
+
     class DashOverdueAdapter extends ArrayAdapter<KanboardTask> {
         private Context mContext;
         private LayoutInflater mInflater;
+
         private List<KanboardTask> mValues;
 
         DashOverdueAdapter(Context context, List<KanboardTask> values) {
@@ -49,7 +61,6 @@ public class DashOverdueFragment extends ListFragment {
             mInflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             mValues = values;
         }
-
         @NonNull
         @Override
         public View getView(int position, View convertView, @NonNull ViewGroup parent) {
