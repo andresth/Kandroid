@@ -3,12 +3,12 @@
     package="in.andres.kandroid">
 
     <!-- To auto-complete the email text field in the login form with the user's emails -->
-    <!--<uses-permission android:name="android.permission.GET_ACCOUNTS" />-->
-    <!--<uses-permission android:name="android.permission.READ_PROFILE" />-->
-    <!--<uses-permission android:name="android.permission.READ_CONTACTS" />-->
+    <!-- <uses-permission android:name="android.permission.GET_ACCOUNTS" /> -->
+    <!-- <uses-permission android:name="android.permission.READ_PROFILE" /> -->
+    <!-- <uses-permission android:name="android.permission.READ_CONTACTS" /> -->
     <uses-permission android:name="android.permission.INTERNET" />
-    <!--<uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />-->
 
+    <!-- <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" /> -->
     <application
         android:allowBackup="true"
         android:icon="@drawable/launcher"
@@ -21,28 +21,27 @@
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
         <activity
             android:name=".LoginActivity"
             android:label="@string/title_activity_login"
             android:parentActivityName=".MainActivity">
             <intent-filter>
                 <action android:name="in.andres.kandroid.LoginActivity" />
+
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
+
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="in.andres.kandroid.SettingsActivity" />
         </activity>
-
         <activity
             android:name=".AboutActivity"
-            android:label="@string/title_activity_about">
-        </activity>
-
+            android:label="@string/title_activity_about"></activity>
         <activity
             android:name=".SettingsActivity"
             android:label="@string/title_activity_settings">
@@ -50,6 +49,7 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="in.andres.kandroid.MainActivity" />
         </activity>
+        <activity android:name=".TaskDetailActivity"></activity>
     </application>
 
 </manifest>
