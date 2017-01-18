@@ -48,6 +48,7 @@ public class KanboardProject implements Comparable<KanboardProject>, Serializabl
     public final List<KanboardTask> OverdueTasks;
     public final Dictionary<Integer, List<KanboardTask>> GroupedOverdueTasks;
     public final Dictionary<Integer, KanboardTask> TaskHashtable;
+    public final Dictionary<Integer, KanboardCategory> CategoryHashtable;
     // TODO: add priority values to project details
     // TODO: getProjectById might have additional properties!
 
@@ -100,6 +101,7 @@ public class KanboardProject implements Comparable<KanboardProject>, Serializabl
         GroupedInactiveTasks = new Hashtable<>();
         GroupedOverdueTasks = new Hashtable<>();
         TaskHashtable = new Hashtable<>();
+        CategoryHashtable = new Hashtable<>();
 
         Columns = new ArrayList<>();
         JSONArray cols = project.optJSONArray("columns");
@@ -131,8 +133,11 @@ public class KanboardProject implements Comparable<KanboardProject>, Serializabl
 
         Categories = new ArrayList<>();
         if (categories != null) {
-            for (int i = 0; i < categories.length(); i++)
-                Categories.add(new KanboardCategory(categories.optJSONObject(i)));
+            for (int i = 0; i < categories.length(); i++) {
+                KanboardCategory tmpCategory = new KanboardCategory(categories.optJSONObject(i));
+                Categories.add(tmpCategory);
+                CategoryHashtable.put(tmpCategory.ID, tmpCategory);
+            }
         }
 
         ActiveTasks = new ArrayList<>();
