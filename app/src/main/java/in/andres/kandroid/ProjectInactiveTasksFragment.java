@@ -1,6 +1,7 @@
 package in.andres.kandroid;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -47,6 +48,17 @@ public class ProjectInactiveTasksFragment extends Fragment {
             ((ExpandableListView) getView().findViewById(R.id.expandable_list)).setAdapter(listAdapter);
             for (int i = 0; i < listAdapter.getGroupCount(); i++)
                 ((ExpandableListView) getView().findViewById(R.id.expandable_list)).expandGroup(i);
+            ((ExpandableListView) getView().findViewById(R.id.expandable_list)).setOnChildClickListener(new ExpandableListView.OnChildClickListener() {
+                @Override
+                public boolean onChildClick(ExpandableListView parent, View v, int groupPosition, int childPosition, long id) {
+                    KanboardProject project = ((MainActivity) getActivity()).getProject();
+                    KanboardTask clickedTask = project.GroupedInactiveTasks.get(project.Swimlanes.get(groupPosition).ID).get(childPosition);
+                    Intent taskIntent = new Intent(getContext(), TaskDetailActivity.class);
+                    taskIntent.putExtra("task", clickedTask);
+                    startActivity(taskIntent);
+                    return true;
+                }
+            });
         } else {
             getView().findViewById(R.id.fragment_dash_errortext).setVisibility(View.VISIBLE);
             getView().findViewById(R.id.expandable_list).setVisibility(View.GONE);
