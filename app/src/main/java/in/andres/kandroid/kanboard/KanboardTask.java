@@ -18,7 +18,9 @@ public class KanboardTask implements Comparable<KanboardTask>, Serializable {
     public final int SwimlaneID;
     public final int CategoryID;
     public final int CreatorID;
+    public final int OwnerID;
     public final int Priority;
+    public final int Position;
     public final boolean IsActive;
     public final String Title;
     public final String Description;
@@ -29,7 +31,11 @@ public class KanboardTask implements Comparable<KanboardTask>, Serializable {
     public final String ProjectName;
     public final String ColumnTitle;
     public final Date DueDate;
+    public final Date CompletedDate;
+    public final Date StartedDate;
     public final Date CreationDate;
+    public final Date ModificationDate;
+    public final Date MovedDate;
     // TODO: getTaskByID has additional properties
     // TODO: add color
 
@@ -40,7 +46,9 @@ public class KanboardTask implements Comparable<KanboardTask>, Serializable {
         SwimlaneID = json.optInt("swimlane_id", -1);
         CategoryID = json.optInt("category_id", -1);
         CreatorID = json.optInt("creator_id", -1);
+        OwnerID = json.optInt("owner_id", -1);
         Priority = json.optInt("priority", -1);
+        Position = json.optInt("position", -1);
         IsActive = KanboardAPI.StringToBoolean(json.optString("is_active"));
         Title = json.optString("title");
         Description = json.optString("description");
@@ -59,11 +67,32 @@ public class KanboardTask implements Comparable<KanboardTask>, Serializable {
             DueDate = new Date(tmpTime * 1000);
         else
             DueDate = null;
-        tmpTime = json.optLong("creation_date");
+        tmpTime = json.optLong("date_completed");
+        if (tmpTime > 0)
+            CompletedDate = new Date(tmpTime * 1000);
+        else
+            CompletedDate = null;
+        tmpTime = json.optLong("date_started");
+        if (tmpTime > 0)
+            StartedDate = new Date(tmpTime * 1000);
+        else
+            StartedDate = null;
+        tmpTime = json.optLong("date_creation");
         if (tmpTime > 0)
             CreationDate = new Date(tmpTime * 1000);
         else
             CreationDate = null;
+        tmpTime = json.optLong("date_modification");
+        if (tmpTime > 0)
+            ModificationDate = new Date(tmpTime * 1000);
+        else
+            ModificationDate = null;
+        tmpTime = json.optLong("date_moved");
+        if (tmpTime > 0)
+            MovedDate = new Date(tmpTime * 1000);
+        else
+            MovedDate = null;
+
     }
 
     @Override
