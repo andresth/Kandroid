@@ -1,6 +1,7 @@
 package in.andres.kandroid.kanboard;
 
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 
 public class KanboardRequest {
     public final String Command;
@@ -47,6 +48,19 @@ public class KanboardRequest {
                 "    \"params\": {\n" +
                 "        \"project_id\": %d\n" +
                 "    }\n" +
+                "}", projectid)});
+    }
+
+    @Nullable
+    public static KanboardRequest getProjectUsers(int projectid) {
+        return new KanboardRequest("getProjectUsers", new String[] {String.format(
+                "{\n" +
+                "    \"jsonrpc\": \"2.0\",\n" +
+                "    \"method\": \"getProjectUsers\",\n" +
+                "    \"id\": 1601016721,\n" +
+                "    \"params\": [\n" +
+                "        \"%d\"\n" +
+                "    ]\n" +
                 "}", projectid)});
     }
 
