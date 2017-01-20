@@ -2,7 +2,9 @@ package in.andres.kandroid.kanboard;
 
 
 import android.os.AsyncTask;
+import android.support.annotation.NonNull;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -139,6 +141,24 @@ public class KanboardAPI {
                 return;
             }
 
+            if (s.Request.Command.equalsIgnoreCase("getAllComments")) {
+                List<KanboardComment> res = null;
+                try {
+                    if (s.Result[0].has("result")) {
+                        success = true;
+                        res = new ArrayList<>();
+                        JSONArray jsa = s.Result[0].getJSONArray("result");
+                        for (int i = 0; i < jsa.length(); i++)
+                            res.add(new KanboardComment(jsa.getJSONObject(i)));
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                for (OnGetAllCommentsListener l: onGetAllCommentsListeners)
+                    l.onGetAllComments(success, res);
+                return;
+            }
+
             if (s.Request.Command.equalsIgnoreCase("KD_getDashboard")) {
                 KanboardDashboard res = null;
                 try {
@@ -179,6 +199,7 @@ public class KanboardAPI {
 
     private URL kanboardURL;
     private HashSet<KanbordEvents> listeners = new HashSet<>();
+    private HashSet<OnGetAllCommentsListener> onGetAllCommentsListeners = new HashSet<>();
 
     public KanboardAPI(String serverURL, final String username, final String password) throws MalformedURLException, IOException {
         Authenticator.setDefault(new Authenticator() {
@@ -197,12 +218,20 @@ public class KanboardAPI {
         kanboardURL = new URL(tmpURL);
     }
 
-    public void addListener(KanbordEvents listener) {
+    public void addListener(@NonNull KanbordEvents listener) {
         listeners.add(listener);
     }
 
-    public void removeListener(KanbordEvents listener) {
+    public void removeListener(@NonNull KanbordEvents listener) {
         listeners.remove(listener);
+    }
+
+    public void addOnGetAllCommentsListener(@NonNull OnGetAllCommentsListener listener) {
+        onGetAllCommentsListeners.add(listener);
+    }
+
+    public void removeOnGetAllCommentsListener(@NonNull OnGetAllCommentsListener listener) {
+        onGetAllCommentsListeners.remove(listener);
     }
 
     public void getMe() {
