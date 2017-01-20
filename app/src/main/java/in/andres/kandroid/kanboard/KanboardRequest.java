@@ -91,6 +91,19 @@ public class KanboardRequest {
     }
 
     @NonNull
+    public static KanboardRequest getSwimlane(int swimlaneid) {
+        return new KanboardRequest("getSwimlane", new String[] {String.format(
+                "{\n" +
+                "    \"jsonrpc\": \"2.0\",\n" +
+                "    \"method\": \"getSwimlane\",\n" +
+                "    \"id\": 131071870,\n" +
+                "    \"params\": [\n" +
+                "        %d\n" +
+                "    ]\n" +
+                "}", swimlaneid)});
+    }
+
+    @NonNull
     public static KanboardRequest getColumns(int projectid) {
         return new KanboardRequest("getColumns", new String[] {String.format(
                 "{\n" +
