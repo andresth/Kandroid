@@ -102,6 +102,18 @@ public class KanboardRequest {
                 "    }\n" +
                 "}", projectid)});
     }
+    
+    public static KanboardRequest getAllComments(int projectid) {
+        return new KanboardRequest("getAllComments", new String[] {String.format(
+                "{\n" +
+                "    \"jsonrpc\": \"2.0\",\n" +
+                "    \"method\": \"getAllComments\",\n" +
+                "    \"id\": 1,\n" +
+                "    \"params\": {\n" +
+                "        \"task_id\": %d\n" +
+                "    }\n" +
+                "}", projectid)});
+    }
     //endregion
 
     //region Custom API
