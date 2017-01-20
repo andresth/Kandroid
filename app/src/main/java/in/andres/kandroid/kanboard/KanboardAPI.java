@@ -156,6 +156,21 @@ public class KanboardAPI {
                 return;
             }
 
+            if (s.Request.Command.equalsIgnoreCase("getSwimlane")) {
+                KanboardSwimlane res = null;
+                try {
+                    if (s.Result[0].has("result")) {
+                        success = true;
+                        res = new KanboardSwimlane(s.Result[0].getJSONObject("result"));
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                for (OnGetSwimlaneListener l: onGetSwimlaneListeners)
+                    l.onGetSwimlane(success, res);
+                return;
+            }
+
             if (s.Request.Command.equalsIgnoreCase("getAllComments")) {
                 List<KanboardComment> res = null;
                 try {
@@ -216,6 +231,7 @@ public class KanboardAPI {
     private HashSet<KanbordEvents> listeners = new HashSet<>();
     private HashSet<OnGetAllCommentsListener> onGetAllCommentsListeners = new HashSet<>();
     private HashSet<OnGetTaskListener> onGetTaskListeners = new HashSet<>();
+    private HashSet<OnGetSwimlaneListener> onGetSwimlaneListeners = new HashSet<>();
 
     public KanboardAPI(String serverURL, final String username, final String password) throws MalformedURLException, IOException {
         Authenticator.setDefault(new Authenticator() {
@@ -250,6 +266,14 @@ public class KanboardAPI {
         onGetAllCommentsListeners.remove(listener);
     }
 
+    public void addOnGetSwimlaneListener(@NonNull OnGetSwimlaneListener listener) {
+        onGetSwimlaneListeners.add(listener);
+    }
+
+    public void removeOnGetSwimlaneListener(@NonNull OnGetSwimlaneListener listener) {
+        onGetSwimlaneListeners.remove(listener);
+    }
+
     public void addOnGetTaskListener(@NonNull OnGetTaskListener listener) {
         onGetTaskListeners.add(listener);
     }
@@ -276,6 +300,10 @@ public class KanboardAPI {
 
     public void getAllComments(int taskid) {
         new KanboardAsync().execute(KanboardRequest.getAllComments(taskid));
+    }
+
+    public void getSwimlane(int swimlaneid) {
+        new KanboardAsync().execute(KanboardRequest.getSwimlane(swimlaneid));
     }
 
     public void KB_getDashboard() {
