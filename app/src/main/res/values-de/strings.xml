@@ -72,4 +72,25 @@
     <string name="caption_tasks">Aufgaben:</string>
     <string name="caption_modify_date">Geändert am:</string>
 
+    <!--TaskActivity-->
+    <string name="taskview_category"><![CDATA[<b>Kategorie:</b> %s]]></string>
+    <string name="taskview_status"><![CDATA[<b>Status:</b> %s]]></string>
+    <string name="taskview_status_open">offen</string>
+    <string name="taskview_status_closed">geschlossen</string>
+    <string name="taskview_swimlane"><![CDATA[<b>Swimlane:</b> %s]]></string>
+    <string name="taskview_position"><![CDATA[<b>Position:</b> %d]]></string>
+    <string name="taskview_priority"><![CDATA[<b>Priorität:</b> %d]]></string>
+    <string name="taskview_owner"><![CDATA[<b>Zuständig:</b> %s]]></string>
+    <string name="taskview_creator"><![CDATA[<b>Ersteller:</b> %s]]></string>
+    <string name="taskview_date_created"><![CDATA[<b>Erstellt:</b><br />%tF]]></string>
+    <string name="taskview_date_modified"><![CDATA[<b>Geändert:</b><br />%tF]]></string>
+    <string name="taskview_date_moved"><![CDATA[<b>Verschoben:</b><br />%tF]]></string>
+    <string name="taskview_hours_estimated"><![CDATA[<b>Stunden geplant:</b> %.2fh]]></string>
+    <string name="taskview_hours_spent"><![CDATA[<b>Stunden gebarucht:</b> %.2fh]]></string>
+    <string name="taskview_date_start"><![CDATA[<b>Start:</b> %tF]]></string>
+    <string name="taskview_date_due"><![CDATA[<b>Fällig:</b> %tF]]></string>
+    <string name="taskview_caption_information"><big><b><u>Informationen</u></b></big></string>
+    <string name="taskview_caption_timetracking"><big><b><u>Zeiterfassung</u></b></big></string>
+    <string name="taskview_caption_comments"><big><b><u>Kommentare</u></b></big></string>
+
 </resources>
