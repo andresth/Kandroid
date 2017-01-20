@@ -51,6 +51,19 @@ public class KanboardRequest {
     }
 
     @NonNull
+    public static KanboardRequest getTask(int taskid) {
+        return new KanboardRequest("getTask", new String[] {String.format(
+                "{\n" +
+                "    \"jsonrpc\": \"2.0\",\n" +
+                "    \"method\": \"getTask\",\n" +
+                "    \"id\": 700738119,\n" +
+                "    \"params\": {\n" +
+                "        \"task_id\": %d\n" +
+                "    }\n" +
+                "}", taskid)});
+    }
+
+    @NonNull
     public static KanboardRequest getAllTasks(int projectid, int status) {
         return new KanboardRequest("getAllTasks", new String[] {String.format(
                 "{\n" +

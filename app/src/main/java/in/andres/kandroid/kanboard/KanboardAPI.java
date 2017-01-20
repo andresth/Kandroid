@@ -141,6 +141,21 @@ public class KanboardAPI {
                 return;
             }
 
+            if (s.Request.Command.equalsIgnoreCase("getTask")) {
+                KanboardTask res = null;
+                try {
+                    if (s.Result[0].has("result")) {
+                        success = true;
+                        res = new KanboardTask(s.Result[0].getJSONObject("result"));
+                    }
+                } catch (JSONException | MalformedURLException e) {
+                    e.printStackTrace();
+                }
+                for (OnGetTaskListener l: onGetTaskListeners)
+                    l.onGetTask(success, res);
+                return;
+            }
+
             if (s.Request.Command.equalsIgnoreCase("getAllComments")) {
                 List<KanboardComment> res = null;
                 try {
@@ -200,6 +215,7 @@ public class KanboardAPI {
     private URL kanboardURL;
     private HashSet<KanbordEvents> listeners = new HashSet<>();
     private HashSet<OnGetAllCommentsListener> onGetAllCommentsListeners = new HashSet<>();
+    private HashSet<OnGetTaskListener> onGetTaskListeners = new HashSet<>();
 
     public KanboardAPI(String serverURL, final String username, final String password) throws MalformedURLException, IOException {
         Authenticator.setDefault(new Authenticator() {
@@ -234,6 +250,14 @@ public class KanboardAPI {
         onGetAllCommentsListeners.remove(listener);
     }
 
+    public void addOnGetTask(@NonNull OnGetTaskListener listener) {
+        onGetTaskListeners.add(listener);
+    }
+
+    public void removeGetTask(@NonNull OnGetTaskListener listener) {
+        onGetTaskListeners.remove(listener);
+    }
+
     public void getMe() {
         new KanboardAsync().execute(KanboardRequest.getMe());
     }
@@ -244,6 +268,10 @@ public class KanboardAPI {
 
     public void getMyDashboard() {
         new KanboardAsync().execute(KanboardRequest.getMyDashboard());
+    }
+
+    public void getTask(int taskid) {
+        new KanboardAsync().execute(KanboardRequest.getTask(taskid));
     }
 
     public void getAllComments(int taskid) {
