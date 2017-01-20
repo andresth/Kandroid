@@ -12,30 +12,30 @@ import java.util.Date;
  */
 
 public class KanboardTask implements Comparable<KanboardTask>, Serializable {
-    public final int ID;
-    public final int ProjectID;
-    public final int ColumnID;
-    public final int SwimlaneID;
-    public final int CategoryID;
-    public final int CreatorID;
-    public final int OwnerID;
-    public final int Priority;
-    public final int Position;
-    public final boolean IsActive;
-    public final String Title;
-    public final String Description;
-    public final URL Url;
-    public final double TimeEstimated;
-    public final double TimeSpent;
+    private int ID;
+    private int ProjectID;
+    private int ColumnID;
+    private int SwimlaneID;
+    private int CategoryID;
+    private int CreatorID;
+    private int OwnerID;
+    private int Priority;
+    private int Position;
+    private boolean IsActive;
+    private String Title;
+    private String Description;
+    private URL Url;
+    private double TimeEstimated;
+    private double TimeSpent;
     // Dashboard properties
-    public final String ProjectName;
-    public final String ColumnTitle;
-    public final Date DueDate;
-    public final Date CompletedDate;
-    public final Date StartedDate;
-    public final Date CreationDate;
-    public final Date ModificationDate;
-    public final Date MovedDate;
+    private String ProjectName;
+    private String ColumnTitle;
+    private Date DueDate;
+    private Date CompletedDate;
+    private Date StartedDate;
+    private Date CreationDate;
+    private Date ModificationDate;
+    private Date MovedDate;
     // TODO: getTaskByID has additional properties
     // TODO: add color
 
@@ -93,6 +93,98 @@ public class KanboardTask implements Comparable<KanboardTask>, Serializable {
         else
             MovedDate = null;
 
+    }
+
+    public int getId() {
+        return ID;
+    }
+
+    public int getProjectId() {
+        return ProjectID;
+    }
+
+    public int getColumnId() {
+        return ColumnID;
+    }
+
+    public int getSwimlaneId() {
+        return SwimlaneID;
+    }
+
+    public int getCategoryId() {
+        return CategoryID;
+    }
+
+    public int getOwnerId() {
+        return OwnerID;
+    }
+
+    public int getCreatorId() {
+        return CreatorID;
+    }
+
+    public int getPriority() {
+        return Priority;
+    }
+
+    public int getPosition() {
+        return Position;
+    }
+
+    public boolean getIsActive() {
+        return IsActive;
+    }
+
+    public String getDescription() {
+        return Description;
+    }
+
+    public String getTitle() {
+        return Title;
+    }
+
+    public URL getUrl() {
+        return Url;
+    }
+
+    public double getTimeEstimated() {
+        return TimeEstimated;
+    }
+
+    public double getTimeSpent() {
+        return TimeSpent;
+    }
+
+    public String getProjectName() {
+        return ProjectName;
+    }
+
+    public String getColumnTitle() {
+        return ColumnTitle;
+    }
+
+    public Date getDateCompleted() {
+        return CompletedDate;
+    }
+
+    public Date getDateStarted() {
+        return StartedDate;
+    }
+
+    public Date getDateDue() {
+        return DueDate;
+    }
+
+    public Date getDateCreation() {
+        return CreationDate;
+    }
+
+    public Date getDateModification() {
+        return ModificationDate;
+    }
+
+    public Date getDateMoved() {
+        return MovedDate;
     }
 
     @Override

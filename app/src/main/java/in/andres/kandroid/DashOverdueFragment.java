@@ -71,9 +71,9 @@ public class DashOverdueFragment extends ListFragment {
             TextView textOverdue = (TextView) convertView.findViewById(R.id.task_overdue);
             TextView textProject = (TextView) convertView.findViewById(R.id.task_project);
 
-            textName.setText(mValues.get(position).Title);
-            textProject.setText(mValues.get(position).ProjectName);
-            long overdue = new Date().getTime() - mValues.get(position).DueDate.getTime();
+            textName.setText(mValues.get(position).getTitle());
+            textProject.setText(mValues.get(position).getProjectName());
+            long overdue = new Date().getTime() - mValues.get(position).getDateDue().getTime();
             long hours = TimeUnit.MILLISECONDS.toHours(overdue);
             long days = TimeUnit.MILLISECONDS.toDays(overdue);
 

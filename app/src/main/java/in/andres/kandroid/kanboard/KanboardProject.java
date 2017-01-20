@@ -144,26 +144,26 @@ public class KanboardProject implements Comparable<KanboardProject>, Serializabl
         if (activetasks != null)
             for (int i = 0; i < activetasks.length(); i++) {
                 KanboardTask tmpActiveTask = new KanboardTask(activetasks.optJSONObject(i));
-                TaskHashtable.put(tmpActiveTask.ID, tmpActiveTask);
+                TaskHashtable.put(tmpActiveTask.getId(), tmpActiveTask);
                 ActiveTasks.add(tmpActiveTask);
-                GroupedActiveTasks.get(tmpActiveTask.ColumnID).get(tmpActiveTask.SwimlaneID).add(tmpActiveTask);
+                GroupedActiveTasks.get(tmpActiveTask.getColumnId()).get(tmpActiveTask.getSwimlaneId()).add(tmpActiveTask);
             }
 
         InactiveTasks = new ArrayList<>();
         if (inactivetasks != null)
             for (int i = 0; i < inactivetasks.length(); i++) {
                 KanboardTask tmpInactiveTask = new KanboardTask(inactivetasks.optJSONObject(i));
-                TaskHashtable.put(tmpInactiveTask.ID, tmpInactiveTask);
+                TaskHashtable.put(tmpInactiveTask.getId(), tmpInactiveTask);
                 InactiveTasks.add(tmpInactiveTask);
-                GroupedInactiveTasks.get(tmpInactiveTask.SwimlaneID).add(tmpInactiveTask);
+                GroupedInactiveTasks.get(tmpInactiveTask.getSwimlaneId()).add(tmpInactiveTask);
             }
 
         OverdueTasks = new ArrayList<>();
         if (overduetasks != null)
             for (int i = 0; i < overduetasks.length(); i++) {
                 KanboardTask tmpOverdueTask = new KanboardTask(overduetasks.optJSONObject(i));
-                OverdueTasks.add(TaskHashtable.get(tmpOverdueTask.ID));
-                GroupedOverdueTasks.get(TaskHashtable.get(tmpOverdueTask.ID).SwimlaneID).add(TaskHashtable.get(tmpOverdueTask.ID));
+                OverdueTasks.add(TaskHashtable.get(tmpOverdueTask.getId()));
+                GroupedOverdueTasks.get(TaskHashtable.get(tmpOverdueTask.getId()).getSwimlaneId()).add(TaskHashtable.get(tmpOverdueTask.getId()));
             }
     }
 

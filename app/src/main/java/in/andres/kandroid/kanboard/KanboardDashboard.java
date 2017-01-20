@@ -49,7 +49,7 @@ public class KanboardDashboard implements Serializable {
             for (int i = 0; i < tasks.length(); i++) {
                 KanboardTask tmpTask = new KanboardTask(tasks.optJSONObject(i));
                 Tasks.add(tmpTask);
-                GroupedTasks.get(tmpTask.ProjectID).add(tmpTask);
+                GroupedTasks.get(tmpTask.getProjectId()).add(tmpTask);
             }
         Subtasks = new ArrayList<>();
         JSONArray subtasks = dashboard.optJSONArray("subtasks");
