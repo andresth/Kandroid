@@ -250,11 +250,11 @@ public class KanboardAPI {
         onGetAllCommentsListeners.remove(listener);
     }
 
-    public void addOnGetTask(@NonNull OnGetTaskListener listener) {
+    public void addOnGetTaskListener(@NonNull OnGetTaskListener listener) {
         onGetTaskListeners.add(listener);
     }
 
-    public void removeGetTask(@NonNull OnGetTaskListener listener) {
+    public void removeGetTaskListener(@NonNull OnGetTaskListener listener) {
         onGetTaskListeners.remove(listener);
     }
 
