@@ -157,7 +157,7 @@ public class ProjectOverdueTasksFragment extends Fragment {
 
         @Override
         public View getChildView(int groupPosition, int childPosition, boolean isLastChild, View convertView, ViewGroup parent) {
-            String childTitle = ((KanboardTask) getChild(groupPosition, childPosition)).Title;
+            String childTitle = ((KanboardTask) getChild(groupPosition, childPosition)).getTitle();
 
             if (convertView == null)
                 convertView = mInflater.inflate(android.R.layout.simple_list_item_1, null);
