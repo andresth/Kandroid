@@ -1,35 +1,43 @@
 package in.andres.kandroid.kanboard;
 
+import android.support.annotation.NonNull;
+
 public class KanboardRequest {
     public final String Command;
     public final String[] JSON;
 
-    private KanboardRequest(String command, String[] json) {
+    private KanboardRequest(@NonNull String command, @NonNull String[] json) {
         this.Command = command;
         this.JSON = json;
     }
 
     //region Kanboard API
+    @NonNull
     public static KanboardRequest getMe() {
         return new KanboardRequest("getMe", new String[] {"{\"jsonrpc\": \"2.0\", \"method\": \"getMe\", \"id\": 1}"});
     }
 
+    @NonNull
     public static KanboardRequest getMyProjectsList() {
         return new KanboardRequest("getMyProjectsList", new String[] {"{\"jsonrpc\": \"2.0\", \"method\": \"getMyProjectsList\", \"id\": 1}"});
     }
 
+    @NonNull
     public static KanboardRequest getMyDashboard() {
         return new KanboardRequest("getMyDashboard", new  String[] {"{\"jsonrpc\": \"2.0\", \"method\": \"getMyDashboard\", \"id\": 1}"});
     }
 
+    @NonNull
     public static KanboardRequest getMyOverdueTasks() {
         return new KanboardRequest("getMyOverdueTasks", new String[] {"{\"jsonrpc\": \"2.0\", \"method\": \"getMyOverdueTasks\", \"id\": 1}"});
     }
 
+    @NonNull
     public static KanboardRequest getMyActivityStream() {
         return new KanboardRequest("getMyActivityStream", new String[] {"{\"jsonrpc\": \"2.0\", \"method\": \"getMyActivityStream\", \"id\": 1}"});
     }
 
+    @NonNull
     public static KanboardRequest getProjectById(int projectid) {
         return new KanboardRequest("getProjectById", new String[] {String.format(
                 "{\n" +
@@ -42,6 +50,7 @@ public class KanboardRequest {
                 "}", projectid)});
     }
 
+    @NonNull
     public static KanboardRequest getAllTasks(int projectid, int status) {
         return new KanboardRequest("getAllTasks", new String[] {String.format(
                 "{\n" +
@@ -55,6 +64,7 @@ public class KanboardRequest {
                 "}", projectid, status)});
     }
 
+    @NonNull
     public static KanboardRequest getOverdueTasksByProject(int projectid) {
         return new KanboardRequest("getOverdueTasksByProject", new String[] {String.format(
                 "{\n" +
@@ -67,6 +77,7 @@ public class KanboardRequest {
                 "}", projectid)});
     }
 
+    @NonNull
     public static KanboardRequest getColumns(int projectid) {
         return new KanboardRequest("getColumns", new String[] {String.format(
                 "{\n" +
@@ -79,6 +90,7 @@ public class KanboardRequest {
                 "}", projectid)});
     }
 
+    @NonNull
     public static KanboardRequest getActiveSwimlanes(int projectid) {
         return new KanboardRequest("getActiveSwimlanes", new String[] {String.format(
                 "{\n" +
@@ -91,6 +103,7 @@ public class KanboardRequest {
                 "}", projectid)});
     }
 
+    @NonNull
     public static KanboardRequest getAllCategories(int projectid) {
         return new KanboardRequest("getAllCategories", new String[] {String.format(
                 "{\n" +
@@ -102,7 +115,8 @@ public class KanboardRequest {
                 "    }\n" +
                 "}", projectid)});
     }
-    
+
+    @NonNull
     public static KanboardRequest getAllComments(int projectid) {
         return new KanboardRequest("getAllComments", new String[] {String.format(
                 "{\n" +
@@ -117,12 +131,14 @@ public class KanboardRequest {
     //endregion
 
     //region Custom API
+    @NonNull
     public static KanboardRequest KD_getDashboard() {
         return new KanboardRequest("KD_getDashboard", new String[] {KanboardRequest.getMyDashboard().JSON[0],
                                                                     KanboardRequest.getMyOverdueTasks().JSON[0],
                                                                     KanboardRequest.getMyActivityStream().JSON[0]});
     }
 
+    @NonNull
     public static KanboardRequest KD_getProjectById(int projectid) {
         return new KanboardRequest("KD_getProjectById", new String[] {KanboardRequest.getProjectById(projectid).JSON[0],
                                                                       KanboardRequest.getColumns(projectid).JSON[0],
