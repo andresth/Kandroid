@@ -104,6 +104,19 @@ public class KanboardRequest {
     }
 
     @NonNull
+    public static KanboardRequest getCategrory(int categoryid) {
+        return new KanboardRequest("getCategory", new String[] {String.format(
+                "{\n" +
+                "    \"jsonrpc\": \"2.0\",\n" +
+                "    \"method\": \"getCategory\",\n" +
+                "    \"id\": 203539163,\n" +
+                "    \"params\": {\n" +
+                "        \"category_id\": %d\n" +
+                "    }\n" +
+                "}", categoryid)});
+    }
+
+    @NonNull
     public static KanboardRequest getColumns(int projectid) {
         return new KanboardRequest("getColumns", new String[] {String.format(
                 "{\n" +
