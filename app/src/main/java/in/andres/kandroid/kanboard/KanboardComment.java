@@ -1,5 +1,8 @@
 package in.andres.kandroid.kanboard;
 
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+
 import org.json.JSONObject;
 
 import java.io.Serializable;
@@ -22,7 +25,7 @@ public class KanboardComment implements Serializable {
 
     public KanboardComment() {}
 
-    public KanboardComment(JSONObject comment) {
+    public KanboardComment(@NonNull JSONObject comment) {
         id = comment.optInt("id", -1);
         long tmpTime = comment.optLong("date_creation");
         if (tmpTime > 0)
@@ -31,7 +34,7 @@ public class KanboardComment implements Serializable {
             date_creation = null;
         task_id = comment.optInt("task_id");
         user_id = comment.optInt("user_id");
-        content = comment.optString("content");
+        content = comment.optString("comment");
         username = comment.optString("username");
         name = comment.optString("name");
         email = comment.optString("email");
@@ -42,6 +45,7 @@ public class KanboardComment implements Serializable {
         return this.id;
     }
 
+    @Nullable
     public Date getDateCreation() {
         return this.date_creation;
     }
@@ -62,11 +66,12 @@ public class KanboardComment implements Serializable {
         this.user_id = user_id;
     }
 
+    @Nullable
     public String getContent() {
         return this.content;
     }
 
-    public void setContent(String content) {
+    public void setContent(@NonNull String content) {
         this.content = content;
     }
 
@@ -74,14 +79,17 @@ public class KanboardComment implements Serializable {
         return this.username;
     }
 
+    @Nullable
     public String getName() {
         return this.name;
     }
 
+    @Nullable
     public String getEmail() {
         return this.email;
     }
 
+    @Nullable
     public String getAvatarPath() {
         return this.avatar_path;
     }
