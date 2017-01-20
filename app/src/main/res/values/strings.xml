@@ -26,7 +26,7 @@
     <string name="action_overdue">Overdue Tasks</string>
     <string name="action_about">About</string>
     <string name="title_activity_about">About Kandroid</string>
-    <string name="txt_about" translatable="false">"<html>\n  <body>\n    <p><big><bold>About Kandroid</bold></big></p>\n    <p>A JSON RPC client for Kanboard.</p>\n    <p><small>(c) Thomas Andres</small></p>\n  </body>\n</html>"</string>
+    <string name="txt_about" translatable="false">"<html>\n  <body>\n    <p><big><b>About Kandroid</b></big></p>\n    <p>A JSON RPC client for Kanboard.</p>\n    <p><small>(c) Thomas Andres</small></p>\n  </body>\n</html>"</string>
 
     <!-- Strings related to Settings -->
     <string name="settings_cat_projects">Projects</string>
@@ -77,4 +77,24 @@
         <item quantity="other">%d tasks total</item>
     </plurals>
 
+    <!--TaskActivity-->
+    <string name="taskview_category"><![CDATA[<b>Category:</b> %s]]></string>
+    <string name="taskview_status"><![CDATA[<b>Status:</b> %s]]></string>
+    <string name="taskview_status_open">open</string>
+    <string name="taskview_status_closed">closed</string>
+    <string name="taskview_swimlane"><![CDATA[<b>Swimlane:</b> %s]]></string>
+    <string name="taskview_position"><![CDATA[<b>Position:</b> %d]]></string>
+    <string name="taskview_priority"><![CDATA[<b>Priority:</b> %d]]></string>
+    <string name="taskview_owner"><![CDATA[<b>Owner:</b> %s]]></string>
+    <string name="taskview_creator"><![CDATA[<b>Creator:</b> %s]]></string>
+    <string name="taskview_date_created"><![CDATA[<b>Created:</b><br />%tF]]></string>
+    <string name="taskview_date_modified"><![CDATA[<b>Modified:</b><br />%tF]]></string>
+    <string name="taskview_date_moved"><![CDATA[<b>Moved:</b><br />%tF]]></string>
+    <string name="taskview_hours_estimated"><![CDATA[<b>Hours estimated:</b> %.2fh]]></string>
+    <string name="taskview_hours_spent"><![CDATA[<b>Hours spent:</b> %.2fh]]></string>
+    <string name="taskview_date_start"><![CDATA[<b>Start date:</b> %tF]]></string>
+    <string name="taskview_date_due"><![CDATA[<b>Due date:</b> %tF]]></string>
+    <string name="taskview_caption_information"><big><b><u>Information</u></b></big></string>
+    <string name="taskview_caption_timetracking"><big><b><u>Timetracking</u></b></big></string>
+    <string name="taskview_caption_comments"><big><b><u>Comments</u></b></big></string>
 </resources>
