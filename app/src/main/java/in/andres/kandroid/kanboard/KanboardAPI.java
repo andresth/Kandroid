@@ -64,11 +64,15 @@ public class KanboardAPI {
             } catch (SocketTimeoutException e) {
                 try {
                     return new KanboardResult(params[0], new JSONObject[] {new JSONObject("{\"jsonrpc\":\"2.0\",\"error\":{\"code\":0,\"message\":\"Network Timeout\"},\"id\":null}")}, 0);
-                } catch (JSONException e1) {}
+                } catch (JSONException e1) {
+                    e1.printStackTrace();
+                }
             } catch (Exception e) {
                 try {
                     return new KanboardResult(params[0], new JSONObject[] {new JSONObject("{\"jsonrpc\":\"2.0\",\"error\":{\"code\":-1,\"message\":\"" + e.getMessage() + "\"},\"id\":null}")}, 0);
-                } catch (JSONException e1) {}
+                } catch (JSONException e1) {
+                    e1.printStackTrace();
+                }
             }
             return null;
         }
@@ -79,12 +83,14 @@ public class KanboardAPI {
                 KanboardError res = new KanboardError(null, null, 0);
                 for (KanbordEvents l: listeners)
                     l.onError(res);
+                return;
             }
             if (s.Result[0].has("error") || s.ReturnCode >= 400) {
                 JSONObject err = s.Result[0].optJSONObject("error");
                 KanboardError res = new KanboardError(s.Request, err, s.ReturnCode);
                 for (KanbordEvents l: listeners)
                     l.onError(res);
+                return;
             }
 
             // Handle Return Messages
@@ -171,6 +177,21 @@ public class KanboardAPI {
                 return;
             }
 
+            if (s.Request.Command.equalsIgnoreCase("getCategory")) {
+                KanboardCategory res = null;
+                try {
+                    if (s.Result[0].has("result")) {
+                        success = true;
+                        res = new KanboardCategory(s.Result[0].getJSONObject("result"));
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                for (OnGetCategoryListener l: onGetCategoryListeners)
+                    l.onGetCategory(success, res);
+                return;
+            }
+
             if (s.Request.Command.equalsIgnoreCase("getAllComments")) {
                 List<KanboardComment> res = null;
                 try {
@@ -232,6 +253,7 @@ public class KanboardAPI {
     private HashSet<OnGetAllCommentsListener> onGetAllCommentsListeners = new HashSet<>();
     private HashSet<OnGetTaskListener> onGetTaskListeners = new HashSet<>();
     private HashSet<OnGetSwimlaneListener> onGetSwimlaneListeners = new HashSet<>();
+    private HashSet<OnGetCategoryListener> onGetCategoryListeners = new HashSet<>();
 
     public KanboardAPI(String serverURL, final String username, final String password) throws MalformedURLException, IOException {
         Authenticator.setDefault(new Authenticator() {
@@ -282,6 +304,14 @@ public class KanboardAPI {
         onGetTaskListeners.remove(listener);
     }
 
+    public void addOnGetCategoryListener(@NonNull OnGetCategoryListener listener) {
+        onGetCategoryListeners.add(listener);
+    }
+
+    public void removeOnGetCategoryListener(@NonNull OnGetCategoryListener listener) {
+        onGetCategoryListeners.remove(listener);
+    }
+
     public void getMe() {
         new KanboardAsync().execute(KanboardRequest.getMe());
     }
@@ -304,6 +334,10 @@ public class KanboardAPI {
 
     public void getSwimlane(int swimlaneid) {
         new KanboardAsync().execute(KanboardRequest.getSwimlane(swimlaneid));
+    }
+
+    public void getCategory(int categoryid) {
+        new KanboardAsync().execute(KanboardRequest.getCategrory(categoryid));
     }
 
     public void KB_getDashboard() {
