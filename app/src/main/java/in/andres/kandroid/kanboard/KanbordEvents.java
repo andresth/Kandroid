@@ -1,7 +1,5 @@
 package in.andres.kandroid.kanboard;
 
-import org.json.JSONObject;
-
 import java.util.List;
 
 public interface KanbordEvents {
