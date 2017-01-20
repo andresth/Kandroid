@@ -19,6 +19,8 @@ import java.net.SocketTimeoutException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.Hashtable;
+import java.util.Iterator;
 import java.util.List;
 
 import javax.net.ssl.HttpsURLConnection;
@@ -147,6 +149,27 @@ public class KanboardAPI {
                 return;
             }
 
+            if (s.Request.Command.equalsIgnoreCase("getProjectUsers")) {
+                Hashtable<Integer, String> res = null;
+                try {
+                    if (s.Result[0].has("result")) {
+                        success = true;
+                        res = new Hashtable<>();
+                        JSONObject jso = s.Result[0].getJSONObject("result");
+                        Iterator<String> iter = jso.keys();
+                        while (iter.hasNext()) {
+                            String key = iter.next();
+                            res.put(Integer.parseInt(key), jso.getString(key));
+                        }
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                for (OnGetProjectUsersListener l: onGetProjectUsersListeners)
+                    l.onGetProjectUsers(success, res);
+                return;
+            }
+
             if (s.Request.Command.equalsIgnoreCase("getTask")) {
                 KanboardTask res = null;
                 try {
@@ -254,6 +277,7 @@ public class KanboardAPI {
     private HashSet<OnGetTaskListener> onGetTaskListeners = new HashSet<>();
     private HashSet<OnGetSwimlaneListener> onGetSwimlaneListeners = new HashSet<>();
     private HashSet<OnGetCategoryListener> onGetCategoryListeners = new HashSet<>();
+    private HashSet<OnGetProjectUsersListener> onGetProjectUsersListeners = new HashSet<>();
 
     public KanboardAPI(String serverURL, final String username, final String password) throws MalformedURLException, IOException {
         Authenticator.setDefault(new Authenticator() {
@@ -312,6 +336,14 @@ public class KanboardAPI {
         onGetCategoryListeners.remove(listener);
     }
 
+    public void addOnGetProjectUsersListener(@NonNull OnGetProjectUsersListener listener) {
+        onGetProjectUsersListeners.add(listener);
+    }
+
+    public void removeOnGetProjectUsersListener(@NonNull OnGetProjectUsersListener listener) {
+        onGetProjectUsersListeners.remove(listener);
+    }
+
     public void getMe() {
         new KanboardAsync().execute(KanboardRequest.getMe());
     }
@@ -322,6 +354,10 @@ public class KanboardAPI {
 
     public void getMyDashboard() {
         new KanboardAsync().execute(KanboardRequest.getMyDashboard());
+    }
+
+    public void getProjectUsers(int projectid) {
+        new KanboardAsync().execute(KanboardRequest.getProjectUsers(projectid));
     }
 
     public void getTask(int taskid) {
