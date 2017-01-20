@@ -246,6 +246,10 @@ public class KanboardAPI {
         new KanboardAsync().execute(KanboardRequest.getMyDashboard());
     }
 
+    public void getAllComments(int taskid) {
+        new KanboardAsync().execute(KanboardRequest.getAllComments(taskid));
+    }
+
     public void KB_getDashboard() {
         new KanboardAsync().execute(KanboardRequest.KD_getDashboard());
     }
