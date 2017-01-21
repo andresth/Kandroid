@@ -118,6 +118,19 @@ public class KanboardRequest {
     }
 
     @NonNull
+    public static KanboardRequest getDefaultSwimlane(int projectid) {
+        return new KanboardRequest("getDefaultSwimlane", new String[] {String.format(
+                "{\n" +
+                        "    \"jsonrpc\": \"2.0\",\n" +
+                        "    \"method\": \"getDefaultSwimlane\",\n" +
+                        "    \"id\": 131071870,\n" +
+                        "    \"params\": [\n" +
+                        "        %d\n" +
+                        "    ]\n" +
+                        "}", projectid)});
+    }
+
+    @NonNull
     public static KanboardRequest getCategrory(int categoryid) {
         return new KanboardRequest("getCategory", new String[] {String.format(
                 "{\n" +
