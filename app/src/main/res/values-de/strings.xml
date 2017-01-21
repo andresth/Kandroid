@@ -92,5 +92,6 @@
     <string name="taskview_caption_information"><big><b><u>Informationen</u></b></big></string>
     <string name="taskview_caption_timetracking"><big><b><u>Zeiterfassung</u></b></big></string>
     <string name="taskview_caption_comments"><big><b><u>Kommentare</u></b></big></string>
+    <string name="taskview_caption_description"><big><b><u>Beschreibung</u></b></big></string>
 
 </resources>
