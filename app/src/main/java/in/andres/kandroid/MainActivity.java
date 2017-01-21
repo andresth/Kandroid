@@ -44,30 +44,27 @@ import in.andres.kandroid.kanboard.KanbordEvents;
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
-    String serverURL;
-    String apiKey;
-    String username;
-    String password;
+    private String serverURL;
+    private String username;
+    private String password;
 
-    Context self;
-    ViewPager mViewPager;
-    PagerTitleStrip mTitleStrip;
-    DashPagerAdapter mDashPager;
-    ProjectPagerAdapter mProjectPager;
+    private Context self;
+    private ViewPager mViewPager;
+    private PagerTitleStrip mTitleStrip;
     private ArrayPagerAdapter mArrayPager;
-    View mMainView;
-    View mProgress;
-    int progressBarCount = 0;
+    private View mMainView;
+    private View mProgress;
+    private int progressBarCount = 0;
 
     private int mode = 0;
 
-    KanboardAPI kanboardAPI;
-    KanboardUserInfo Me;
-    List<KanboardProjectInfo> mProjects;
+    private KanboardAPI kanboardAPI;
+    private KanboardUserInfo Me;
+    private List<KanboardProjectInfo> mProjects;
     private KanboardProject mProject = null;
     private KanboardDashboard mDashboard = null;
 
-    KanbordEvents eventHandler = new KanbordEvents() {
+    private KanbordEvents eventHandler = new KanbordEvents() {
         @Override
         public void onGetMe(boolean success, KanboardUserInfo userInfo) {
             showProgress(false);
@@ -199,7 +196,6 @@ public class MainActivity extends AppCompatActivity
             showDashboard();
         if (mProject != null && progressBarCount <= 0 && mode == 1)
             showProject();
-//        showDashboard();
     }
 
     @Override
@@ -264,8 +260,6 @@ public class MainActivity extends AppCompatActivity
         if (id == R.id.nav_dashboard) {
             mode = 0;
             showDashboard();
-//        } else if (id == R.id.nav_overdue) {
-//
         } else if (id == R.id.nav_sign_in) {
             Intent iSetting = new Intent(this, SettingsActivity.class);
             startActivity(iSetting);
@@ -314,28 +308,11 @@ public class MainActivity extends AppCompatActivity
             e.printStackTrace();
         }
 
-        if (mProjectPager != null) {
-            mProjectPager.clearAll();
-            mProjectPager = null;
-        }
-
-//        mViewPager.removeAllViews();
-//        mViewPager.addView(mTitleStrip);
-//        for (int i = mViewPager.getChildCount(); i > 0; i--) {
-//            if (mViewPager.getChildAt(i - 1).getId() != R.id.pager_title_strip)
-//                mViewPager.removeView(mViewPager.getChildAt(i - 1));
-//        }
-//        mViewPager.setAdapter(null);
-//
-//        mDashPager = new DashPagerAdapter(getSupportFragmentManager(), mDashboard, this);
-//        mViewPager.setAdapter(mDashPager);
-//        mDashPager.notifyDataSetChanged();
         mArrayPager.removeAllFragments();
         mArrayPager.addFragment(new DashProjectsFragment(), getString(R.string.tab_projects));
         mArrayPager.addFragment(new DashOverdueFragment(),getString(R.string.tab_overdue_tasks));
         mArrayPager.addFragment(new DashActivitiesFragment(), getString(R.string.tab_activity));
         mArrayPager.notifyDataSetChanged();
-//        mViewPager.setCurrentItem(0);
     }
 
     private void showProject() {
@@ -345,26 +322,9 @@ public class MainActivity extends AppCompatActivity
         try {
             getSupportActionBar().setTitle(mProject.Name);
         } catch (NullPointerException e) {
-            e.printStackTrace();;
+            e.printStackTrace();
         }
 
-        if (mDashPager != null) {
-            mDashPager.clearAll();
-            mDashPager = null;
-        }
-
-//        mViewPager.removeAllViews();
-//        mViewPager.addView(mTitleStrip);
-//        for (int i = mViewPager.getChildCount(); i > 0; i--) {
-//            if (mViewPager.getChildAt(i - 1).getId() != R.id.pager_title_strip)
-//                mViewPager.removeView(mViewPager.getChildAt(i - 1));
-//        }
-//        mViewPager.setAdapter(null);
-//
-//        mProjectPager = new ProjectPagerAdapter(getSupportFragmentManager(), mProject);
-//        mViewPager.setAdapter(mProjectPager);
-//        mProjectPager.notifyDataSetChanged();
-//        Log.d("showProject", Integer.toString(mProjectPager.getCount()));
         mArrayPager.removeAllFragments();
         mArrayPager.addFragment(ProjectOverviewFragment.newInstance(), getString(R.string.tab_overview));
         for (KanboardColumn column: mProject.Columns) {
@@ -373,7 +333,6 @@ public class MainActivity extends AppCompatActivity
         mArrayPager.addFragment(ProjectOverdueTasksFragment.newInstance(), getString(R.string.tab_overdue_tasks));
         mArrayPager.addFragment(ProjectInactiveTasksFragment.newInstance(), getString(R.string.tab_inactive_tasks));
         mArrayPager.notifyDataSetChanged();
-//        mViewPager.setCurrentItem(0);
     }
 
     @TargetApi(Build.VERSION_CODES.HONEYCOMB_MR2)
@@ -419,10 +378,6 @@ public class MainActivity extends AppCompatActivity
         if (!preferences.contains("serverurl"))
             showLoginScreen = true;
         serverURL = preferences.getString("serverurl", "");
-
-//        if (!preferences.contains("apikey"))
-//            showLoginScreen = true;
-//        apiKey = preferences.getString("apikey", "");
 
         if (!preferences.contains("username"))
             showLoginScreen = true;

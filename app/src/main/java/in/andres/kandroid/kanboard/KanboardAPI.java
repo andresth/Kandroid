@@ -298,7 +298,7 @@ public class KanboardAPI {
     private HashSet<OnGetProjectUsersListener> onGetProjectUsersListeners = new HashSet<>();
     private HashSet<OnGetDefaultSwimlaneListener> onGetDefaultSwimlaneListeners = new HashSet<>();
 
-    public KanboardAPI(String serverURL, final String username, final String password) throws MalformedURLException, IOException {
+    public KanboardAPI(String serverURL, final String username, final String password) throws IOException {
         Authenticator.setDefault(new Authenticator() {
             @Override
             protected PasswordAuthentication getPasswordAuthentication() {

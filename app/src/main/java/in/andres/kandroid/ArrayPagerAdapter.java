@@ -57,7 +57,7 @@ public class ArrayPagerAdapter extends FragmentStatePagerAdapter {
 
     @Override
     public int getItemPosition(Object object) {
-        int idx = mFragments.indexOf((Fragment) object);
+        int idx = mFragments.indexOf(object);
         if (idx == -1)
             return POSITION_NONE;
         else
