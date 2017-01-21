@@ -185,6 +185,24 @@ public class KanboardAPI {
                 return;
             }
 
+            if (s.Request.Command.equalsIgnoreCase("getDefaultSwimlane")) {
+                String res = null;
+                boolean active = false;
+                try {
+                    if (s.Result[0].has("result")) {
+                        success = true;
+                        JSONObject jso = s.Result[0].getJSONObject("result");
+                        res = jso.getString("default_swimlane");
+                        active = KanboardAPI.StringToBoolean(jso.optString("show_default_swimlane"));
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                for (OnGetDefaultSwimlaneListener l: onGetDefaultSwimlaneListeners)
+                    l.onGetDefaultSwimlane(success, res, active);
+                return;
+            }
+
             if (s.Request.Command.equalsIgnoreCase("getSwimlane")) {
                 KanboardSwimlane res = null;
                 try {
@@ -278,6 +296,7 @@ public class KanboardAPI {
     private HashSet<OnGetSwimlaneListener> onGetSwimlaneListeners = new HashSet<>();
     private HashSet<OnGetCategoryListener> onGetCategoryListeners = new HashSet<>();
     private HashSet<OnGetProjectUsersListener> onGetProjectUsersListeners = new HashSet<>();
+    private HashSet<OnGetDefaultSwimlaneListener> onGetDefaultSwimlaneListeners = new HashSet<>();
 
     public KanboardAPI(String serverURL, final String username, final String password) throws MalformedURLException, IOException {
         Authenticator.setDefault(new Authenticator() {
@@ -318,6 +337,14 @@ public class KanboardAPI {
 
     public void removeOnGetSwimlaneListener(@NonNull OnGetSwimlaneListener listener) {
         onGetSwimlaneListeners.remove(listener);
+    }
+
+    public void addOnGetDefaultSwimlaneListener(@NonNull OnGetDefaultSwimlaneListener listener) {
+        onGetDefaultSwimlaneListeners.add(listener);
+    }
+
+    public void removeOnGetDefaultSwimlaneListener(@NonNull OnGetDefaultSwimlaneListener listener) {
+        onGetDefaultSwimlaneListeners.remove(listener);
     }
 
     public void addOnGetTaskListener(@NonNull OnGetTaskListener listener) {
@@ -366,6 +393,10 @@ public class KanboardAPI {
 
     public void getAllComments(int taskid) {
         new KanboardAsync().execute(KanboardRequest.getAllComments(taskid));
+    }
+
+    public void getDefaultSwimlane(int projectid) {
+        new KanboardAsync().execute(KanboardRequest.getDefaultSwimlane(projectid));
     }
 
     public void getSwimlane(int swimlaneid) {
