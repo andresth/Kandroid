@@ -7,4 +7,7 @@
     <dimen name="activity_vertical_margin">16dp</dimen>
     <dimen name="fab_margin">16dp</dimen>
     <dimen name="text_margin">16dp</dimen>
+    <dimen name="cardview_horizintal_margin">0dp</dimen>
+    <dimen name="cardview_vertical_margin">3dp</dimen>
+    <dimen name="cardview_padding">5dp</dimen>
 </resources>
