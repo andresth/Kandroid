@@ -17,8 +17,6 @@ import in.andres.kandroid.kanboard.KanboardDashboard;
 import in.andres.kandroid.kanboard.KanboardProject;
 import in.andres.kandroid.kanboard.KanboardTask;
 
-;
-
 /**
  * Created by Thomas Andres on 06.01.17.
  */
