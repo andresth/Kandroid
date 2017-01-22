@@ -1,5 +1,7 @@
 package in.andres.kandroid.kanboard;
 
+import android.support.annotation.NonNull;
+
 import org.json.JSONObject;
 
 import java.io.Serializable;
@@ -9,35 +11,35 @@ import java.io.Serializable;
  */
 
 public class KanboardSubtask implements Comparable<KanboardSubtask>, Serializable {
-    public final int ID;
-    public final int TaskID;
-    public final int Position;
-    public final int UserID;
-    public final int Status;
-    public final String Title;
-    public final double TimeEstimated;
-    public final double TimeSpent;
+    private int Id;
+    private int TaskId;
+    private int Position;
+    private int UserId;
+    private int Status;
+    private String Title;
+    private double TimeEstimated;
+    private double TimeSpent;
     // Dashboard properties
-    public final int ProjectID;
-    public final String TaskName;
-    public final String ProjectName;
-    public final String StatusName;
-    public final boolean IsTimerStarted;
-    public final int TimerStartDate;
-    public final String ColorName;
+    private int ProjectId;
+    private String TaskName;
+    private String ProjectName;
+    private String StatusName;
+    private boolean IsTimerStarted;
+    private int TimerStartDate;
+    private String ColorName;
     // TODO: What is timer_start_date?
 
     public KanboardSubtask(JSONObject json) {
-        ID = json.optInt("id", -1);
-        TaskID = json.optInt("task_id", -1);
+        Id = json.optInt("id", -1);
+        TaskId = json.optInt("task_id", -1);
         Position = json.optInt("position", -1);
-        UserID = json.optInt("user_id", -1);
+        UserId = json.optInt("user_id", -1);
         Status = json.optInt("status");
         Title = json.optString("title");
         TimeEstimated = json.optDouble("time_estimated");
         TimeSpent = json.optDouble("time_spent");
         // Dashboard properties
-        ProjectID = json.optInt("project_id", -1);
+        ProjectId = json.optInt("project_id", -1);
         TaskName = json.optString("task_name");
         ProjectName = json.optString("project_name");
         StatusName = json.optString("status_name");
@@ -46,8 +48,68 @@ public class KanboardSubtask implements Comparable<KanboardSubtask>, Serializabl
         ColorName = json.optString("color_id");
     }
 
+    public int getId() {
+        return Id;
+    }
+
+    public int getTaskId() {
+        return TaskId;
+    }
+
+    public int getPosition() {
+        return Position;
+    }
+
+    public int getUserId() {
+        return UserId;
+    }
+
+    public int getStatus() {
+        return Status;
+    }
+
+    public String getTitle() {
+        return Title;
+    }
+
+    public double getTimeEstimated() {
+        return TimeEstimated;
+    }
+
+    public double getTimeSpent() {
+        return TimeSpent;
+    }
+
+    public int getProjectId() {
+        return ProjectId;
+    }
+
+    public String getTaskName() {
+        return TaskName;
+    }
+
+    public String getProjectName() {
+        return ProjectName;
+    }
+
+    public String getStatusName() {
+        return StatusName;
+    }
+
+    public boolean getIsTimerStarted() {
+        return IsTimerStarted;
+    }
+
+    public int getTimerStartDate() {
+        return TimerStartDate;
+    }
+
+    public String getColorName() {
+        return ColorName;
+    }
+
     @Override
-    public int compareTo(KanboardSubtask o) {
+    public int compareTo(@NonNull KanboardSubtask o) {
         return this.Title.compareTo(o.Title);
     }
 
