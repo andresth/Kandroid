@@ -95,7 +95,7 @@ public class MainActivity extends AppCompatActivity
         public void onGetProjectById(boolean success, KanboardProject project) {
             showProgress(false);
             mProject = project;
-            Log.d("Event", String.format("Received Project %s", mProject.Name));
+            Log.d("Event", String.format("Received Project %s", mProject.getName()));
             showProject();
         }
 
@@ -287,14 +287,14 @@ public class MainActivity extends AppCompatActivity
             return;
         }
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this.getApplicationContext());
-        List<KanboardProject> projList = new ArrayList<>(mDashboard.Projects);
+        List<KanboardProject> projList = new ArrayList<>(mDashboard.getProjects());
         if (preferences.getBoolean("projects_sort_alphabetic", false))
             Collections.sort(projList);
         NavigationView nav = (NavigationView) findViewById(R.id.nav_view);
         SubMenu projMenu = nav.getMenu().findItem(R.id.projects).getSubMenu();
         projMenu.clear();
         for (KanboardProject item: projList)
-            projMenu.add(Menu.NONE, item.ID, Menu.NONE, item.Name)
+            projMenu.add(Menu.NONE, item.getId(), Menu.NONE, item.getName())
                     .setIcon(R.drawable.project);
     }
 
@@ -320,14 +320,14 @@ public class MainActivity extends AppCompatActivity
             return;
 
         try {
-            getSupportActionBar().setTitle(mProject.Name);
+            getSupportActionBar().setTitle(mProject.getName());
         } catch (NullPointerException e) {
             e.printStackTrace();
         }
 
         mArrayPager.removeAllFragments();
         mArrayPager.addFragment(ProjectOverviewFragment.newInstance(), getString(R.string.tab_overview));
-        for (KanboardColumn column: mProject.Columns) {
+        for (KanboardColumn column: mProject.getColumns()) {
             mArrayPager.addFragment(ProjectTasksFragment.newInstance(column), column.getTitle());
         }
         mArrayPager.addFragment(ProjectOverdueTasksFragment.newInstance(), getString(R.string.tab_overdue_tasks));

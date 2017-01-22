@@ -18,22 +18,18 @@ import java.util.List;
  */
 
 public class KanboardDashboard implements Serializable {
-    public final List<KanboardProject> Projects;
-    public final List<KanboardTask> Tasks;
-    public final List<KanboardSubtask> Subtasks;
-    public final Dictionary<Integer, List<KanboardTask>> GroupedTasks;
-    public final List<KanboardTask> OverdueTasks;
-    public final List<KanboardActivity> Activities;
-
-    public final String Json;
+    private List<KanboardProject> Projects;
+    private List<KanboardTask> Tasks;
+    private List<KanboardSubtask> Subtasks;
+    private Dictionary<Integer, List<KanboardTask>> GroupedTasks;
+    private List<KanboardTask> OverdueTasks;
+    private List<KanboardActivity> Activities;
 
     public KanboardDashboard(@NonNull JSONObject dashboard) throws MalformedURLException {
         this(dashboard, null, null);
     }
 
     public KanboardDashboard(@NonNull JSONObject dashboard, @Nullable JSONArray overdue, @Nullable JSONArray activities) throws MalformedURLException {
-
-        Json = dashboard.toString();
         GroupedTasks = new Hashtable<>();
         Projects = new ArrayList<>();
         JSONArray projects = dashboard.optJSONArray("projects");
@@ -41,7 +37,7 @@ public class KanboardDashboard implements Serializable {
             for (int i = 0; i < projects.length(); i++) {
                 KanboardProject tmpProject = new KanboardProject(projects.optJSONObject(i));
                 Projects.add(tmpProject);
-                GroupedTasks.put(tmpProject.ID, new ArrayList<KanboardTask>());
+                GroupedTasks.put(tmpProject.getId(), new ArrayList<KanboardTask>());
             }
         Tasks = new ArrayList<>();
         JSONArray tasks = dashboard.optJSONArray("tasks");
@@ -74,5 +70,29 @@ public class KanboardDashboard implements Serializable {
         } else {
             Activities = null;
         }
+    }
+
+    public List<KanboardProject> getProjects() {
+        return Projects;
+    }
+
+    public List<KanboardTask> getTasks() {
+        return Tasks;
+    }
+
+    public List<KanboardSubtask> getSubtasks() {
+        return Subtasks;
+    }
+
+    public Dictionary<Integer, List<KanboardTask>> getGroupedTasks() {
+        return GroupedTasks;
+    }
+
+    public List<KanboardTask> getOverdueTasks() {
+        return OverdueTasks;
+    }
+
+    public List<KanboardActivity> getActivities() {
+        return Activities;
     }
 }

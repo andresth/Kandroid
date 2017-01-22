@@ -44,7 +44,7 @@ public class DashProjectsAdapter extends BaseExpandableListAdapter {
     @Override
     public int getGroupCount() {
         if (mDashboard != null)
-          return mDashboard.GroupedTasks.size();
+          return mDashboard.getGroupedTasks().size();
         // TODO: Add Swimlanes
 
         return 0;
@@ -53,7 +53,7 @@ public class DashProjectsAdapter extends BaseExpandableListAdapter {
     @Override
     public int getChildrenCount(int groupPosition) {
         if (mDashboard != null)
-            return mDashboard.GroupedTasks.get(mDashboard.Projects.get(groupPosition).ID).size();
+            return mDashboard.getGroupedTasks().get(mDashboard.getProjects().get(groupPosition).getId()).size();
         // TODO: Add Swimlanes
 
         return 0;
@@ -62,7 +62,7 @@ public class DashProjectsAdapter extends BaseExpandableListAdapter {
     @Override
     public Object getGroup(int groupPosition) {
         if (mDashboard != null)
-            return mDashboard.Projects.get(groupPosition);
+            return mDashboard.getProjects().get(groupPosition);
         // TODO: Add Swimlanes
 
         return null;
@@ -71,7 +71,7 @@ public class DashProjectsAdapter extends BaseExpandableListAdapter {
     @Override
     public Object getChild(int groupPosition, int childPosition) {
         if (mDashboard != null)
-            return mDashboard.GroupedTasks.get(mDashboard.Projects.get(groupPosition).ID).get(childPosition);
+            return mDashboard.getGroupedTasks().get(mDashboard.getProjects().get(groupPosition).getId()).get(childPosition);
         // TODO: Add Swimlanes
 
         return null;
@@ -104,12 +104,12 @@ public class DashProjectsAdapter extends BaseExpandableListAdapter {
         TextView projectColumns = (TextView) convertView.findViewById(R.id.project_columns);
         TextView projectNbTasks = (TextView) convertView.findViewById(R.id.project_nb_own_tasks);
 
-        projectName.setText(proj.Name);
-        if ((proj.Description == null) || proj.Description.contentEquals(""))
+        projectName.setText(proj.getName());
+        if ((proj.getDescription() == null) || proj.getDescription().contentEquals(""))
             projectDescription.setVisibility(View.GONE);
-        projectDescription.setText(proj.Description);
+        projectDescription.setText(proj.getDescription());
         List<String> columns = new ArrayList<>();
-        for (KanboardColumn c: proj.Columns)
+        for (KanboardColumn c: proj.getColumns())
             columns.add(String.format("<big><b>%1s</b></big> %2s", c.getNumberTasks(), c.getTitle()));
         projectColumns.setText(Html.fromHtml(TextUtils.join(" <big><b>|</b></big> ", columns)));
         projectNbTasks.setText(mContext.getResources().getQuantityString(R.plurals.format_nb_tasks, getChildrenCount(groupPosition), getChildrenCount(groupPosition)));

@@ -52,7 +52,7 @@ public class DashProjectsFragment extends Fragment {
                 @Override
                 public boolean onChildClick(ExpandableListView parent, View v, int groupPosition, int childPosition, long id) {
                     KanboardDashboard dashboard = ((MainActivity)getActivity()).getDashboard();
-                    KanboardTask clickedTask = dashboard.GroupedTasks.get(dashboard.Projects.get(groupPosition).ID).get(childPosition);
+                    KanboardTask clickedTask = dashboard.getGroupedTasks().get(dashboard.getProjects().get(groupPosition).getId()).get(childPosition);
                     Intent taskIntent = new Intent(getContext(), TaskDetailActivity.class);
                     taskIntent.putExtra("task", clickedTask);
                     startActivity(taskIntent);

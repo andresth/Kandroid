@@ -35,7 +35,7 @@ public class DashOverdueFragment extends ListFragment {
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         if (((MainActivity)getActivity()).getDashboard() != null) {
-            DashOverdueAdapter listAdapter = new DashOverdueAdapter(getActivity(), ((MainActivity)getActivity()).getDashboard().OverdueTasks);
+            DashOverdueAdapter listAdapter = new DashOverdueAdapter(getActivity(), ((MainActivity)getActivity()).getDashboard().getOverdueTasks());
             setListAdapter(listAdapter);
         }
     }
@@ -43,7 +43,7 @@ public class DashOverdueFragment extends ListFragment {
     @Override
     public void onListItemClick(ListView l, View v, int position, long id) {
         super.onListItemClick(l, v, position, id);
-        KanboardTask clickedTask = ((MainActivity)getActivity()).getDashboard().OverdueTasks.get(position);
+        KanboardTask clickedTask = ((MainActivity)getActivity()).getDashboard().getOverdueTasks().get(position);
         Intent taskIntent = new Intent(getContext(), TaskDetailActivity.class);
         taskIntent.putExtra("task", clickedTask);
         startActivity(taskIntent);

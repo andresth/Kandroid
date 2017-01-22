@@ -21,34 +21,34 @@ import java.util.List;
 
 
 public class KanboardProject implements Comparable<KanboardProject>, Serializable {
-    public final int ID;
-    public final String Name;
-    public final int OwnerID;
-    public final String Description;
-    public final String Identifier;
-    public final String Token;
-    public final boolean IsActive;
-    public final boolean IsPublic;
-    public final boolean IsPrivate;
-    public final boolean IsEverybodyAllowed;
-    public final Date StartDate;
-    public final Date EndDate;
-    public final Date LastModified;
-    public final int NumberActiveTasks;
-    public final URL ListURL;
-    public final URL BoardURL;
-    public final URL CalendarURL;
-    public final List<KanboardColumn> Columns;
-    public final List<KanboardCategory> Categories;
-    public final List<KanboardSwimlane> Swimlanes;
-    public final List<KanboardTask> ActiveTasks;
-    public final Dictionary<Integer, Dictionary<Integer, List<KanboardTask>>> GroupedActiveTasks;
-    public final List<KanboardTask> InactiveTasks;
-    public final Dictionary<Integer, List<KanboardTask>> GroupedInactiveTasks;
-    public final List<KanboardTask> OverdueTasks;
-    public final Dictionary<Integer, List<KanboardTask>> GroupedOverdueTasks;
-    public final Dictionary<Integer, KanboardTask> TaskHashtable;
-    public final Dictionary<Integer, KanboardCategory> CategoryHashtable;
+    private int Id;
+    private String Name;
+    private int OwnerId;
+    private String Description;
+    private String Identifier;
+    private String Token;
+    private boolean IsActive;
+    private boolean IsPublic;
+    private boolean IsPrivate;
+    private boolean IsEverybodyAllowed;
+    private Date StartDate;
+    private Date EndDate;
+    private Date LastModified;
+    private int NumberActiveTasks;
+    private URL ListURL;
+    private URL BoardURL;
+    private URL CalendarURL;
+    private List<KanboardColumn> Columns;
+    private List<KanboardCategory> Categories;
+    private List<KanboardSwimlane> Swimlanes;
+    private List<KanboardTask> ActiveTasks;
+    private Dictionary<Integer, Dictionary<Integer, List<KanboardTask>>> GroupedActiveTasks;
+    private List<KanboardTask> InactiveTasks;
+    private Dictionary<Integer, List<KanboardTask>> GroupedInactiveTasks;
+    private List<KanboardTask> OverdueTasks;
+    private Dictionary<Integer, List<KanboardTask>> GroupedOverdueTasks;
+    private Dictionary<Integer, KanboardTask> TaskHashtable;
+    private Dictionary<Integer, KanboardCategory> CategoryHashtable;
     // TODO: add priority values to project details
     // TODO: getProjectById might have additional properties!
 
@@ -59,9 +59,9 @@ public class KanboardProject implements Comparable<KanboardProject>, Serializabl
     public KanboardProject(@NonNull JSONObject project, @Nullable JSONArray columns, @Nullable JSONArray swimlanes,
                            @Nullable JSONArray categories, @Nullable JSONArray activetasks,
                            @Nullable JSONArray inactivetasks, @Nullable JSONArray overduetasks) throws MalformedURLException {
-        ID = project.optInt("id");
+        Id = project.optInt("id");
         Name = project.optString("name");
-        OwnerID = project.optInt("owner_id");
+        OwnerId = project.optInt("owner_id");
         Object desc = project.opt("description");
         Description = desc.equals(null) ? null : desc.toString();
         Identifier = project.optString("identifier");
@@ -165,6 +165,118 @@ public class KanboardProject implements Comparable<KanboardProject>, Serializabl
                 OverdueTasks.add(TaskHashtable.get(tmpOverdueTask.getId()));
                 GroupedOverdueTasks.get(TaskHashtable.get(tmpOverdueTask.getId()).getSwimlaneId()).add(TaskHashtable.get(tmpOverdueTask.getId()));
             }
+    }
+
+    public int getId() {
+        return Id;
+    }
+
+    public String getName() {
+        return Name;
+    }
+
+    public int getOwnerId() {
+        return OwnerId;
+    }
+
+    public String getDescription() {
+        return Description;
+    }
+
+    public String getIdentifier() {
+        return Identifier;
+    }
+
+    public String getToken() {
+        return Token;
+    }
+
+    public boolean getIsActive() {
+        return IsActive;
+    }
+
+    public boolean getIsPublic() {
+        return IsPublic;
+    }
+
+    public boolean getIsPrivate() {
+        return IsPrivate;
+    }
+
+    public boolean getIsEverybodyAllowed() {
+        return IsEverybodyAllowed;
+    }
+
+    public Date getStartDate() {
+        return StartDate;
+    }
+
+    public Date getEndDate() {
+        return EndDate;
+    }
+
+    public Date getLastModified() {
+        return LastModified;
+    }
+
+    public int getNumberActiveTasks() {
+        return NumberActiveTasks;
+    }
+
+    public URL getListURL() {
+        return ListURL;
+    }
+
+    public URL getBoardURL() {
+        return BoardURL;
+    }
+
+    public URL getCalendarURL() {
+        return CalendarURL;
+    }
+
+    public List<KanboardColumn> getColumns() {
+        return Columns;
+    }
+
+    public List<KanboardCategory> getCategories() {
+        return Categories;
+    }
+
+    public List<KanboardSwimlane> getSwimlanes() {
+        return Swimlanes;
+    }
+
+    public List<KanboardTask> getActiveTasks() {
+        return ActiveTasks;
+    }
+
+    public Dictionary<Integer, Dictionary<Integer, List<KanboardTask>>> getGroupedActiveTasks() {
+        return GroupedActiveTasks;
+    }
+
+    public List<KanboardTask> getInactiveTasks() {
+        return InactiveTasks;
+    }
+
+    public Dictionary<Integer, List<KanboardTask>> getGroupedInactiveTasks() {
+        return GroupedInactiveTasks;
+    }
+
+    public List<KanboardTask> getOverdueTasks() {
+        return OverdueTasks;
+    }
+
+    public Dictionary<Integer, List<KanboardTask>> getGroupedOverdueTasks() {
+        return GroupedOverdueTasks;
+    }
+
+    public Dictionary<Integer, KanboardTask> getTaskHashtable() {
+        return TaskHashtable;
+    }
+
+    public Dictionary<Integer, KanboardCategory> getCategoryHashtable() {
+        return CategoryHashtable;
     }
 
     @Override

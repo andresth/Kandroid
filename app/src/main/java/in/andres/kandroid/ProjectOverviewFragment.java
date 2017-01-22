@@ -37,13 +37,13 @@ public class ProjectOverviewFragment extends Fragment {
             TextView projectNBTotalTasks = (TextView) getView().findViewById(R.id.project_total_tasks);
             TextView projectModifyDate = (TextView) getView().findViewById(R.id.project_modify_date);
 
-            projectName.setText(project.Name);
-            projectDescription.setText(project.Description);
-            projectNBActiveTasks.setText(getContext().getResources().getQuantityString(R.plurals.format_nb_active_tasks, project.ActiveTasks.size(), project.ActiveTasks.size()));
-            projectNBInactiveTasks.setText(getContext().getResources().getQuantityString(R.plurals.format_nb_inactive_tasks, project.InactiveTasks.size(), project.InactiveTasks.size()));
-            projectNBOverdueTasks.setText(getContext().getResources().getQuantityString(R.plurals.format_nb_overdue_tasks, project.OverdueTasks.size(), project.OverdueTasks.size()));
-            projectNBTotalTasks.setText(getContext().getResources().getQuantityString(R.plurals.format_nb_total_tasks, project.ActiveTasks.size() + project.InactiveTasks.size(), project.ActiveTasks.size() + project.InactiveTasks.size()));
-            projectModifyDate.setText(DateFormat.getLongDateFormat(getContext()).format(project.LastModified) + " " + DateFormat.getTimeFormat(getContext()).format(project.LastModified));
+            projectName.setText(project.getName());
+            projectDescription.setText(project.getDescription());
+            projectNBActiveTasks.setText(getContext().getResources().getQuantityString(R.plurals.format_nb_active_tasks, project.getActiveTasks().size(), project.getActiveTasks().size()));
+            projectNBInactiveTasks.setText(getContext().getResources().getQuantityString(R.plurals.format_nb_inactive_tasks, project.getInactiveTasks().size(), project.getInactiveTasks().size()));
+            projectNBOverdueTasks.setText(getContext().getResources().getQuantityString(R.plurals.format_nb_overdue_tasks, project.getOverdueTasks().size(), project.getOverdueTasks().size()));
+            projectNBTotalTasks.setText(getContext().getResources().getQuantityString(R.plurals.format_nb_total_tasks, project.getActiveTasks().size() + project.getInactiveTasks().size(), project.getActiveTasks().size() + project.getInactiveTasks().size()));
+            projectModifyDate.setText(DateFormat.getLongDateFormat(getContext()).format(project.getLastModified()) + " " + DateFormat.getTimeFormat(getContext()).format(project.getLastModified()));
         }
     }
 

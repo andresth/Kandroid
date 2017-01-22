@@ -32,7 +32,7 @@ public class DashActivitiesFragment extends ListFragment {
         super.onActivityCreated(savedInstanceState);
         if (((MainActivity)getActivity()).getDashboard() != null) {
 //            ArrayAdapter<KanboardActivity> listAdapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_list_item_1, ((MainActivity)getActivity()).getDashboard().Activities);
-            DashActivityAdapter listAdapter = new DashActivityAdapter(getActivity(), ((MainActivity)getActivity()).getDashboard().Activities);
+            DashActivityAdapter listAdapter = new DashActivityAdapter(getActivity(), ((MainActivity)getActivity()).getDashboard().getActivities());
             setListAdapter(listAdapter);
         }
     }
