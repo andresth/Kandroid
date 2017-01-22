@@ -10,30 +10,66 @@ import java.util.Date;
  */
 
 public class KanboardActivity implements Serializable {
-    public final String Title;
-    public final String Content;
-    public final String Creator;
-    public final String CreatorUserName;
-    public final int CreatorID;
-    public final int ID;
-    public final int ProjectID;
-    public final int TaskID;
-    public final Date CreationDate;
+    private String Title;
+    private String Content;
+    private String Creator;
+    private String CreatorUserName;
+    private int CreatorId;
+    private int Id;
+    private int ProjectId;
+    private int TaskId;
+    private Date DateCreation;
 
     public KanboardActivity(JSONObject json) {
         Title = json.optString("event_title");
         Content = json.optString("event_content");
         Creator = json.optString("author");
         CreatorUserName = json.optString("author_username");
-        CreatorID = json.optInt("creator_id");
-        ID = json.optInt("id");
-        ProjectID = json.optInt("project_id");
-        TaskID = json.optInt("task_id");
-        CreationDate = new Date(json.optLong("date_creation") * 1000);
+        CreatorId = json.optInt("creator_id");
+        Id = json.optInt("id");
+        ProjectId = json.optInt("project_id");
+        TaskId = json.optInt("task_id");
+        DateCreation = new Date(json.optLong("date_creation") * 1000);
+    }
+
+    public String getTitle() {
+        return Title;
+    }
+
+    public String getContent() {
+        return Content;
+    }
+
+    public String getCreator() {
+        return Creator;
+    }
+
+    public String getCreatorUserName() {
+        return CreatorUserName;
+    }
+
+    public int getCreatorId() {
+        return CreatorId;
+    }
+
+    public int getId() {
+        return Id;
+    }
+
+    public int getProjectId() {
+        return ProjectId;
+    }
+
+    public int getTaskId() {
+        return TaskId;
+    }
+
+    public Date getDateCreation() {
+        return DateCreation;
     }
 
     @Override
     public String toString() {
-        return this.Title + " " + this.CreationDate.toString();
+        return this.Title + " " + this.DateCreation.toString();
     }
 }
