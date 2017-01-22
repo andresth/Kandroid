@@ -11,6 +11,7 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import in.andres.kandroid.kanboard.KanboardColumn;
 import in.andres.kandroid.kanboard.KanboardDashboard;
@@ -119,13 +120,17 @@ public class DashProjectsAdapter extends BaseExpandableListAdapter {
 
     @Override
     public View getChildView(int groupPosition, int childPosition, boolean isLastChild, View convertView, ViewGroup parent) {
-        String childTitle = ((KanboardTask) getChild(groupPosition, childPosition)).getTitle();
+        KanboardTask child = (KanboardTask) getChild(groupPosition, childPosition);
 
         if (convertView == null)
-            convertView = mInflater.inflate(android.R.layout.simple_list_item_1, null);
+            convertView = mInflater.inflate(R.layout.listitem_project_task, null);
 
-        TextView text = (TextView) convertView.findViewById(android.R.id.text1);
-        text.setText(childTitle);
+        ((TextView) convertView.findViewById(R.id.task_name)).setText(Html.fromHtml(String.format(Locale.getDefault(), "<big><b>#%d</b></big><br />%s", child.getId(), child.getTitle())));
+
+        convertView.findViewById(R.id.task_owner).setVisibility(View.INVISIBLE);
+
+        if (child.getColorBackground() != null)
+            convertView.findViewById(R.id.list_card).setBackgroundColor(child.getColorBackground());
 
         return convertView;
     }

@@ -16,6 +16,7 @@
     <ExpandableListView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:id="@+id/expandable_list" />
+        android:id="@+id/expandable_list"
+        android:childDivider="#00000000"/>
 
 </LinearLayout>
