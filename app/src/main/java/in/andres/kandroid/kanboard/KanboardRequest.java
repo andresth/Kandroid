@@ -203,7 +203,7 @@ public class KanboardRequest {
                 "    \"method\": \"getAllSubtasks\",\n" +
                 "    \"id\": 2087700490,\n" +
                 "    \"params\": {\n" +
-                "        \"task_id\":%d1\n" +
+                "        \"task_id\":%d\n" +
                 "    }\n" +
                 "}", taskid)});
     }
