@@ -110,7 +110,7 @@ public class DashProjectsAdapter extends BaseExpandableListAdapter {
         projectDescription.setText(proj.Description);
         List<String> columns = new ArrayList<>();
         for (KanboardColumn c: proj.Columns)
-            columns.add(String.format("<big><b>%1s</b></big> %2s", c.NumberTasks, c.Title));
+            columns.add(String.format("<big><b>%1s</b></big> %2s", c.getNumberTasks(), c.getTitle()));
         projectColumns.setText(Html.fromHtml(TextUtils.join(" <big><b>|</b></big> ", columns)));
         projectNbTasks.setText(mContext.getResources().getQuantityString(R.plurals.format_nb_tasks, getChildrenCount(groupPosition), getChildrenCount(groupPosition)));
 
