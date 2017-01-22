@@ -27,7 +27,7 @@ import javax.net.ssl.HttpsURLConnection;
 
 public class KanboardAPI {
 
-    class KanboardAsync extends AsyncTask<KanboardRequest, Void, KanboardResult> {
+    private class KanboardAsync extends AsyncTask<KanboardRequest, Void, KanboardResult> {
         @Override
         protected KanboardResult doInBackground(KanboardRequest... params) {
             HttpsURLConnection con = null;
@@ -35,6 +35,8 @@ public class KanboardAPI {
                 List<JSONObject> responseList = new ArrayList<>();
                 for (String s: params[0].JSON) {
                     con = (HttpsURLConnection) kanboardURL.openConnection();
+                    if (con == null)
+                        return new KanboardResult(params[0], new JSONObject[] {new JSONObject("{\"jsonrpc\":\"2.0\",\"error\":{\"code\":0,\"message\":\"Unable to open connection\"},\"id\":null}")}, 0);
                     con.setRequestMethod("POST");
                     con.setConnectTimeout(120000);
                     con.setReadTimeout(120000);
@@ -53,7 +55,7 @@ public class KanboardAPI {
                     }
                     in.close();
 
-                    JSONObject response = null;
+                    JSONObject response;
                     try {
                         response = new JSONObject(responseStr.toString());
                     } catch (JSONException e) {
@@ -62,6 +64,7 @@ public class KanboardAPI {
                     responseList.add(response);
                 }
 
+                assert con != null;
                 return new KanboardResult(params[0], responseList.toArray(new JSONObject[] {}), con.getResponseCode());
             } catch (SocketTimeoutException e) {
                 try {
@@ -118,7 +121,7 @@ public class KanboardAPI {
                 try {
                     if (s.Result[0].has("result")) {
                         success = true;
-                        res = new ArrayList<KanboardProjectInfo>();
+                        res = new ArrayList<>();
                         JSONObject jso = s.Result[0].getJSONObject("result");
                         for (int i = 0; i < jso.names().length(); i++) {
                             String key = jso.names().getString(i);
