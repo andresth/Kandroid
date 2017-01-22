@@ -56,7 +56,7 @@ public class DashActivitiesFragment extends ListFragment {
                 convertView = mInflater.inflate(android.R.layout.simple_list_item_1, null);
 
             TextView textView = (TextView) convertView.findViewById(android.R.id.text1);
-            textView.setText(Html.fromHtml(mValues.get(position).Content));
+            textView.setText(Html.fromHtml(mValues.get(position).getContent()));
 
             return convertView;
         }
