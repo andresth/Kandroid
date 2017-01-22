@@ -194,6 +194,19 @@ public class KanboardRequest {
                 "    }\n" +
                 "}", projectid)});
     }
+
+    @NonNull
+    public static KanboardRequest getAllSubtasks(int taskid) {
+        return new KanboardRequest("getAllSubtasks", new String[] {String.format(
+                "{\n" +
+                "    \"jsonrpc\": \"2.0\",\n" +
+                "    \"method\": \"getAllSubtasks\",\n" +
+                "    \"id\": 2087700490,\n" +
+                "    \"params\": {\n" +
+                "        \"task_id\":%d1\n" +
+                "    }\n" +
+                "}", taskid)});
+    }
     //endregion
 
     //region Custom API
