@@ -255,7 +255,7 @@ public class TaskDetailActivity extends AppCompatActivity {
     }
 
     private void setCategoryDetails() {
-        textCategory.setText(Html.fromHtml(getString(R.string.taskview_category, category.Name)));
+        textCategory.setText(Html.fromHtml(getString(R.string.taskview_category, category.getName())));
         textCategory.setVisibility(View.VISIBLE);
     }
 

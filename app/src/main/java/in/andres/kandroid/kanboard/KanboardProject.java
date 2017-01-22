@@ -136,7 +136,7 @@ public class KanboardProject implements Comparable<KanboardProject>, Serializabl
             for (int i = 0; i < categories.length(); i++) {
                 KanboardCategory tmpCategory = new KanboardCategory(categories.optJSONObject(i));
                 Categories.add(tmpCategory);
-                CategoryHashtable.put(tmpCategory.ID, tmpCategory);
+                CategoryHashtable.put(tmpCategory.getId(), tmpCategory);
             }
         }
 

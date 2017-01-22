@@ -9,13 +9,30 @@ import java.io.Serializable;
  */
 
 public class KanboardCategory implements Serializable {
-    public final int ID;
-    public final String Name;
-    public final int ProjectID;
+    private int Id;
+    private String Name;
+    private int ProjectId;
 
     public KanboardCategory(JSONObject category) {
-        ID = category.optInt("id");
+        Id = category.optInt("id");
         Name = category.optString("name");
-        ProjectID = category.optInt("project_id");
+        ProjectId = category.optInt("project_id");
+    }
+
+    public int getId() {
+        return Id;
+    }
+
+    public String getName() {
+        return Name;
+    }
+
+    public int getProjectId() {
+        return ProjectId;
+    }
+
+    @Override
+    public String toString() {
+        return this.Name;
     }
 }
