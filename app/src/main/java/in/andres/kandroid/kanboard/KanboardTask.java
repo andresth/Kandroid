@@ -27,6 +27,7 @@ public class KanboardTask implements Comparable<KanboardTask>, Serializable {
     private URL Url;
     private double TimeEstimated;
     private double TimeSpent;
+    private Integer ColorBackground = null;
     // Dashboard properties
     private String ProjectName;
     private String ColumnTitle;
@@ -93,6 +94,8 @@ public class KanboardTask implements Comparable<KanboardTask>, Serializable {
         else
             MovedDate = null;
 
+        if (json.has("color"))
+            ColorBackground = KanboardAPI.parseColorString(json.optJSONObject("color").optString("background"));
     }
 
     public int getId() {
@@ -185,6 +188,10 @@ public class KanboardTask implements Comparable<KanboardTask>, Serializable {
 
     public Date getDateMoved() {
         return MovedDate;
+    }
+
+    public Integer getColorBackground() {
+        return ColorBackground;
     }
 
     @Override
