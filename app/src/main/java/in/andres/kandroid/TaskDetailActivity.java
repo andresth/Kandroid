@@ -44,7 +44,7 @@ public class TaskDetailActivity extends AppCompatActivity {
         public void onGetAllComments(boolean success, List<KanboardComment> result) {
             if (success ) {
                 commentListview.setAdapter(new ArrayAdapter<> (getApplicationContext(),android.R.layout.simple_list_item_1, result));
-                findViewById(R.id.card_comments).setVisibility(View.INVISIBLE);
+                findViewById(R.id.card_comments).setVisibility(View.VISIBLE);
             }
         }
     };
