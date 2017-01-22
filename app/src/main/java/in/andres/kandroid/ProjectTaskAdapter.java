@@ -47,7 +47,7 @@ public class ProjectTaskAdapter extends BaseExpandableListAdapter {
 
     @Override
     public int getChildrenCount(int groupPosition) {
-        return mProject.GroupedActiveTasks.get(mColumn.ID).get(mProject.Swimlanes.get(groupPosition).getId()).size();
+        return mProject.GroupedActiveTasks.get(mColumn.getId()).get(mProject.Swimlanes.get(groupPosition).getId()).size();
     }
 
     @Override
@@ -57,7 +57,7 @@ public class ProjectTaskAdapter extends BaseExpandableListAdapter {
 
     @Override
     public Object getChild(int groupPosition, int childPosition) {
-        return mProject.GroupedActiveTasks.get(mColumn.ID).get(mProject.Swimlanes.get(groupPosition).getId()).get(childPosition);
+        return mProject.GroupedActiveTasks.get(mColumn.getId()).get(mProject.Swimlanes.get(groupPosition).getId()).get(childPosition);
     }
 
     @Override
@@ -89,7 +89,7 @@ public class ProjectTaskAdapter extends BaseExpandableListAdapter {
         TextView sidebar = (TextView) convertView.findViewById(R.id.sidebar);
 
         projectName.setText(swimlane.getName());
-        int taskCount = mProject.GroupedActiveTasks.get(mColumn.ID).get(swimlane.getId()).size();
+        int taskCount = mProject.GroupedActiveTasks.get(mColumn.getId()).get(swimlane.getId()).size();
         projectNbTasks.setText(mContext.getResources().getQuantityString(R.plurals.format_nb_tasks, taskCount, taskCount));
         RelativeLayout.LayoutParams lp = (RelativeLayout.LayoutParams) sidebar.getLayoutParams();
         lp.removeRule(RelativeLayout.ALIGN_BOTTOM);

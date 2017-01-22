@@ -328,7 +328,7 @@ public class MainActivity extends AppCompatActivity
         mArrayPager.removeAllFragments();
         mArrayPager.addFragment(ProjectOverviewFragment.newInstance(), getString(R.string.tab_overview));
         for (KanboardColumn column: mProject.Columns) {
-            mArrayPager.addFragment(ProjectTasksFragment.newInstance(column), column.Title);
+            mArrayPager.addFragment(ProjectTasksFragment.newInstance(column), column.getTitle());
         }
         mArrayPager.addFragment(ProjectOverdueTasksFragment.newInstance(), getString(R.string.tab_overdue_tasks));
         mArrayPager.addFragment(ProjectInactiveTasksFragment.newInstance(), getString(R.string.tab_inactive_tasks));

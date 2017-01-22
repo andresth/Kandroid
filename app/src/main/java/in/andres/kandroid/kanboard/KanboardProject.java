@@ -109,7 +109,7 @@ public class KanboardProject implements Comparable<KanboardProject>, Serializabl
             for (int i = 0; i < columns.length(); i++) {
                 KanboardColumn tmpCol = new KanboardColumn(columns.optJSONObject(i));
                 Columns.add(tmpCol);
-                GroupedActiveTasks.put(tmpCol.ID, new Hashtable<Integer, List<KanboardTask>>());
+                GroupedActiveTasks.put(tmpCol.getId(), new Hashtable<Integer, List<KanboardTask>>());
             }
         }
         else if (cols != null) {
@@ -123,7 +123,7 @@ public class KanboardProject implements Comparable<KanboardProject>, Serializabl
                 KanboardSwimlane tmpSwim = new KanboardSwimlane(swimlanes.optJSONObject(i));
                 Swimlanes.add(tmpSwim);
                 for (KanboardColumn c: Columns) {
-                    GroupedActiveTasks.get(c.ID).put(tmpSwim.getId(), new ArrayList<KanboardTask>());
+                    GroupedActiveTasks.get(c.getId()).put(tmpSwim.getId(), new ArrayList<KanboardTask>());
 
                 GroupedInactiveTasks.put(tmpSwim.getId(), new ArrayList<KanboardTask>());
                 GroupedOverdueTasks.put(tmpSwim.getId(), new ArrayList<KanboardTask>());
