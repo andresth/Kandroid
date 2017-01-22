@@ -1,8 +1,10 @@
 package in.andres.kandroid.kanboard;
 
 
+import android.graphics.Color;
 import android.os.AsyncTask;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -22,6 +24,8 @@ import java.util.HashSet;
 import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.net.ssl.HttpsURLConnection;
 
@@ -454,5 +458,24 @@ public class KanboardAPI {
 
     public static boolean StringToBoolean(String s) {
         return s.equalsIgnoreCase("true") || s.equalsIgnoreCase("yes") || s.equalsIgnoreCase("1");
+    }
+
+    @Nullable
+    public static Integer parseColorString(String colorstring) {
+        try {
+            return Color.parseColor(colorstring);
+        } catch (IllegalArgumentException e) {
+            Pattern c = Pattern.compile("rgb *\\( *([0-9]+), *([0-9]+), *([0-9]+) *\\)");
+            Matcher m = c.matcher(colorstring);
+
+            if (m.matches())
+            {
+                return Color.rgb(Integer.valueOf(m.group(1)),  // r
+                        Integer.valueOf(m.group(2)),  // g
+                        Integer.valueOf(m.group(3))); // b
+            }
+
+        }
+        return null;
     }
 }
