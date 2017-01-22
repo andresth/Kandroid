@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.Dictionary;
 import java.util.Hashtable;
+import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -49,16 +50,18 @@ public class KanboardProject implements Comparable<KanboardProject>, Serializabl
     private Dictionary<Integer, List<KanboardTask>> GroupedOverdueTasks;
     private Dictionary<Integer, KanboardTask> TaskHashtable;
     private Dictionary<Integer, KanboardCategory> CategoryHashtable;
+    private Dictionary<Integer, String> ProjectUsers;
     // TODO: add priority values to project details
     // TODO: getProjectById might have additional properties!
 
     public KanboardProject(@NonNull JSONObject project) throws MalformedURLException {
-        this(project, null, null, null, null, null, null);
+        this(project, null, null, null, null, null, null, null);
     }
 
     public KanboardProject(@NonNull JSONObject project, @Nullable JSONArray columns, @Nullable JSONArray swimlanes,
                            @Nullable JSONArray categories, @Nullable JSONArray activetasks,
-                           @Nullable JSONArray inactivetasks, @Nullable JSONArray overduetasks) throws MalformedURLException {
+                           @Nullable JSONArray inactivetasks, @Nullable JSONArray overduetasks,
+                           @Nullable JSONObject projectusers) throws MalformedURLException {
         Id = project.optInt("id");
         Name = project.optString("name");
         OwnerId = project.optInt("owner_id");
@@ -165,6 +168,14 @@ public class KanboardProject implements Comparable<KanboardProject>, Serializabl
                 OverdueTasks.add(TaskHashtable.get(tmpOverdueTask.getId()));
                 GroupedOverdueTasks.get(TaskHashtable.get(tmpOverdueTask.getId()).getSwimlaneId()).add(TaskHashtable.get(tmpOverdueTask.getId()));
             }
+
+        ProjectUsers = new Hashtable<>();
+        if (projectusers != null) {
+            for (Iterator<String> iter = projectusers.keys(); iter.hasNext();) {
+                String key = iter.next();
+                ProjectUsers.put(Integer.parseInt(key), projectusers.optString(key));
+            }
+        }
     }
 
     public int getId() {
@@ -277,6 +288,10 @@ public class KanboardProject implements Comparable<KanboardProject>, Serializabl
 
     public Dictionary<Integer, KanboardCategory> getCategoryHashtable() {
         return CategoryHashtable;
+    }
+
+    public Dictionary<Integer, String> getProjectUsers() {
+        return ProjectUsers;
     }
 
     @Override

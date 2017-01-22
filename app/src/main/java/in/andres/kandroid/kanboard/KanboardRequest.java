@@ -225,7 +225,8 @@ public class KanboardRequest {
                                                                       KanboardRequest.getAllCategories(projectid).JSON[0],
                                                                       KanboardRequest.getAllTasks(projectid, 1).JSON[0],
                                                                       KanboardRequest.getAllTasks(projectid, 0).JSON[0],
-                                                                      KanboardRequest.getOverdueTasksByProject(projectid).JSON[0]});
+                                                                      KanboardRequest.getOverdueTasksByProject(projectid).JSON[0],
+                                                                      KanboardRequest.getProjectUsers(projectid).JSON[0]});
     }
     //endregion
 }

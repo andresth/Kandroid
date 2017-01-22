@@ -298,7 +298,8 @@ public class KanboardAPI {
                                                   s.Result[3].optJSONArray("result"),
                                                   s.Result[4].optJSONArray("result"),
                                                   s.Result[5].optJSONArray("result"),
-                                                  s.Result[6].optJSONArray("result"));
+                                                  s.Result[6].optJSONArray("result"),
+                                                  s.Result[7].optJSONObject("result"));
                     }
                 } catch (MalformedURLException e) {
                     e.printStackTrace();
