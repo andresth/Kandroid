@@ -4,7 +4,9 @@ import android.support.annotation.NonNull;
 
 import org.json.JSONObject;
 
-public class KanboardUserInfo implements Comparable<KanboardUserInfo> {
+import java.io.Serializable;
+
+public class KanboardUserInfo implements Comparable<KanboardUserInfo>, Serializable {
     private int Id;
     private String Username;
     private String Role;
