@@ -85,7 +85,7 @@ public class TaskDetailActivity extends AppCompatActivity {
         public void onGetSwimlane(boolean success, KanboardSwimlane result) {
             if (success) {
                 swimlane = result;
-                setSwimlaneDetails(swimlane.Name);
+                setSwimlaneDetails(swimlane.getName());
             }
         }
     };
@@ -181,7 +181,7 @@ public class TaskDetailActivity extends AppCompatActivity {
 
         if (getIntent().hasExtra("swimlane")) {
             swimlane = (KanboardSwimlane) getIntent().getSerializableExtra("swimlane");
-            setSwimlaneDetails(swimlane.Name);
+            setSwimlaneDetails(swimlane.getName());
         } else {
             textSwimlane.setVisibility(View.INVISIBLE);
         }

@@ -52,7 +52,7 @@ public class ProjectTasksFragment extends Fragment {
                 @Override
                 public boolean onChildClick(ExpandableListView parent, View v, int groupPosition, int childPosition, long id) {
                     KanboardProject project = ((MainActivity) getActivity()).getProject();
-                    KanboardTask clickedTask = project.GroupedActiveTasks.get(mColumn.ID).get(project.Swimlanes.get(groupPosition).ID).get(childPosition);
+                    KanboardTask clickedTask = project.GroupedActiveTasks.get(mColumn.ID).get(project.Swimlanes.get(groupPosition).getId()).get(childPosition);
                     Intent taskIntent = new Intent(getContext(), TaskDetailActivity.class);
                     taskIntent.putExtra("task", clickedTask);
                     taskIntent.putExtra("column", mColumn);
