@@ -47,7 +47,7 @@ public class ProjectTaskAdapter extends BaseExpandableListAdapter {
 
     @Override
     public int getChildrenCount(int groupPosition) {
-        return mProject.GroupedActiveTasks.get(mColumn.ID).get(mProject.Swimlanes.get(groupPosition).ID).size();
+        return mProject.GroupedActiveTasks.get(mColumn.ID).get(mProject.Swimlanes.get(groupPosition).getId()).size();
     }
 
     @Override
@@ -57,7 +57,7 @@ public class ProjectTaskAdapter extends BaseExpandableListAdapter {
 
     @Override
     public Object getChild(int groupPosition, int childPosition) {
-        return mProject.GroupedActiveTasks.get(mColumn.ID).get(mProject.Swimlanes.get(groupPosition).ID).get(childPosition);
+        return mProject.GroupedActiveTasks.get(mColumn.ID).get(mProject.Swimlanes.get(groupPosition).getId()).get(childPosition);
     }
 
     @Override
@@ -88,13 +88,13 @@ public class ProjectTaskAdapter extends BaseExpandableListAdapter {
         TextView projectNbTasks = (TextView) convertView.findViewById(R.id.project_nb_own_tasks);
         TextView sidebar = (TextView) convertView.findViewById(R.id.sidebar);
 
-        projectName.setText(swimlane.Name);
-        int taskCount = mProject.GroupedActiveTasks.get(mColumn.ID).get(swimlane.ID).size();
+        projectName.setText(swimlane.getName());
+        int taskCount = mProject.GroupedActiveTasks.get(mColumn.ID).get(swimlane.getId()).size();
         projectNbTasks.setText(mContext.getResources().getQuantityString(R.plurals.format_nb_tasks, taskCount, taskCount));
         RelativeLayout.LayoutParams lp = (RelativeLayout.LayoutParams) sidebar.getLayoutParams();
         lp.removeRule(RelativeLayout.ALIGN_BOTTOM);
 //        if (!swimlane.Description.contentEquals("") && swimlane.Description != null) {
-            projectDescription.setText(swimlane.Description);
+            projectDescription.setText(swimlane.getDescription());
             lp.addRule(RelativeLayout.ALIGN_BOTTOM, projectDescription.getId());
 //        } else {
 //            projectDescription.setVisibility(View.GONE);

@@ -123,10 +123,10 @@ public class KanboardProject implements Comparable<KanboardProject>, Serializabl
                 KanboardSwimlane tmpSwim = new KanboardSwimlane(swimlanes.optJSONObject(i));
                 Swimlanes.add(tmpSwim);
                 for (KanboardColumn c: Columns) {
-                    GroupedActiveTasks.get(c.ID).put(tmpSwim.ID, new ArrayList<KanboardTask>());
+                    GroupedActiveTasks.get(c.ID).put(tmpSwim.getId(), new ArrayList<KanboardTask>());
 
-                GroupedInactiveTasks.put(tmpSwim.ID, new ArrayList<KanboardTask>());
-                GroupedOverdueTasks.put(tmpSwim.ID, new ArrayList<KanboardTask>());
+                GroupedInactiveTasks.put(tmpSwim.getId(), new ArrayList<KanboardTask>());
+                GroupedOverdueTasks.put(tmpSwim.getId(), new ArrayList<KanboardTask>());
                 }
             }
         }

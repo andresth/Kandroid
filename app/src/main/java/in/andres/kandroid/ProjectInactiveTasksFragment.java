@@ -52,7 +52,7 @@ public class ProjectInactiveTasksFragment extends Fragment {
                 @Override
                 public boolean onChildClick(ExpandableListView parent, View v, int groupPosition, int childPosition, long id) {
                     KanboardProject project = ((MainActivity) getActivity()).getProject();
-                    KanboardTask clickedTask = project.GroupedInactiveTasks.get(project.Swimlanes.get(groupPosition).ID).get(childPosition);
+                    KanboardTask clickedTask = project.GroupedInactiveTasks.get(project.Swimlanes.get(groupPosition).getId()).get(childPosition);
                     Intent taskIntent = new Intent(getContext(), TaskDetailActivity.class);
                     taskIntent.putExtra("task", clickedTask);
                     startActivity(taskIntent);
@@ -101,7 +101,7 @@ public class ProjectInactiveTasksFragment extends Fragment {
 
         @Override
         public int getChildrenCount(int groupPosition) {
-            return mProject.GroupedInactiveTasks.get(mProject.Swimlanes.get(groupPosition).ID).size();
+            return mProject.GroupedInactiveTasks.get(mProject.Swimlanes.get(groupPosition).getId()).size();
         }
 
         @Override
@@ -111,7 +111,7 @@ public class ProjectInactiveTasksFragment extends Fragment {
 
         @Override
         public Object getChild(int groupPosition, int childPosition) {
-            return mProject.GroupedInactiveTasks.get(mProject.Swimlanes.get(groupPosition).ID).get(childPosition);
+            return mProject.GroupedInactiveTasks.get(mProject.Swimlanes.get(groupPosition).getId()).get(childPosition);
         }
 
         @Override
@@ -142,12 +142,12 @@ public class ProjectInactiveTasksFragment extends Fragment {
             TextView projectNbTasks = (TextView) convertView.findViewById(R.id.project_nb_own_tasks);
             TextView sidebar = (TextView) convertView.findViewById(R.id.sidebar);
 
-            projectName.setText(swimlane.Name);
-            int taskCount = mProject.GroupedInactiveTasks.get(swimlane.ID).size();
+            projectName.setText(swimlane.getName());
+            int taskCount = mProject.GroupedInactiveTasks.get(swimlane.getId()).size();
             projectNbTasks.setText(mContext.getResources().getQuantityString(R.plurals.format_nb_tasks, taskCount, taskCount));
             RelativeLayout.LayoutParams lp = (RelativeLayout.LayoutParams) sidebar.getLayoutParams();
             lp.removeRule(RelativeLayout.ALIGN_BOTTOM);
-            projectDescription.setText(swimlane.Description);
+            projectDescription.setText(swimlane.getDescription());
             lp.addRule(RelativeLayout.ALIGN_BOTTOM, projectDescription.getId());
             sidebar.setLayoutParams(lp);
             projectColumns.setVisibility(View.GONE);

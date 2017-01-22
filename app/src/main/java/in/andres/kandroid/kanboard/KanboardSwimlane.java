@@ -9,19 +9,43 @@ import java.io.Serializable;
  */
 
 public class KanboardSwimlane implements Serializable {
-    public final int ID;
-    public final String Name;
-    public final String Description;
-    public final int Position;
-    public final int ProjectID;
-    public final boolean IsActive;
+    private int Id;
+    private String Name;
+    private String Description;
+    private int Position;
+    private int ProjectId;
+    private boolean IsActive;
 
     public KanboardSwimlane(JSONObject swimlane) {
-        ID = swimlane.optInt("id");
+        Id = swimlane.optInt("id");
         Name = swimlane.optString("name");
         Description = swimlane.optString("description");
         Position = swimlane.optInt("position");
-        ProjectID = swimlane.optInt("project_id");
+        ProjectId = swimlane.optInt("project_id");
         IsActive = KanboardAPI.StringToBoolean(swimlane.optString("is_active"));
+    }
+
+    public int getId() {
+        return Id;
+    }
+
+    public String getName() {
+        return Name;
+    }
+
+    public String getDescription() {
+        return Description;
+    }
+
+    public int getPosition() {
+        return Position;
+    }
+
+    public int getProjectId() {
+        return ProjectId;
+    }
+
+    public boolean getIsActive() {
+        return IsActive;
     }
 }
