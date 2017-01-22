@@ -1,45 +1,47 @@
 package in.andres.kandroid.kanboard;
 
+import android.support.annotation.NonNull;
+
 import org.json.JSONObject;
 
 public class KanboardUserInfo implements Comparable<KanboardUserInfo> {
-    public final int ID;
-    public final String Username;
-    public final String Role;
-    public final boolean IsLDAPUser;
-    public final String Name;
-    public final String Email;
-    public final String GoogleID;
-    public final String GithubID;
-    public final String GitlabID;
-    public final int NotificationsEnabled;
-    public final String Timezone;
-    public final String Language;
-    public final int DisableLoginForm;
-    public final boolean TwofactorActivated;
-    public final String TwofactorSecret;
-    public final String Token;
-    public final int NotificationsFilter;
-    public final int NumberFailedLohǵin;
-    public final int LockExpirationDate;
-    public final boolean IsActive;
-    public final String AvatarPath;
+    private int Id;
+    private String Username;
+    private String Role;
+    private boolean IsLDAPUser;
+    private String Name;
+    private String Email;
+    private String GoogleId;
+    private String GithubId;
+    private String GitlabId;
+    private int NotificationsEnabled;
+    private String Timezone;
+    private String Language;
+    private int DisableLoginForm;
+    private boolean TwofactorActivated;
+    private String TwofactorSecret;
+    private String Token;
+    private int NotificationsFilter;
+    private int NumberFailedLogin;
+    private int LockExpirationDate;
+    private boolean IsActive;
+    private String AvatarPath;
 
     KanboardUserInfo(int id, String username, String role, boolean isLDAPUser, String name,
-                     String email, String googleID, String githubID, String gitlabID,
+                     String email, String googleId, String githubId, String gitlabId,
                      int notificationsEnabled, String timezone, String language,
                      int disableLoginForm, boolean twofactorActivated, String twofactorSecret,
-                     String token, int notificationsFilter, int numberFailedLohǵin,
+                     String token, int notificationsFilter, int numberFailedLogin,
                      int lockExpirationDate, boolean isActive, String avatarPath) {
-        ID = id;
+        Id = id;
         Username = username;
         Role = role;
         IsLDAPUser = isLDAPUser;
         Name = name;
         Email = email;
-        GoogleID = googleID;
-        GithubID = githubID;
-        GitlabID = gitlabID;
+        GoogleId = googleId;
+        GithubId = githubId;
+        GitlabId = gitlabId;
         NotificationsEnabled = notificationsEnabled;
         Timezone = timezone;
         Language = language;
@@ -48,22 +50,22 @@ public class KanboardUserInfo implements Comparable<KanboardUserInfo> {
         TwofactorSecret = twofactorSecret;
         Token = token;
         NotificationsFilter = notificationsFilter;
-        NumberFailedLohǵin = numberFailedLohǵin;
+        NumberFailedLogin = numberFailedLogin;
         LockExpirationDate = lockExpirationDate;
         IsActive = isActive;
         AvatarPath = avatarPath;
     }
 
     KanboardUserInfo(JSONObject json) {
-        ID = json.optInt("id", -1);
+        Id = json.optInt("id", -1);
         Username = json.optString("username", "");
         Role = json.optString("role", "");
         IsLDAPUser = json.optBoolean("is_ldap_user", false);
         Name = json.optString("name", "");
         Email = json.optString("email", "");
-        GoogleID = json.optString("google_id", "");
-        GithubID = json.optString("github_id", "");
-        GitlabID = json.optString("gitlab_id", "");
+        GoogleId = json.optString("google_id", "");
+        GithubId = json.optString("github_id", "");
+        GitlabId = json.optString("gitlab_id", "");
         NotificationsEnabled = json.optInt("notifications_enabled", -1);
         Timezone = json.optString("timezone", "");
         Language = json.optString("language", "");
@@ -72,15 +74,99 @@ public class KanboardUserInfo implements Comparable<KanboardUserInfo> {
         TwofactorSecret = json.optString("twofactor_secret", "");
         Token = json.optString("token", "");
         NotificationsFilter = json.optInt("notifications_filter", -1);
-        NumberFailedLohǵin = json.optInt("nb_failed_login", -1);
+        NumberFailedLogin = json.optInt("nb_failed_login", -1);
         LockExpirationDate = json.optInt("lock_expiration_date", -1);
         IsActive = json.optBoolean("is_active", false);
         AvatarPath = json.optString("avatar_path", "");
 
     }
 
+    public int getId() {
+        return Id;
+    }
+
+    public String getUsername() {
+        return Username;
+    }
+
+    public String getRole() {
+        return Role;
+    }
+
+    public boolean getIsLDAPUser() {
+        return IsLDAPUser;
+    }
+
+    public String getName() {
+        return Name;
+    }
+
+    public String getEmail() {
+        return Email;
+    }
+
+    public String getGoogleId() {
+        return GoogleId;
+    }
+
+    public String getGithubId() {
+        return GithubId;
+    }
+
+    public String getGitlabId() {
+        return GitlabId;
+    }
+
+    public int getNotificationsEnabled() {
+        return NotificationsEnabled;
+    }
+
+    public String getTimezone() {
+        return Timezone;
+    }
+
+    public String getLanguage() {
+        return Language;
+    }
+
+    public int getDisableLoginForm() {
+        return DisableLoginForm;
+    }
+
+    public boolean getTwofactorActivated() {
+        return TwofactorActivated;
+    }
+
+    public String getTwofactorSecret() {
+        return TwofactorSecret;
+    }
+
+    public String getToken() {
+        return Token;
+    }
+
+    public int getNotificationsFilter() {
+        return NotificationsFilter;
+    }
+
+    public int getNumberFailedLogin() {
+        return NumberFailedLogin;
+    }
+
+    public int getLockExpirationDate() {
+        return LockExpirationDate;
+    }
+
+    public boolean getIsActive() {
+        return IsActive;
+    }
+
+    public String getAvatarPath() {
+        return AvatarPath;
+    }
+
     @Override
-    public int compareTo(KanboardUserInfo o) {
+    public int compareTo(@NonNull KanboardUserInfo o) {
         return this.Username.compareTo(o.Username);
     }
 }

@@ -150,7 +150,7 @@ public class MainActivity extends AppCompatActivity
             public void onDrawerOpened(View drawerView) {
                 TextView mServerUrl = (TextView) findViewById(R.id.nav_serverurl);
                 if ((Me != null) && (mServerUrl != null))
-                    mServerUrl.setText(Me.Name);
+                    mServerUrl.setText(Me.getName());
             }
         };
         drawer.addDrawerListener(toggle);
