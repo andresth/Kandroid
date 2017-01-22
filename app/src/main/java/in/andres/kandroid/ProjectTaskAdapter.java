@@ -1,6 +1,7 @@
 package in.andres.kandroid;
 
 import android.content.Context;
+import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -8,7 +9,10 @@ import android.widget.BaseExpandableListAdapter;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import in.andres.kandroid.kanboard.KanboardColumn;
+import java.util.Dictionary;
+import java.util.List;
+import java.util.Locale;
+
 import in.andres.kandroid.kanboard.KanboardDashboard;
 import in.andres.kandroid.kanboard.KanboardProject;
 import in.andres.kandroid.kanboard.KanboardSwimlane;
@@ -23,7 +27,7 @@ public class ProjectTaskAdapter extends BaseExpandableListAdapter {
     private LayoutInflater mInflater;
     private KanboardDashboard mDashboard;
     private KanboardProject mProject;
-    private KanboardColumn mColumn;
+    private Dictionary<Integer, List<KanboardTask>> mData;
 
     public ProjectTaskAdapter(Context context, KanboardDashboard values) {
         mContext = context;
@@ -32,12 +36,12 @@ public class ProjectTaskAdapter extends BaseExpandableListAdapter {
         mProject = null;
     }
 
-    public ProjectTaskAdapter(Context context, KanboardProject values, KanboardColumn column) {
+    public ProjectTaskAdapter(Context context, KanboardProject values, Dictionary<Integer, List<KanboardTask>> data) {
         mContext = context;
         mInflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         mDashboard = null;
         mProject = values;
-        mColumn = column;
+        mData = data;
     }
 
     @Override
@@ -47,7 +51,7 @@ public class ProjectTaskAdapter extends BaseExpandableListAdapter {
 
     @Override
     public int getChildrenCount(int groupPosition) {
-        return mProject.getGroupedActiveTasks().get(mColumn.getId()).get(mProject.getSwimlanes().get(groupPosition).getId()).size();
+        return mData.get(mProject.getSwimlanes().get(groupPosition).getId()).size();
     }
 
     @Override
@@ -57,7 +61,7 @@ public class ProjectTaskAdapter extends BaseExpandableListAdapter {
 
     @Override
     public Object getChild(int groupPosition, int childPosition) {
-        return mProject.getGroupedActiveTasks().get(mColumn.getId()).get(mProject.getSwimlanes().get(groupPosition).getId()).get(childPosition);
+        return mData.get(mProject.getSwimlanes().get(groupPosition).getId()).get(childPosition);
     }
 
     @Override
@@ -89,7 +93,7 @@ public class ProjectTaskAdapter extends BaseExpandableListAdapter {
         TextView sidebar = (TextView) convertView.findViewById(R.id.sidebar);
 
         projectName.setText(swimlane.getName());
-        int taskCount = mProject.getGroupedActiveTasks().get(mColumn.getId()).get(swimlane.getId()).size();
+        int taskCount = mData.get(swimlane.getId()).size();
         projectNbTasks.setText(mContext.getResources().getQuantityString(R.plurals.format_nb_tasks, taskCount, taskCount));
         RelativeLayout.LayoutParams lp = (RelativeLayout.LayoutParams) sidebar.getLayoutParams();
         lp.removeRule(RelativeLayout.ALIGN_BOTTOM);
@@ -108,13 +112,20 @@ public class ProjectTaskAdapter extends BaseExpandableListAdapter {
 
     @Override
     public View getChildView(int groupPosition, int childPosition, boolean isLastChild, View convertView, ViewGroup parent) {
-        String childTitle = ((KanboardTask) getChild(groupPosition, childPosition)).getTitle();
+        final KanboardTask child = (KanboardTask) getChild(groupPosition, childPosition);
 
         if (convertView == null)
-            convertView = mInflater.inflate(android.R.layout.simple_list_item_1, null);
+            convertView = mInflater.inflate(R.layout.listitem_project_task, null);
 
-        TextView text = (TextView) convertView.findViewById(android.R.id.text1);
-        text.setText(childTitle);
+        ((TextView) convertView.findViewById(R.id.task_name)).setText(Html.fromHtml(String.format(Locale.getDefault(), "<big><b>#%d</b></big><br />%s", child.getId(), child.getTitle())));
+
+        if (mProject.getProjectUsers().get(child.getOwnerId()) != null)
+            ((TextView) convertView.findViewById(R.id.task_owner)).setText(Html.fromHtml(String.format(Locale.getDefault(), "<small>%s</small>", mProject.getProjectUsers().get(child.getOwnerId()))));
+        else
+            convertView.findViewById(R.id.task_owner).setVisibility(View.INVISIBLE);
+
+        if (child.getColorBackground() != null)
+            convertView.findViewById(R.id.list_card).setBackgroundColor(child.getColorBackground());
 
         return convertView;
     }
