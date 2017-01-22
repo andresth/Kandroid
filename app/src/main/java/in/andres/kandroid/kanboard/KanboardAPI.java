@@ -251,6 +251,24 @@ public class KanboardAPI {
                 return;
             }
 
+            if (s.Request.Command.equalsIgnoreCase("getAllSubtasks")) {
+                List<KanboardSubtask> res = null;
+                try {
+                    if (s.Result[0].has("result")) {
+                        success = true;
+                        res = new ArrayList<>();
+                        JSONArray jsa = s.Result[0].getJSONArray("result");
+                        for (int i = 0; i < jsa.length(); i++)
+                            res.add(new KanboardSubtask(jsa.getJSONObject(i)));
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                for (OnGetAllSubtasksListener l: onGetAllSubtasksListeners)
+                    l.onGetAllSubtasks(success, res);
+                return;
+            }
+
             if (s.Request.Command.equalsIgnoreCase("KD_getDashboard")) {
                 KanboardDashboard res = null;
                 try {
@@ -297,6 +315,7 @@ public class KanboardAPI {
     private HashSet<OnGetCategoryListener> onGetCategoryListeners = new HashSet<>();
     private HashSet<OnGetProjectUsersListener> onGetProjectUsersListeners = new HashSet<>();
     private HashSet<OnGetDefaultSwimlaneListener> onGetDefaultSwimlaneListeners = new HashSet<>();
+    private HashSet<OnGetAllSubtasksListener> onGetAllSubtasksListeners = new HashSet<>();
 
     public KanboardAPI(String serverURL, final String username, final String password) throws IOException {
         Authenticator.setDefault(new Authenticator() {
@@ -371,6 +390,14 @@ public class KanboardAPI {
         onGetProjectUsersListeners.remove(listener);
     }
 
+    public void addOnGetAllSubtasksListener(@NonNull OnGetAllSubtasksListener listener) {
+        onGetAllSubtasksListeners.add(listener);
+    }
+
+    public void removeOnGetAllSubtasksListener(@NonNull OnGetAllSubtasksListener listener) {
+        onGetAllSubtasksListeners.remove(listener);
+    }
+
     public void getMe() {
         new KanboardAsync().execute(KanboardRequest.getMe());
     }
@@ -405,6 +432,10 @@ public class KanboardAPI {
 
     public void getCategory(int categoryid) {
         new KanboardAsync().execute(KanboardRequest.getCategrory(categoryid));
+    }
+
+    public void setOnGetAllSubtasksListeners(int taskid) {
+        new KanboardAsync().execute(KanboardRequest.getAllSubtasks(taskid));
     }
 
     public void KB_getDashboard() {
