@@ -434,7 +434,7 @@ public class KanboardAPI {
         new KanboardAsync().execute(KanboardRequest.getCategrory(categoryid));
     }
 
-    public void setOnGetAllSubtasksListeners(int taskid) {
+    public void getOnGetAllSubtasksListeners(int taskid) {
         new KanboardAsync().execute(KanboardRequest.getAllSubtasks(taskid));
     }
 
