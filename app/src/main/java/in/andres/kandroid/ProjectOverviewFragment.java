@@ -13,7 +13,9 @@ import android.text.format.DateFormat;
 import in.andres.kandroid.kanboard.KanboardProject;
 
 /**
- * Created by Thomas Andres on 15.01.17.
+ * Fragment to show general information aboout a project
+ *
+ * Created by Thomas Andres on 2017-01-15.
  */
 
 public class ProjectOverviewFragment extends Fragment {
@@ -29,6 +31,7 @@ public class ProjectOverviewFragment extends Fragment {
         super.onActivityCreated(savedInstanceState);
         KanboardProject project = ((MainActivity) getActivity()).getProject();
         if (project != null) {
+            assert getView() != null : "ProjectOverviewFragment: getView() returned null";
             TextView projectName = (TextView) getView().findViewById(R.id.project_name);
             TextView projectDescription = (TextView) getView().findViewById(R.id.project_description);
             TextView projectNBActiveTasks = (TextView) getView().findViewById(R.id.project_active_tasks);

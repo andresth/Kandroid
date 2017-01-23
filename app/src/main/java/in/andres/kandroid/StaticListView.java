@@ -6,7 +6,9 @@ import android.view.ViewGroup;
 import android.widget.ListView;
 
 /**
- * Created by Thomas Andres on 20.01.17.
+ * ListView that does not scroll
+ *
+ * Created by Thomas Andres on 2017-01-20.
  */
 
 public class StaticListView extends ListView {

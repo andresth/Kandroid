@@ -16,7 +16,9 @@ import java.util.List;
 import in.andres.kandroid.kanboard.KanboardActivity;
 
 /**
- * Created by Thomas Andres on 07.01.17.
+ * Fragment to display  the list of users activities
+ *
+ * Created by Thomas Andres on 2017-01-07.
  */
 
 public class DashActivitiesFragment extends ListFragment {
@@ -31,7 +33,6 @@ public class DashActivitiesFragment extends ListFragment {
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         if (((MainActivity)getActivity()).getDashboard() != null) {
-//            ArrayAdapter<KanboardActivity> listAdapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_list_item_1, ((MainActivity)getActivity()).getDashboard().Activities);
             DashActivityAdapter listAdapter = new DashActivityAdapter(getActivity(), ((MainActivity)getActivity()).getDashboard().getActivities());
             setListAdapter(listAdapter);
         }
@@ -53,7 +54,7 @@ public class DashActivitiesFragment extends ListFragment {
         @Override
         public View getView(int position, View convertView, @NonNull ViewGroup parent) {
             if (convertView == null)
-                convertView = mInflater.inflate(android.R.layout.simple_list_item_1, null);
+                convertView = mInflater.inflate(android.R.layout.simple_list_item_1, parent, false);
 
             TextView textView = (TextView) convertView.findViewById(android.R.id.text1);
             textView.setText(Html.fromHtml(mValues.get(position).getContent()));

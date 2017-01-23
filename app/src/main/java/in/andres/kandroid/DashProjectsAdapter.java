@@ -19,63 +19,40 @@ import in.andres.kandroid.kanboard.KanboardProject;
 import in.andres.kandroid.kanboard.KanboardTask;
 
 /**
- * Created by Thomas Andres on 06.01.17.
+ * List adapter for project view in dashboard.
+ *
+ * Created by Thomas Andres on 2017-01-06.
  */
 
 public class DashProjectsAdapter extends BaseExpandableListAdapter {
     private Context mContext;
     private LayoutInflater mInflater;
     private KanboardDashboard mDashboard;
-    private KanboardProject mProject;
 
     public DashProjectsAdapter(Context context, KanboardDashboard values) {
         mContext = context;
         mInflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         mDashboard = values;
-        mProject = null;
-    }
-
-    public DashProjectsAdapter(Context context, KanboardProject values) {
-        mContext = context;
-        mInflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        mDashboard = null;
-        mProject = values;
     }
 
     @Override
     public int getGroupCount() {
-        if (mDashboard != null)
-          return mDashboard.getGroupedTasks().size();
-        // TODO: Add Swimlanes
-
-        return 0;
+        return mDashboard.getGroupedTasks().size();
     }
 
     @Override
     public int getChildrenCount(int groupPosition) {
-        if (mDashboard != null)
-            return mDashboard.getGroupedTasks().get(mDashboard.getProjects().get(groupPosition).getId()).size();
-        // TODO: Add Swimlanes
-
-        return 0;
+        return mDashboard.getGroupedTasks().get(mDashboard.getProjects().get(groupPosition).getId()).size();
     }
 
     @Override
     public Object getGroup(int groupPosition) {
-        if (mDashboard != null)
-            return mDashboard.getProjects().get(groupPosition);
-        // TODO: Add Swimlanes
-
-        return null;
+        return mDashboard.getProjects().get(groupPosition);
     }
 
     @Override
     public Object getChild(int groupPosition, int childPosition) {
-        if (mDashboard != null)
-            return mDashboard.getGroupedTasks().get(mDashboard.getProjects().get(groupPosition).getId()).get(childPosition);
-        // TODO: Add Swimlanes
-
-        return null;
+        return mDashboard.getGroupedTasks().get(mDashboard.getProjects().get(groupPosition).getId()).get(childPosition);
     }
 
     @Override
@@ -98,7 +75,7 @@ public class DashProjectsAdapter extends BaseExpandableListAdapter {
         KanboardProject proj = (KanboardProject) getGroup(groupPosition);
 
         if (convertView == null)
-            convertView = mInflater.inflate(R.layout.listitem_dash_project_header, null);
+            convertView = mInflater.inflate(R.layout.listitem_dash_project_header, parent, false);
 
         TextView projectName = (TextView) convertView.findViewById(R.id.project_name);
         TextView projectDescription = (TextView) convertView.findViewById(R.id.project_description);
@@ -123,7 +100,7 @@ public class DashProjectsAdapter extends BaseExpandableListAdapter {
         KanboardTask child = (KanboardTask) getChild(groupPosition, childPosition);
 
         if (convertView == null)
-            convertView = mInflater.inflate(R.layout.listitem_project_task, null);
+            convertView = mInflater.inflate(R.layout.listitem_project_task, parent, false);
 
         ((TextView) convertView.findViewById(R.id.task_name)).setText(Html.fromHtml(String.format(Locale.getDefault(), "<big><b>#%d</b></big><br />%s", child.getId(), child.getTitle())));
 
