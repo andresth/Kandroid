@@ -9,6 +9,7 @@ import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
@@ -128,7 +129,7 @@ public class MainActivity extends AppCompatActivity
         mMainView = findViewById(R.id.pager);
         mProgress = findViewById(R.id.main_progress);
 
-        mViewPager = (ViewPager) findViewById(R.id.pager);
+        mViewPager = (ViewPager) mMainView;
         mTitleStrip = (PagerTitleStrip) mViewPager.findViewById(R.id.pager_title_strip);
         mArrayPager = new ArrayPagerAdapter(getSupportFragmentManager());
         mViewPager.setAdapter(mArrayPager);
@@ -160,10 +161,10 @@ public class MainActivity extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-        if ((savedInstanceState != null) && savedInstanceState.containsKey("dashboard")) {
+        if (savedInstanceState.containsKey("dashboard")) {
             // App was restarted by System, load saved instance
             mDashboard = (KanboardDashboard) savedInstanceState.getSerializable("dashboard");
-        if ((savedInstanceState != null) && savedInstanceState.containsKey("project"))
+        if (savedInstanceState.containsKey("project"))
             mProject = (KanboardProject) savedInstanceState.getSerializable("project");
         }
     }
@@ -176,6 +177,8 @@ public class MainActivity extends AppCompatActivity
         if (mProject != null)
             savedInstanceState.putSerializable("project", mProject);
 
+        savedInstanceState.putInt("ViewPagerItem", mViewPager.getCurrentItem());
+
         savedInstanceState.putInt("mode", mode);
     }
 
@@ -183,7 +186,6 @@ public class MainActivity extends AppCompatActivity
     public void onRestoreInstanceState(Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
         // User rotated the screen or something
-        Log.d("Lifecycle", "onRestoreInstance");
         if (savedInstanceState.containsKey("dashboard")) {
             mDashboard = (KanboardDashboard) savedInstanceState.getSerializable("dashboard");
             populateProjectsMenu();
@@ -196,6 +198,8 @@ public class MainActivity extends AppCompatActivity
             showDashboard();
         if (mProject != null && progressBarCount <= 0 && mode == 1)
             showProject();
+
+        mViewPager.setCurrentItem(savedInstanceState.getInt("ViewPagerItem"));
     }
 
     @Override
@@ -253,7 +257,7 @@ public class MainActivity extends AppCompatActivity
 
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
-    public boolean onNavigationItemSelected(MenuItem item) {
+    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
@@ -302,11 +306,8 @@ public class MainActivity extends AppCompatActivity
         if (mDashboard == null)
             return;
 
-        try {
+        if (getSupportActionBar() != null)
             getSupportActionBar().setTitle(getString(R.string.action_dashboard));
-        } catch (NullPointerException e) {
-            e.printStackTrace();
-        }
 
         mArrayPager.removeAllFragments();
         mArrayPager.addFragment(DashProjectsFragment.newInstance(), getString(R.string.tab_projects));
@@ -319,11 +320,8 @@ public class MainActivity extends AppCompatActivity
         if (mProject == null)
             return;
 
-        try {
+        if (getSupportActionBar() != null)
             getSupportActionBar().setTitle(mProject.getName());
-        } catch (NullPointerException e) {
-            e.printStackTrace();
-        }
 
         mArrayPager.removeAllFragments();
         mArrayPager.addFragment(ProjectOverviewFragment.newInstance(), getString(R.string.tab_overview));
