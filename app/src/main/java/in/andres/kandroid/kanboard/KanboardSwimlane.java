@@ -48,4 +48,9 @@ public class KanboardSwimlane implements Serializable {
     public boolean getIsActive() {
         return IsActive;
     }
+
+    @Override
+    public String toString() {
+        return this.Name;
+    }
 }
