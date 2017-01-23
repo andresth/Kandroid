@@ -35,7 +35,8 @@
     <string name="error_host_unknown">Unbekanter Host</string>
     <string name="error_incorrect_username">Der Bentzername ist ungültig</string>
     <string name="tab_overview">Übersicht</string>
-    <string name="caption_description">Beschreibung:</string>
+    <string name="caption_description"><big><b><u>Beschreibung</u></b></big></string>
+    <string name="caption_project_members"><big><b><u>Projektmitglieder</u></b></big></string>
     <string name="caption_name">Name:</string>
 
 
@@ -68,9 +69,10 @@
         <item quantity="other">%d Aufgaben insgesamt</item>
     </plurals>
     <string name="tab_inactive_tasks">Inaktive Aufgaben</string>
-    <string name="caption_columns">Spalten:</string>
-    <string name="caption_tasks">Aufgaben:</string>
-    <string name="caption_modify_date">Geändert am:</string>
+    <string name="caption_columns"><big><b><u>Spalten</u></b></big></string>
+    <string name="caption_swimlanes"><big><b><u>Swimlanes</u></b></big></string>
+    <string name="caption_tasks"><big><b><u>Aufgaben</u></b></big></string>
+    <string name="caption_modify_date"><big><b><u>Letzte Änderung</u></b></big></string>
 
     <!--TaskActivity-->
     <string name="taskview_category"><![CDATA[<b>Kategorie:</b> %s]]></string>
