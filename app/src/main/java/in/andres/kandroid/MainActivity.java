@@ -161,11 +161,13 @@ public class MainActivity extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-        if (savedInstanceState.containsKey("dashboard")) {
-            // App was restarted by System, load saved instance
-            mDashboard = (KanboardDashboard) savedInstanceState.getSerializable("dashboard");
-        if (savedInstanceState.containsKey("project"))
-            mProject = (KanboardProject) savedInstanceState.getSerializable("project");
+        if (savedInstanceState != null) {
+            if (savedInstanceState.containsKey("dashboard")) {
+                // App was restarted by System, load saved instance
+                mDashboard = (KanboardDashboard) savedInstanceState.getSerializable("dashboard");
+            }
+            if (savedInstanceState.containsKey("project"))
+                mProject = (KanboardProject) savedInstanceState.getSerializable("project");
         }
     }
 
