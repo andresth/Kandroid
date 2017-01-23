@@ -15,6 +15,7 @@ import android.widget.TextView;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 
 import in.andres.kandroid.kanboard.KanboardTask;
@@ -67,14 +68,16 @@ public class DashOverdueFragment extends ListFragment {
         @Override
         public View getView(int position, View convertView, @NonNull ViewGroup parent) {
             if (convertView == null)
-                convertView = mInflater.inflate(R.layout.listitem_dash_overdue, parent, false);
+                convertView = mInflater.inflate(R.layout.listitem_project_task, parent, false);
+//                convertView = mInflater.inflate(R.layout.listitem_dash_overdue, parent, false);
 
             TextView textName = (TextView) convertView.findViewById(R.id.task_name);
-            TextView textOverdue = (TextView) convertView.findViewById(R.id.task_overdue);
-            TextView textProject = (TextView) convertView.findViewById(R.id.task_project);
+            TextView textOverdue = (TextView) convertView.findViewById(R.id.task_owner);
+//            TextView textOverdue = (TextView) convertView.findViewById(R.id.task_overdue);
+//            TextView textProject = (TextView) convertView.findViewById(R.id.task_project);
 
-            textName.setText(mValues.get(position).getTitle());
-            textProject.setText(mValues.get(position).getProjectName());
+            textName.setText(Html.fromHtml(String.format(Locale.getDefault(), "<big><b>%s</b></big><br />%s", mValues.get(position).getTitle(), mValues.get(position).getProjectName())));
+//            textProject.setText(mValues.get(position).getProjectName());
             long overdue = new Date().getTime() - mValues.get(position).getDateDue().getTime();
             long hours = TimeUnit.MILLISECONDS.toHours(overdue);
             long days = TimeUnit.MILLISECONDS.toDays(overdue);
@@ -83,6 +86,9 @@ public class DashOverdueFragment extends ListFragment {
                 textOverdue.setText(Html.fromHtml(mContext.getResources().getQuantityString(R.plurals.format_overdue_hours, (int) hours, hours)));
             else
                 textOverdue.setText(Html.fromHtml(mContext.getResources().getQuantityString(R.plurals.format_overdue_days, (int) days, days)));
+
+            if (mValues.get(position).getColorBackground() != null)
+                convertView.findViewById(R.id.list_card).setBackgroundColor(mValues.get(position).getColorBackground());
 
             return convertView;
         }
