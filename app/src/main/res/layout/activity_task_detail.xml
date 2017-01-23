@@ -22,7 +22,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/cardview_vertical_margin"
             android:layout_marginBottom="@dimen/cardview_vertical_margin"
-            app:cardCornerRadius="@dimen/cardview_default_radius"
+            app:cardCornerRadius="@dimen/cardview_radius"
             app:contentPadding="@dimen/cardview_padding">
 
             <TableLayout
@@ -139,7 +139,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/cardview_vertical_margin"
             android:layout_marginBottom="@dimen/cardview_vertical_margin"
-            app:cardCornerRadius="@dimen/cardview_default_radius"
+            app:cardCornerRadius="@dimen/cardview_radius"
             app:contentPadding="@dimen/cardview_padding">
             <LinearLayout
                 android:layout_width="match_parent"
@@ -162,7 +162,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/cardview_vertical_margin"
             android:layout_marginBottom="@dimen/cardview_vertical_margin"
-            app:cardCornerRadius="@dimen/cardview_default_radius"
+            app:cardCornerRadius="@dimen/cardview_radius"
             app:contentPadding="@dimen/cardview_padding">
             <TableLayout
                 android:layout_width="match_parent"
@@ -212,7 +212,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/cardview_vertical_margin"
             android:layout_marginBottom="@dimen/cardview_vertical_margin"
-            app:cardCornerRadius="@dimen/cardview_default_radius"
+            app:cardCornerRadius="@dimen/cardview_radius"
             app:contentPadding="@dimen/cardview_padding">
             <LinearLayout
                 android:layout_width="match_parent"
@@ -237,7 +237,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/cardview_vertical_margin"
             android:layout_marginBottom="@dimen/cardview_vertical_margin"
-            app:cardCornerRadius="@dimen/cardview_default_radius"
+            app:cardCornerRadius="@dimen/cardview_radius"
             app:contentPadding="@dimen/cardview_padding">
             <LinearLayout
                 android:layout_width="match_parent"
