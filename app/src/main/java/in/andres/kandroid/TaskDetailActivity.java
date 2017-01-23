@@ -3,6 +3,8 @@ package in.andres.kandroid;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.design.widget.FloatingActionButton;
+import android.support.v4.widget.NestedScrollView;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Html;
@@ -159,6 +161,16 @@ public class TaskDetailActivity extends AppCompatActivity {
         commentListview = (ListView) findViewById(R.id.comment_listview);
 
         subtaskListview = (ListView) findViewById(R.id.subtask_listview);
+
+        ((NestedScrollView) findViewById(R.id.activity_task_detail)).setOnScrollChangeListener(new NestedScrollView.OnScrollChangeListener() {
+            @Override
+            public void onScrollChange(NestedScrollView v, int scrollX, int scrollY, int oldScrollX, int oldScrollY) {
+                if (oldScrollY - scrollY > 0)
+                    ((FloatingActionButton) findViewById(R.id.fab)).show();
+                else if (oldScrollY - scrollY < 0)
+                    ((FloatingActionButton) findViewById(R.id.fab)).hide();
+            }
+        });
 
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this.getApplicationContext());
         try {
