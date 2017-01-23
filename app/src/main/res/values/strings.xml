@@ -102,6 +102,4 @@
     <string name="taskview_caption_description"><big><b><u>Description</u></b></big></string>
     <string name="taskview_caption_subtask"><big><b><u>Subtasks</u></b></big></string>
 
-    <!--ProjectOverviewFragment-->
-    <string name="projectoverview_description"></string>
 </resources>
