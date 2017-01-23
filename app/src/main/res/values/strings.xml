@@ -41,10 +41,12 @@
     <string name="tab_inactive_tasks">Inactive Tasks</string>
 
     <string name="caption_name">Name:</string>
-    <string name="caption_description">Description:</string>
-    <string name="caption_tasks">Tasks:</string>
-    <string name="caption_columns">Columns:</string>
-    <string name="caption_modify_date">Last modified:</string>
+    <string name="caption_description"><big><b><u>Description</u></b></big></string>
+    <string name="caption_tasks"><big><b><u>Tasks</u></b></big></string>
+    <string name="caption_columns"><big><b><u>Columns</u></b></big></string>
+    <string name="caption_swimlanes"><big><b><u>Swimlanes</u></b></big></string>
+    <string name="caption_modify_date"><big><b><u>Last modified</u></b></big></string>
+    <string name="caption_project_members"><big><b><u>Project Members</u></b></big></string>
 
     <string name="error_no_list_data">No data available!\nPlease hit refresh.</string>
 
@@ -99,4 +101,7 @@
     <string name="taskview_caption_comments"><big><b><u>Comments</u></b></big></string>
     <string name="taskview_caption_description"><big><b><u>Description</u></b></big></string>
     <string name="taskview_caption_subtask"><big><b><u>Subtasks</u></b></big></string>
+
+    <!--ProjectOverviewFragment-->
+    <string name="projectoverview_description"></string>
 </resources>
