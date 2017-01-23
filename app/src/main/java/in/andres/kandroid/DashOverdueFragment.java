@@ -20,7 +20,9 @@ import java.util.concurrent.TimeUnit;
 import in.andres.kandroid.kanboard.KanboardTask;
 
 /**
- * Created by Thomas Andres on 07.01.17.
+ * Fragment to display  the list of users overdue tasks
+ *
+ * Created by Thomas Andres on 2017-01-07.
  */
 
 public class DashOverdueFragment extends ListFragment {
@@ -65,7 +67,7 @@ public class DashOverdueFragment extends ListFragment {
         @Override
         public View getView(int position, View convertView, @NonNull ViewGroup parent) {
             if (convertView == null)
-                convertView = mInflater.inflate(R.layout.listitem_dash_overdue, null);
+                convertView = mInflater.inflate(R.layout.listitem_dash_overdue, parent, false);
 
             TextView textName = (TextView) convertView.findViewById(R.id.task_name);
             TextView textOverdue = (TextView) convertView.findViewById(R.id.task_overdue);

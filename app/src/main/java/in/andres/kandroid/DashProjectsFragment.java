@@ -13,7 +13,9 @@ import in.andres.kandroid.kanboard.KanboardDashboard;
 import in.andres.kandroid.kanboard.KanboardTask;
 
 /**
- * Created by Thomas Andres on 04.01.17.
+ * Fragment to display  the list of users projects and tasks
+ *
+ * Created by Thomas Andres on 2017-01-04.
  */
 
 public class DashProjectsFragment extends Fragment {
@@ -42,8 +44,8 @@ public class DashProjectsFragment extends Fragment {
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-//        Log.d("ProjectsFragment", "onActivityCreated");
         if (((MainActivity)getActivity()).getDashboard() != null) {
+            assert getView() != null : "DashProjectsFragment: getView() returned null";
             getView().findViewById(R.id.fragment_dash_errortext).setVisibility(View.GONE);
             getView().findViewById(R.id.expandable_list).setVisibility(View.VISIBLE);
             DashProjectsAdapter listAdapter = new DashProjectsAdapter(getActivity(), ((MainActivity)getActivity()).getDashboard());
@@ -60,6 +62,7 @@ public class DashProjectsFragment extends Fragment {
                 }
             });
         } else {
+            assert getView() != null : "DashProjectsFragment: getView() returned null";
             getView().findViewById(R.id.fragment_dash_errortext).setVisibility(View.VISIBLE);
             getView().findViewById(R.id.expandable_list).setVisibility(View.GONE);
         }

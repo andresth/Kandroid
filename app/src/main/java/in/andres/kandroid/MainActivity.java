@@ -309,9 +309,9 @@ public class MainActivity extends AppCompatActivity
         }
 
         mArrayPager.removeAllFragments();
-        mArrayPager.addFragment(new DashProjectsFragment(), getString(R.string.tab_projects));
-        mArrayPager.addFragment(new DashOverdueFragment(),getString(R.string.tab_overdue_tasks));
-        mArrayPager.addFragment(new DashActivitiesFragment(), getString(R.string.tab_activity));
+        mArrayPager.addFragment(DashProjectsFragment.newInstance(), getString(R.string.tab_projects));
+        mArrayPager.addFragment(DashOverdueFragment.newInstance(),getString(R.string.tab_overdue_tasks));
+        mArrayPager.addFragment(DashActivitiesFragment.newInstance(), getString(R.string.tab_activity));
         mArrayPager.notifyDataSetChanged();
     }
 

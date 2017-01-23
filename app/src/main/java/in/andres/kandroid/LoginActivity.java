@@ -35,23 +35,9 @@ import java.net.UnknownHostException;
 import javax.net.ssl.HttpsURLConnection;
 
 /**
- * A login screen that offers login via email/password.
+ * A login screen to input url/user/password.
  */
-public class LoginActivity extends AppCompatActivity //implements LoaderCallbacks<Cursor>
-{
-
-    /**
-     * Id to identity READ_CONTACTS permission request.
-     */
-    private static final int REQUEST_READ_CONTACTS = 0;
-
-    /**
-     * A dummy authentication store containing known user names and passwords.
-     * TODO: remove after connecting to a real authentication system.
-     */
-    private static final String[] DUMMY_CREDENTIALS = new String[]{
-            "foo@example.com:hello", "bar@example.com:world"
-    };
+public class LoginActivity extends AppCompatActivity {
     /**
      * Keep track of the login task to ensure we can cancel it if requested.
      */
@@ -59,7 +45,7 @@ public class LoginActivity extends AppCompatActivity //implements LoaderCallback
 
     // UI references.
     private EditText mServerURLView;
-    private EditText mAPIKeyView;
+//    private EditText mAPIKeyView;
     private EditText mUsernameView;
     private EditText mPasswordView;
     private View mProgressView;
@@ -72,9 +58,8 @@ public class LoginActivity extends AppCompatActivity //implements LoaderCallback
         setupActionBar();
         // Set up the login form.
         mServerURLView = (EditText) findViewById(R.id.serverurl);
-        mAPIKeyView = (EditText) findViewById(R.id.apikey);
+//        mAPIKeyView = (EditText) findViewById(R.id.apikey);
         mUsernameView = (EditText) findViewById(R.id.username);
-//        populateAutoComplete();
 
         mPasswordView = (EditText) findViewById(R.id.password);
         mPasswordView.setOnEditorActionListener(new TextView.OnEditorActionListener() {
@@ -102,7 +87,7 @@ public class LoginActivity extends AppCompatActivity //implements LoaderCallback
         // Load preferences
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this.getApplicationContext());
         mServerURLView.setText(preferences.getString("serverurl", ""));
-        mAPIKeyView.setText(preferences.getString("apikey", ""));
+//        mAPIKeyView.setText(preferences.getString("apikey", ""));
         mUsernameView.setText(preferences.getString("username", ""));
         mPasswordView.setText(preferences.getString("password", ""));
     }
@@ -114,7 +99,8 @@ public class LoginActivity extends AppCompatActivity //implements LoaderCallback
     private void setupActionBar() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
             // Show the Up button in the action bar.
-            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            if (getSupportActionBar() != null)
+                getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }
     }
 
@@ -144,7 +130,7 @@ public class LoginActivity extends AppCompatActivity //implements LoaderCallback
 
         // Store values at the time of the login attempt.
         String serverurl = mServerURLView.getText().toString();
-        String apikey = mAPIKeyView.getText().toString();
+//        String apikey = mAPIKeyView.getText().toString();
         String username = mUsernameView.getText().toString();
         String password = mPasswordView.getText().toString();
 
@@ -270,7 +256,7 @@ public class LoginActivity extends AppCompatActivity //implements LoaderCallback
         @Override
         protected Integer doInBackground(Void... params) {
             // TODO: attempt authentication against a network service.
-            HttpsURLConnection con = null;
+            HttpsURLConnection con;
             try {
                 con = (HttpsURLConnection) mUrl.openConnection();
                 con.setRequestMethod("POST");

@@ -9,27 +9,25 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ExpandableListView;
 
-import in.andres.kandroid.kanboard.KanboardColumn;
 import in.andres.kandroid.kanboard.KanboardProject;
 import in.andres.kandroid.kanboard.KanboardTask;
 
 /**
- * Created by Thomas Andres on 04.01.17.
+ * Fragment to show inactive tasks of a project
+ *
+ * Created by Thomas Andres on 2017-01-04.
  */
 
 public class ProjectInactiveTasksFragment extends Fragment {
-    KanboardColumn mColumn;
     public ProjectInactiveTasksFragment() {}
 
     public static ProjectInactiveTasksFragment newInstance() {
-        ProjectInactiveTasksFragment fragment = new ProjectInactiveTasksFragment();
-        return fragment;
+        return new ProjectInactiveTasksFragment();
     }
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-//        Log.d("ProjectsFragment", "onCreateView");
         return inflater.inflate(R.layout.fragment_expandable_list, container, false);
     }
 
@@ -37,6 +35,7 @@ public class ProjectInactiveTasksFragment extends Fragment {
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         if (((MainActivity)getActivity()).getProject() != null) {
+            assert getView() != null : "ProjectInactiveTasksFragment: getView() returned null";
             getView().findViewById(R.id.fragment_dash_errortext).setVisibility(View.GONE);
             getView().findViewById(R.id.expandable_list).setVisibility(View.VISIBLE);
             ProjectTaskAdapter listAdapter = new ProjectTaskAdapter(getActivity(), ((MainActivity)getActivity()).getProject(), ((MainActivity)getActivity()).getProject().getGroupedInactiveTasks());
@@ -55,6 +54,7 @@ public class ProjectInactiveTasksFragment extends Fragment {
                 }
             });
         } else {
+            assert getView() != null : "ProjectInactiveTasksFragment: getView() returned null";
             getView().findViewById(R.id.fragment_dash_errortext).setVisibility(View.VISIBLE);
             getView().findViewById(R.id.expandable_list).setVisibility(View.GONE);
         }
@@ -73,6 +73,7 @@ public class ProjectInactiveTasksFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
+        assert getView() != null : "ProjectInactiveTasksFragment: getView() returned null";
         ExpandableListView lv = (ExpandableListView) getView().findViewById(R.id.expandable_list);
         for (int i = 0; i < lv.getExpandableListAdapter().getGroupCount(); i++)
             lv.expandGroup(i);

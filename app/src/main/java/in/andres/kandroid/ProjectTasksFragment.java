@@ -14,7 +14,9 @@ import in.andres.kandroid.kanboard.KanboardProject;
 import in.andres.kandroid.kanboard.KanboardTask;
 
 /**
- * Created by Thomas Andres on 04.01.17.
+ * Fragment to show tasks grouped by swimlane
+ *
+ * Created by Thomas Andres on 2017-01-04.
  */
 
 public class ProjectTasksFragment extends Fragment {
@@ -39,6 +41,7 @@ public class ProjectTasksFragment extends Fragment {
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         if (((MainActivity)getActivity()).getProject() != null) {
+            assert getView() != null : "ProjectTaskFragment: getView() returned null";
             getView().findViewById(R.id.fragment_dash_errortext).setVisibility(View.GONE);
             getView().findViewById(R.id.expandable_list).setVisibility(View.VISIBLE);
             mColumn = (KanboardColumn) getArguments().getSerializable("column");
@@ -62,6 +65,7 @@ public class ProjectTasksFragment extends Fragment {
                 }
             });
         } else {
+            assert getView() != null : "ProjectTaskFragment: getView() returned null";
             getView().findViewById(R.id.fragment_dash_errortext).setVisibility(View.VISIBLE);
             getView().findViewById(R.id.expandable_list).setVisibility(View.GONE);
         }
@@ -70,18 +74,17 @@ public class ProjectTasksFragment extends Fragment {
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-//        outState.putSerializable("column", mColumn);
     }
 
     @Override
     public void onViewStateRestored(@Nullable Bundle savedInstanceState) {
         super.onViewStateRestored(savedInstanceState);
-//        mColumn = (KanboardColumn) savedInstanceState.getSerializable("column");
     }
 
     @Override
     public void onResume() {
         super.onResume();
+        assert getView() != null : "ProjectTaskFragment: getView() returned null";
         ExpandableListView lv = (ExpandableListView) getView().findViewById(R.id.expandable_list);
         for (int i = 0; i < lv.getExpandableListAdapter().getGroupCount(); i++)
             lv.expandGroup(i);

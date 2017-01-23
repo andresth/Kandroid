@@ -19,27 +19,26 @@ import in.andres.kandroid.kanboard.KanboardSwimlane;
 import in.andres.kandroid.kanboard.KanboardTask;
 
 /**
- * Created by Thomas Andres on 06.01.17.
+ * List adapter to display task grouped by swimlanes
+ *
+ * Created by Thomas Andres on 2017-01-06.
  */
 
 public class ProjectTaskAdapter extends BaseExpandableListAdapter {
     private Context mContext;
     private LayoutInflater mInflater;
-    private KanboardDashboard mDashboard;
     private KanboardProject mProject;
     private Dictionary<Integer, List<KanboardTask>> mData;
 
     public ProjectTaskAdapter(Context context, KanboardDashboard values) {
         mContext = context;
         mInflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        mDashboard = values;
         mProject = null;
     }
 
     public ProjectTaskAdapter(Context context, KanboardProject values, Dictionary<Integer, List<KanboardTask>> data) {
         mContext = context;
         mInflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        mDashboard = null;
         mProject = values;
         mData = data;
     }
@@ -84,7 +83,7 @@ public class ProjectTaskAdapter extends BaseExpandableListAdapter {
         KanboardSwimlane swimlane = (KanboardSwimlane) getGroup(groupPosition);
 
         if (convertView == null)
-            convertView = mInflater.inflate(R.layout.listitem_dash_project_header, null);
+            convertView = mInflater.inflate(R.layout.listitem_dash_project_header, parent, false);
 
         TextView projectName = (TextView) convertView.findViewById(R.id.project_name);
         TextView projectDescription = (TextView) convertView.findViewById(R.id.project_description);
@@ -115,7 +114,7 @@ public class ProjectTaskAdapter extends BaseExpandableListAdapter {
         final KanboardTask child = (KanboardTask) getChild(groupPosition, childPosition);
 
         if (convertView == null)
-            convertView = mInflater.inflate(R.layout.listitem_project_task, null);
+            convertView = mInflater.inflate(R.layout.listitem_project_task, parent, false);
 
         ((TextView) convertView.findViewById(R.id.task_name)).setText(Html.fromHtml(String.format(Locale.getDefault(), "<big><b>#%d</b></big><br />%s", child.getId(), child.getTitle())));
 
