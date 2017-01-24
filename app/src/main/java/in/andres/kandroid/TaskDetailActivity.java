@@ -1,5 +1,7 @@
 package in.andres.kandroid;
 
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -7,6 +9,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v4.view.ViewCompat;
 import android.support.v4.widget.NestedScrollView;
 import android.support.v7.app.ActionBar;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Html;
 import android.view.MenuItem;
@@ -15,6 +18,7 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.view.animation.OvershootInterpolator;
 import android.widget.ArrayAdapter;
+import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -42,6 +46,7 @@ public class TaskDetailActivity extends AppCompatActivity {
     private KanboardCategory category;
     private KanboardSwimlane swimlane;
     private KanboardColumn column;
+    Context self;
 
     private KanboardAPI kanboardAPI;
 
@@ -149,6 +154,8 @@ public class TaskDetailActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_task_detail);
 
+        self = this;
+
         findViewById(R.id.card_description).setVisibility(View.GONE);
         findViewById(R.id.card_subtasks).setVisibility(View.GONE);
         findViewById(R.id.card_comments).setVisibility(View.GONE);
@@ -205,6 +212,30 @@ public class TaskDetailActivity extends AppCompatActivity {
                     ((FloatingActionButton) findViewById(R.id.fab)).hide();
                     ViewCompat.setRotation(fabMenu, 0.0F);
                 }
+            }
+        });
+
+        fabMenuButton2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(self);
+                builder.setTitle("New comment");
+                EditText input = new EditText(getApplicationContext());
+                input.setMaxLines(10);
+                builder.setView(input);
+                builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                });
+                builder.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.cancel();
+                    }
+                });
+                builder.show();
             }
         });
 
@@ -333,5 +364,13 @@ public class TaskDetailActivity extends AppCompatActivity {
             return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (isFABMenuOpen)
+            collapseFABMenu();
+        else
+            super.onBackPressed();
     }
 }
