@@ -57,6 +57,7 @@ public class DashProjectsFragment extends Fragment {
                     KanboardTask clickedTask = dashboard.getGroupedTasks().get(dashboard.getProjects().get(groupPosition).getId()).get(childPosition);
                     Intent taskIntent = new Intent(getContext(), TaskDetailActivity.class);
                     taskIntent.putExtra("task", clickedTask);
+                    taskIntent.putExtra("me", ((MainActivity)getActivity()).getMe());
                     startActivity(taskIntent);
                     return true;
                 }

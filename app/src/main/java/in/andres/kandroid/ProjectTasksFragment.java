@@ -56,6 +56,7 @@ public class ProjectTasksFragment extends Fragment {
                     KanboardTask clickedTask = project.getGroupedActiveTasks().get(mColumn.getId()).get(project.getSwimlanes().get(groupPosition).getId()).get(childPosition);
                     Intent taskIntent = new Intent(getContext(), TaskDetailActivity.class);
                     taskIntent.putExtra("task", clickedTask);
+                    taskIntent.putExtra("me", ((MainActivity)getActivity()).getMe());
                     taskIntent.putExtra("column", mColumn);
                     taskIntent.putExtra("swimlane", project.getSwimlanes().get(groupPosition));
                     if (clickedTask.getCategoryId() > 0)

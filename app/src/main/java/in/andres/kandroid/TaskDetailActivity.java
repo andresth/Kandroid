@@ -12,6 +12,7 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Html;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.animation.Animation;
@@ -33,6 +34,8 @@ import in.andres.kandroid.kanboard.KanboardComment;
 import in.andres.kandroid.kanboard.KanboardSubtask;
 import in.andres.kandroid.kanboard.KanboardSwimlane;
 import in.andres.kandroid.kanboard.KanboardTask;
+import in.andres.kandroid.kanboard.KanboardUserInfo;
+import in.andres.kandroid.kanboard.OnCreateCommentListener;
 import in.andres.kandroid.kanboard.OnGetAllCommentsListener;
 import in.andres.kandroid.kanboard.OnGetAllSubtasksListener;
 import in.andres.kandroid.kanboard.OnGetCategoryListener;
@@ -46,6 +49,7 @@ public class TaskDetailActivity extends AppCompatActivity {
     private KanboardCategory category;
     private KanboardSwimlane swimlane;
     private KanboardColumn column;
+    private KanboardUserInfo me;
     Context self;
 
     private KanboardAPI kanboardAPI;
@@ -115,6 +119,14 @@ public class TaskDetailActivity extends AppCompatActivity {
                 subtaskListview.setAdapter(new ArrayAdapter<>(getApplicationContext(), android.R.layout.simple_list_item_1, result));
                 findViewById(R.id.card_subtasks).setVisibility(View.VISIBLE);
             }
+        }
+    };
+    private OnCreateCommentListener createCommentListener = new OnCreateCommentListener() {
+        @Override
+        public void onCreateComment(boolean success, Integer commentid) {
+            Log.d("createComment", Boolean.toString(success));
+            if (success)
+                kanboardAPI.getAllComments(task.getId());
         }
     };
 
@@ -220,12 +232,13 @@ public class TaskDetailActivity extends AppCompatActivity {
             public void onClick(View v) {
                 AlertDialog.Builder builder = new AlertDialog.Builder(self);
                 builder.setTitle("New comment");
-                EditText input = new EditText(getApplicationContext());
+                final EditText input = new EditText(getApplicationContext());
                 input.setMaxLines(10);
                 builder.setView(input);
                 builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
+                        kanboardAPI.createComment(task.getId(), me.getId(), input.getText().toString());
                         dialog.dismiss();
                     }
                 });
@@ -249,10 +262,12 @@ public class TaskDetailActivity extends AppCompatActivity {
             kanboardAPI.addOnGetSwimlaneListener(swimlaneListener);
             kanboardAPI.addOnGetDefaultSwimlaneListener(defaultSwimlaneListener);
             kanboardAPI.addOnGetAllSubtasksListener(allSubtasksListener);
+            kanboardAPI.addOnCreateCommentListener(createCommentListener);
         } catch (IOException e) {
             e.printStackTrace();
         }
 
+        me = (KanboardUserInfo) getIntent().getSerializableExtra("me");
         task = (KanboardTask) getIntent().getSerializableExtra("task");
         if (getIntent().hasExtra("column")) {
             column = (KanboardColumn) getIntent().getSerializableExtra("column");

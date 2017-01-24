@@ -426,6 +426,11 @@ public class MainActivity extends AppCompatActivity
     public KanboardProject getProject() {
         return mProject;
     }
+
+    public KanboardUserInfo getMe() {
+        return Me;
+    }
+
     //endregion
 
 }
