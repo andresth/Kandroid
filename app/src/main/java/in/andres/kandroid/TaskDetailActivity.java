@@ -4,12 +4,16 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.view.ViewCompat;
 import android.support.v4.widget.NestedScrollView;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Html;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
+import android.view.animation.OvershootInterpolator;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -131,6 +135,15 @@ public class TaskDetailActivity extends AppCompatActivity {
 
     private ListView subtaskListview;
 
+    private FloatingActionButton fabMenu;
+    private FloatingActionButton fabMenuButton1;
+    private FloatingActionButton fabMenuButton2;
+
+    private Animation fabCloseAnimation;
+    private Animation fabOpenAnimation;
+
+    private boolean isFABMenuOpen = false;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -162,13 +175,36 @@ public class TaskDetailActivity extends AppCompatActivity {
 
         subtaskListview = (ListView) findViewById(R.id.subtask_listview);
 
+        fabMenu = (FloatingActionButton) findViewById(R.id.fab);
+        fabMenuButton1 = (FloatingActionButton) findViewById(R.id.fab_menu_button1);
+        fabMenuButton2 = (FloatingActionButton) findViewById(R.id.fab_menu_button2);
+
+        fabCloseAnimation = AnimationUtils.loadAnimation(this, R.anim.fab_close);
+        fabOpenAnimation = AnimationUtils.loadAnimation(this, R.anim.fab_open);
+
+        fabMenu.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (findViewById(R.id.fab).getVisibility() == View.VISIBLE) {
+                    if (isFABMenuOpen)
+                        collapseFABMenu();
+                    else
+                        expandFABMenu();
+                }
+            }
+        });
+
         ((NestedScrollView) findViewById(R.id.activity_task_detail)).setOnScrollChangeListener(new NestedScrollView.OnScrollChangeListener() {
             @Override
             public void onScrollChange(NestedScrollView v, int scrollX, int scrollY, int oldScrollX, int oldScrollY) {
                 if (oldScrollY - scrollY > 0)
                     ((FloatingActionButton) findViewById(R.id.fab)).show();
-                else if (oldScrollY - scrollY < 0)
+                else if (oldScrollY - scrollY < 0) {
+                    if (isFABMenuOpen)
+                        collapseFABMenu();
                     ((FloatingActionButton) findViewById(R.id.fab)).hide();
+                    ViewCompat.setRotation(fabMenu, 0.0F);
+                }
             }
         });
 
@@ -212,6 +248,24 @@ public class TaskDetailActivity extends AppCompatActivity {
         kanboardAPI.getAllComments(task.getId());
         kanboardAPI.getAllSubtasks(task.getId());
         setupActionBar();
+    }
+
+    private void expandFABMenu() {
+        ViewCompat.animate(fabMenu).rotation(45.0F).withLayer().setDuration(300).setInterpolator(new OvershootInterpolator(10.0F)).start();
+        findViewById(R.id.fab_menu_item1).startAnimation(fabOpenAnimation);
+        findViewById(R.id.fab_menu_item2).startAnimation(fabOpenAnimation);
+        fabMenuButton1.setClickable(true);
+        fabMenuButton2.setClickable(true);
+        isFABMenuOpen = true;
+    }
+
+    private void collapseFABMenu() {
+        ViewCompat.animate(fabMenu).rotation(0.0F).withLayer().setDuration(300).setInterpolator(new OvershootInterpolator(10.0F)).start();
+        findViewById(R.id.fab_menu_item1).startAnimation(fabCloseAnimation);
+        findViewById(R.id.fab_menu_item2).startAnimation(fabCloseAnimation);
+        fabMenuButton1.setClickable(false);
+        fabMenuButton2.setClickable(false);
+        isFABMenuOpen = false;
     }
 
     private void  setupActionBar() {

@@ -50,20 +50,20 @@
 
                         <TextView
                             android:id="@+id/text_status"
-                            android:text="Status:"
+                            tools:text="Status:"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_weight="1" />
 
                         <TextView
-                            android:text="Priorität:"
+                            tools:text="Priorität:"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:id="@+id/text_priority" />
                         <TextView
                             android:id="@+id/text_position"
-                            android:text="Position:"
+                            tools:text="Position:"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_weight="1" />
@@ -75,13 +75,13 @@
 
                         <TextView
                             android:id="@+id/text_category"
-                            android:text="Kategorie:"
+                            tools:text="Kategorie:"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_weight="1" />
 
                         <TextView
-                            android:text="Swimlane:"
+                            tools:text="Swimlane:"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
@@ -94,13 +94,13 @@
 
                         <TextView
                             android:id="@+id/text_owner"
-                            android:text="Zuständig:"
+                            tools:text="Zuständig:"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_weight="1" />
 
                         <TextView
-                            android:text="Ersteller:"
+                            tools:text="Ersteller:"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
@@ -114,20 +114,20 @@
 
                         <TextView
                             android:id="@+id/text_DateCreated"
-                            android:text="Erstellt:"
+                            tools:text="Erstellt:"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_weight="1" />
 
                         <TextView
-                            android:text="Verändert:"
+                            tools:text="Verändert:"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:id="@+id/text_DateModified" />
                         <TextView
                             android:id="@+id/text_DateMoved"
-                            android:text="Verschoben:"
+                            tools:text="Verschoben:"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_weight="1" />
@@ -182,13 +182,13 @@
                         <TextView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:text="Geplant:"
+                            tools:text="Geplant:"
                             android:layout_weight="1"
                             android:id="@+id/text_HoursEstimated"/>
                         <TextView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:text="Verbraucht:"
+                            tools:text="Verbraucht:"
                             android:layout_weight="1"
                             android:id="@+id/text_HoursUsed"/>
                     </TableRow>
@@ -196,13 +196,13 @@
                         <TextView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:text="Start:"
+                            tools:text="Start:"
                             android:layout_weight="1"
                             android:id="@+id/text_DateStart"/>
                         <TextView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:text="Ende:"
+                            tools:text="Ende:"
                             android:layout_weight="1"
                             android:id="@+id/text_DateDue"/>
                     </TableRow>
@@ -263,12 +263,76 @@
 
     </android.support.v4.widget.NestedScrollView>
 
-    <android.support.design.widget.FloatingActionButton
-        android:id="@+id/fab"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_margin="@dimen/fab_margin"
-        android:src="@drawable/plus"
-        app:layout_anchorGravity="bottom|end"
-        app:layout_anchor="@id/activity_task_detail" />
+    <android.support.constraint.ConstraintLayout
+        android:id="@+id/fab_menu"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/fab"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/fab_margin"
+            android:src="@drawable/plus"
+            android:clickable="true"
+            app:layout_constraintEnd_toEndOf="@+id/fab_menu"
+            app:layout_constraintBottom_toBottomOf="parent"
+            tools:layout_editor_absoluteX="304dp" />
+       <!--<android.support.design.widget.FloatingActionButton-->
+            <!--android:id="@+id/fab"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_margin="@dimen/fab_margin"-->
+            <!--android:src="@drawable/plus"-->
+            <!--app:layout_constraintEnd_toEndOf="@+id/fab_menu"-->
+            <!--app:layout_constraintBottom_toBottomOf="@+id/fab_menu" />-->
+        <LinearLayout
+            android:id="@+id/fab_menu_item1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:visibility="invisible"
+            android:layout_marginBottom="6dp"
+            android:layout_marginEnd="16dp"
+            app:layout_constraintBottom_toTopOf="@+id/fab"
+            app:layout_constraintEnd_toEndOf="@id/fab_menu">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="item1" />
+            <android.support.design.widget.FloatingActionButton
+                android:id="@+id/fab_menu_button1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="8dp"
+                android:src="@drawable/folder"
+                app:fabSize="mini" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/fab_menu_item2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:visibility="invisible"
+            android:layout_marginBottom="-2dp"
+            android:layout_marginEnd="16dp"
+            app:layout_constraintBottom_toTopOf="@+id/fab_menu_item1"
+            app:layout_constraintEnd_toEndOf="@id/fab_menu">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="item2"/>
+            <android.support.design.widget.FloatingActionButton
+                android:id="@+id/fab_menu_button2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/comment"
+                android:layout_margin="8dp"
+                app:fabSize="mini" />
+        </LinearLayout>
+
+    </android.support.constraint.ConstraintLayout>
 </android.support.design.widget.CoordinatorLayout>
