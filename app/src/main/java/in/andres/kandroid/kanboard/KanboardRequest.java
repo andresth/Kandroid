@@ -196,6 +196,21 @@ public class KanboardRequest {
     }
 
     @NonNull
+    public static KanboardRequest createComment(int taskid, int userid, String comment) {
+        return new KanboardRequest("createComment", new String[] {String.format("" +
+                "{\n" +
+                "    \"jsonrpc\": \"2.0\",\n" +
+                "    \"method\": \"createComment\",\n" +
+                "    \"id\": 1580417921,\n" +
+                "    \"params\": {\n" +
+                "        \"task_id\": %d,\n" +
+                "        \"user_id\": %d,\n" +
+                "        \"content\": \"%s\"\n" +
+                "    }\n" +
+                "}", taskid, userid, comment)});
+    }
+
+    @NonNull
     public static KanboardRequest getAllSubtasks(int taskid) {
         return new KanboardRequest("getAllSubtasks", new String[] {String.format(
                 "{\n" +

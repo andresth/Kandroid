@@ -278,6 +278,21 @@ public class KanboardAPI {
                 return;
             }
 
+            if (s.Request.Command.equalsIgnoreCase("createComment")) {
+                Integer res = null;
+                try {
+                    if (!s.Result[0].getString("result").equalsIgnoreCase("false")) {
+                        success = true;
+                        res = s.Result[0].getInt("result");
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                for (OnCreateCommentListener l: onCreateCommentListeners)
+                    l.onCreateComment(success, res);
+                return;
+            }
+
             if (s.Request.Command.equalsIgnoreCase("KD_getDashboard")) {
                 KanboardDashboard res = null;
                 try {
@@ -327,6 +342,7 @@ public class KanboardAPI {
     private HashSet<OnGetDefaultSwimlaneListener> onGetDefaultSwimlaneListeners = new HashSet<>();
     private HashSet<OnGetAllSubtasksListener> onGetAllSubtasksListeners = new HashSet<>();
     private HashSet<OnGetMeListener> onGetMeListeners = new HashSet<>();
+    private HashSet<OnCreateCommentListener> onCreateCommentListeners = new HashSet<>();
 
     public KanboardAPI(String serverURL, final String username, final String password) throws IOException {
         Authenticator.setDefault(new Authenticator() {
@@ -417,6 +433,14 @@ public class KanboardAPI {
         onGetMeListeners.remove(listener);
     }
 
+    public void addOnCreateCommentListener(@NonNull OnCreateCommentListener listener) {
+        onCreateCommentListeners.add(listener);
+    }
+
+    public void removeOnCreateCommentListener(@NonNull OnCreateCommentListener listener) {
+        onCreateCommentListeners.remove(listener);
+    }
+
     public void getMe() {
         new KanboardAsync().execute(KanboardRequest.getMe());
     }
@@ -439,6 +463,10 @@ public class KanboardAPI {
 
     public void getAllComments(int taskid) {
         new KanboardAsync().execute(KanboardRequest.getAllComments(taskid));
+    }
+
+    public void createComment(int taskid, int userid, String comment) {
+        new KanboardAsync().execute(KanboardRequest.createComment(taskid, userid, comment));
     }
 
     public void getDefaultSwimlane(int projectid) {
