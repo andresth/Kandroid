@@ -49,6 +49,7 @@ public class DashOverdueFragment extends ListFragment {
         KanboardTask clickedTask = ((MainActivity)getActivity()).getDashboard().getOverdueTasks().get(position);
         Intent taskIntent = new Intent(getContext(), TaskDetailActivity.class);
         taskIntent.putExtra("task", clickedTask);
+        taskIntent.putExtra("me", ((MainActivity)getActivity()).getMe());
         startActivity(taskIntent);
     }
 

@@ -50,6 +50,7 @@ public class ProjectOverdueTasksFragment extends Fragment {
                     KanboardTask clickedTask = project.getGroupedOverdueTasks().get(project.getSwimlanes().get(groupPosition).getId()).get(childPosition);
                     Intent taskIntent = new Intent(getContext(), TaskDetailActivity.class);
                     taskIntent.putExtra("task", clickedTask);
+                    taskIntent.putExtra("me", ((MainActivity)getActivity()).getMe());
                     startActivity(taskIntent);
                     return true;
                 }
