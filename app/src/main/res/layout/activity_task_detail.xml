@@ -300,13 +300,13 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="item1" />
+                android:text="Close Task" />
             <android.support.design.widget.FloatingActionButton
                 android:id="@+id/fab_menu_button1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_margin="8dp"
-                android:src="@drawable/folder"
+                android:src="@drawable/close_task"
                 app:fabSize="mini" />
         </LinearLayout>
 
@@ -324,7 +324,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="item2"/>
+                android:text="New Comment"/>
             <android.support.design.widget.FloatingActionButton
                 android:id="@+id/fab_menu_button2"
                 android:layout_width="wrap_content"
