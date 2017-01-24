@@ -117,6 +117,8 @@ public class KanboardAPI {
                 }
                 for (KanbordEvents l: listeners)
                     l.onGetMe(success, res);
+                for (OnGetMeListener l: onGetMeListeners)
+                    l.onGetMe(success, res);
                 return;
             }
 
@@ -324,6 +326,7 @@ public class KanboardAPI {
     private HashSet<OnGetProjectUsersListener> onGetProjectUsersListeners = new HashSet<>();
     private HashSet<OnGetDefaultSwimlaneListener> onGetDefaultSwimlaneListeners = new HashSet<>();
     private HashSet<OnGetAllSubtasksListener> onGetAllSubtasksListeners = new HashSet<>();
+    private HashSet<OnGetMeListener> onGetMeListeners = new HashSet<>();
 
     public KanboardAPI(String serverURL, final String username, final String password) throws IOException {
         Authenticator.setDefault(new Authenticator() {
@@ -404,6 +407,14 @@ public class KanboardAPI {
 
     public void removeOnGetAllSubtasksListener(@NonNull OnGetAllSubtasksListener listener) {
         onGetAllSubtasksListeners.remove(listener);
+    }
+
+    public void addOnGetMeListener(@NonNull OnGetMeListener listener) {
+        onGetMeListeners.add(listener);
+    }
+
+    public void removeOnGetMeListener(@NonNull OnGetMeListener listener) {
+        onGetMeListeners.remove(listener);
     }
 
     public void getMe() {
