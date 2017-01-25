@@ -210,6 +210,35 @@ public class KanboardRequest {
                 "}", taskid, userid, comment)});
     }
 
+    @Nullable
+    public static KanboardRequest createSubtask(int taskid, @NonNull String title, @Nullable Integer userid,
+                                                @Nullable Integer timeestimated, @Nullable Integer timespent, @Nullable Integer status) {
+        String content = String.format("" +
+                "        \"task_id\": %d,\n" +
+                "        \"title\": \"%s\"", taskid, title);
+        if (userid != null)
+            content += String.format("" + ",\n" +
+                    "        \"user_id\": %d", userid);
+        if (timeestimated != null)
+            content += String.format("" + ",\n" +
+                    "        \"user_id\": %d", timeestimated);
+        if (timespent != null)
+            content += String.format("" + ",\n" +
+                    "        \"user_id\": %d", timespent);
+        if (status != null)
+            content += String.format("" + ",\n" +
+                    "        \"user_id\": %d", status);
+        return new KanboardRequest("createSubtask", new String[] {String.format(
+                "{\n" +
+                "    \"jsonrpc\": \"2.0\",\n" +
+                "    \"method\": \"createSubtask\",\n" +
+                "    \"id\": 2041554661,\n" +
+                "    \"params\": {\n" +
+                "%s\n"+
+                "    }\n" +
+                "}", content)});
+    }
+
     @NonNull
     public static KanboardRequest getAllSubtasks(int taskid) {
         return new KanboardRequest("getAllSubtasks", new String[] {String.format(

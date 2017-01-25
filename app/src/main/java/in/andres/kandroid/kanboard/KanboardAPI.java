@@ -29,6 +29,8 @@ import java.util.regex.Pattern;
 
 import javax.net.ssl.HttpsURLConnection;
 
+import in.andres.kandroid.kanboard.events.OnCreateSubtaskListener;
+
 public class KanboardAPI {
 
     private class KanboardAsync extends AsyncTask<KanboardRequest, Void, KanboardResult> {
@@ -293,6 +295,21 @@ public class KanboardAPI {
                 return;
             }
 
+            if (s.Request.Command.equalsIgnoreCase("createSubtask")) {
+                Integer res = null;
+                try {
+                    if (!s.Result[0].getString("result").equalsIgnoreCase("false")) {
+                        success = true;
+                        res = s.Result[0].getInt("result");
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                for (OnCreateSubtaskListener l: onCreateSubtaskListeners)
+                    l.onCreateSubtask(success, res);
+                return;
+            }
+
             if (s.Request.Command.equalsIgnoreCase("KD_getDashboard")) {
                 KanboardDashboard res = null;
                 try {
@@ -343,6 +360,7 @@ public class KanboardAPI {
     private HashSet<OnGetAllSubtasksListener> onGetAllSubtasksListeners = new HashSet<>();
     private HashSet<OnGetMeListener> onGetMeListeners = new HashSet<>();
     private HashSet<OnCreateCommentListener> onCreateCommentListeners = new HashSet<>();
+    private HashSet<OnCreateSubtaskListener> onCreateSubtaskListeners = new HashSet<>();
 
     public KanboardAPI(String serverURL, final String username, final String password) throws IOException {
         Authenticator.setDefault(new Authenticator() {
@@ -441,6 +459,14 @@ public class KanboardAPI {
         onCreateCommentListeners.remove(listener);
     }
 
+    public void addOnCreateSubtaskListener(@NonNull OnCreateSubtaskListener listener) {
+        onCreateSubtaskListeners.add(listener);
+    }
+
+    public void removeOnSubtaskCommentListener(@NonNull OnCreateSubtaskListener listener) {
+        onCreateSubtaskListeners.remove(listener);
+    }
+
     public void getMe() {
         new KanboardAsync().execute(KanboardRequest.getMe());
     }
@@ -483,6 +509,11 @@ public class KanboardAPI {
 
     public void getAllSubtasks(int taskid) {
         new KanboardAsync().execute(KanboardRequest.getAllSubtasks(taskid));
+    }
+
+    public void createSubtask(int taskid, @NonNull String title, @Nullable Integer userid,
+                              @Nullable Integer timeestimated, @Nullable Integer timespent, @Nullable Integer status) {
+        new KanboardAsync().execute(KanboardRequest.createSubtask(taskid, title, userid, timeestimated, timespent, status));
     }
 
     public void KB_getDashboard() {
