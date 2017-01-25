@@ -235,9 +235,12 @@ public class TaskDetailActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 AlertDialog.Builder builder = new AlertDialog.Builder(self);
-                builder.setTitle("New comment");
+                builder.setTitle(getString(R.string.taskview_fab_new_comment));
                 final EditText input = new EditText(getApplicationContext());
+                input.setSingleLine(false);
+                input.setMinLines(5);
                 input.setMaxLines(10);
+                input.setVerticalScrollBarEnabled(true);
                 builder.setView(input);
                 builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
                     @Override
