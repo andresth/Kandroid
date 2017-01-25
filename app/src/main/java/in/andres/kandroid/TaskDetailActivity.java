@@ -153,8 +153,10 @@ public class TaskDetailActivity extends AppCompatActivity {
     private ListView subtaskListview;
 
     private FloatingActionButton fabMenu;
-    private FloatingActionButton fabMenuButton1;
-    private FloatingActionButton fabMenuButton2;
+    private FloatingActionButton fabMenuButtonCloseTask;
+    private FloatingActionButton fabMenuButtonNewComment;
+    private FloatingActionButton fabMenuButtonNewSubtask;
+    private FloatingActionButton fabMenuButtonEditTask;
 
     private Animation fabCloseAnimation;
     private Animation fabOpenAnimation;
@@ -195,8 +197,10 @@ public class TaskDetailActivity extends AppCompatActivity {
         subtaskListview = (ListView) findViewById(R.id.subtask_listview);
 
         fabMenu = (FloatingActionButton) findViewById(R.id.fab);
-        fabMenuButton1 = (FloatingActionButton) findViewById(R.id.fab_menu_button1);
-        fabMenuButton2 = (FloatingActionButton) findViewById(R.id.fab_menu_button2);
+        fabMenuButtonCloseTask = (FloatingActionButton) findViewById(R.id.fab_menu_button_close_task);
+        fabMenuButtonNewComment = (FloatingActionButton) findViewById(R.id.fab_menu_button_new_comment);
+        fabMenuButtonNewSubtask = (FloatingActionButton) findViewById(R.id.fab_menu_button_new_subtask);
+        fabMenuButtonEditTask = (FloatingActionButton) findViewById(R.id.fab_menu_button_edi_task_task);
 
         fabCloseAnimation = AnimationUtils.loadAnimation(this, R.anim.fab_close);
         fabOpenAnimation = AnimationUtils.loadAnimation(this, R.anim.fab_open);
@@ -227,7 +231,7 @@ public class TaskDetailActivity extends AppCompatActivity {
             }
         });
 
-        fabMenuButton2.setOnClickListener(new View.OnClickListener() {
+        fabMenuButtonNewComment.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 AlertDialog.Builder builder = new AlertDialog.Builder(self);
@@ -300,8 +304,12 @@ public class TaskDetailActivity extends AppCompatActivity {
         ViewCompat.animate(fabMenu).rotation(45.0F).withLayer().setDuration(300).setInterpolator(new OvershootInterpolator(10.0F)).start();
         findViewById(R.id.fab_menu_item1).startAnimation(fabOpenAnimation);
         findViewById(R.id.fab_menu_item2).startAnimation(fabOpenAnimation);
-        fabMenuButton1.setClickable(true);
-        fabMenuButton2.setClickable(true);
+        findViewById(R.id.fab_menu_item3).startAnimation(fabOpenAnimation);
+        findViewById(R.id.fab_menu_item4).startAnimation(fabOpenAnimation);
+        fabMenuButtonCloseTask.setClickable(true);
+        fabMenuButtonNewComment.setClickable(true);
+        fabMenuButtonNewSubtask.setClickable(true);
+        fabMenuButtonEditTask.setClickable(true);
         isFABMenuOpen = true;
     }
 
@@ -309,8 +317,12 @@ public class TaskDetailActivity extends AppCompatActivity {
         ViewCompat.animate(fabMenu).rotation(0.0F).withLayer().setDuration(300).setInterpolator(new OvershootInterpolator(10.0F)).start();
         findViewById(R.id.fab_menu_item1).startAnimation(fabCloseAnimation);
         findViewById(R.id.fab_menu_item2).startAnimation(fabCloseAnimation);
-        fabMenuButton1.setClickable(false);
-        fabMenuButton2.setClickable(false);
+        findViewById(R.id.fab_menu_item3).startAnimation(fabCloseAnimation);
+        findViewById(R.id.fab_menu_item4).startAnimation(fabCloseAnimation);
+        fabMenuButtonCloseTask.setClickable(false);
+        fabMenuButtonNewComment.setClickable(false);
+        fabMenuButtonNewSubtask.setClickable(false);
+        fabMenuButtonEditTask.setClickable(false);
         isFABMenuOpen = false;
     }
 
