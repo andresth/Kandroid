@@ -300,9 +300,12 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Close Task" />
+                android:background="@drawable/fab_label_shape"
+                android:textColor="@android:color/white"
+                android:padding="5dp"
+                android:text="@string/taskview_fab_close_task" />
             <android.support.design.widget.FloatingActionButton
-                android:id="@+id/fab_menu_button1"
+                android:id="@+id/fab_menu_button_close_task"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_margin="8dp"
@@ -317,19 +320,76 @@
             android:orientation="horizontal"
             android:gravity="center_vertical"
             android:visibility="invisible"
-            android:layout_marginBottom="-2dp"
+            android:layout_marginBottom="6dp"
             android:layout_marginEnd="16dp"
             app:layout_constraintBottom_toTopOf="@+id/fab_menu_item1"
             app:layout_constraintEnd_toEndOf="@id/fab_menu">
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="New Comment"/>
+                android:background="@drawable/fab_label_shape"
+                android:textColor="@android:color/white"
+                android:padding="5dp"
+                android:text="@string/taskview_fab_edit_task" />
             <android.support.design.widget.FloatingActionButton
-                android:id="@+id/fab_menu_button2"
+                android:id="@+id/fab_menu_button_edi_task_task"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="8dp"
+                android:src="@drawable/task_edit"
+                app:fabSize="mini" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/fab_menu_item3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:visibility="invisible"
+            android:layout_marginBottom="-2dp"
+            android:layout_marginEnd="16dp"
+            app:layout_constraintBottom_toTopOf="@+id/fab_menu_item2"
+            app:layout_constraintEnd_toEndOf="@id/fab_menu">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/fab_label_shape"
+                android:textColor="@android:color/white"
+                android:padding="5dp"
+                android:text="@string/taskview_fab_new_comment"/>
+            <android.support.design.widget.FloatingActionButton
+                android:id="@+id/fab_menu_button_new_comment"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:src="@drawable/comment"
+                android:layout_margin="8dp"
+                app:fabSize="mini" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/fab_menu_item4"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:visibility="invisible"
+            android:layout_marginBottom="-2dp"
+            android:layout_marginEnd="16dp"
+            app:layout_constraintBottom_toTopOf="@+id/fab_menu_item3"
+            app:layout_constraintEnd_toEndOf="@id/fab_menu">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/fab_label_shape"
+                android:textColor="@android:color/white"
+                android:padding="5dp"
+                android:text="@string/taskview_fab_new_subtask"/>
+            <android.support.design.widget.FloatingActionButton
+                android:id="@+id/fab_menu_button_new_subtask"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/subtask"
                 android:layout_margin="8dp"
                 app:fabSize="mini" />
         </LinearLayout>

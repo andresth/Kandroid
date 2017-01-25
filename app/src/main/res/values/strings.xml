@@ -101,5 +101,8 @@
     <string name="taskview_caption_comments"><big><b><u>Comments</u></b></big></string>
     <string name="taskview_caption_description"><big><b><u>Description</u></b></big></string>
     <string name="taskview_caption_subtask"><big><b><u>Subtasks</u></b></big></string>
-
+    <string name="taskview_fab_new_comment">New Comment</string>
+    <string name="taskview_fab_new_subtask">New Subtask</string>
+    <string name="taskview_fab_close_task">Close Task</string>
+    <string name="taskview_fab_edit_task">Edit Task</string>
 </resources>
