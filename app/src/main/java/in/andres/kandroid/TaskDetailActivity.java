@@ -51,7 +51,9 @@ import in.andres.kandroid.kanboard.OnGetDefaultSwimlaneListener;
 import in.andres.kandroid.kanboard.OnGetProjectUsersListener;
 import in.andres.kandroid.kanboard.OnGetSwimlaneListener;
 import in.andres.kandroid.kanboard.OnGetTaskListener;
+import in.andres.kandroid.kanboard.events.OnCloseTaskListener;
 import in.andres.kandroid.kanboard.events.OnCreateSubtaskListener;
+import in.andres.kandroid.kanboard.events.OnOpenTaskListener;
 
 public class TaskDetailActivity extends AppCompatActivity {
     private KanboardTask task;
@@ -128,7 +130,6 @@ public class TaskDetailActivity extends AppCompatActivity {
         public void onGetAllSubtasks(boolean success, List<KanboardSubtask> result) {
             if (success && result.size() > 0) {
                 subtaskListview.setAdapter(new SubtaskAdapter(getApplicationContext(), result));
-//                subtaskListview.setAdapter(new ArrayAdapter<>(getApplicationContext(), android.R.layout.simple_list_item_1, result));
                 findViewById(R.id.card_subtasks).setVisibility(View.VISIBLE);
             }
         }
@@ -141,13 +142,34 @@ public class TaskDetailActivity extends AppCompatActivity {
                 kanboardAPI.getAllComments(task.getId());
         }
     };
-
     private OnCreateSubtaskListener createSubtaskListener = new OnCreateSubtaskListener() {
         @Override
         public void onCreateSubtask(boolean success, Integer result) {
             Log.d("createSubtask", Boolean.toString(success));
             if (success)
                 kanboardAPI.getAllSubtasks(task.getId());
+        }
+    };
+    private OnOpenTaskListener openTaskListener = new OnOpenTaskListener() {
+        @Override
+        public void onOpenTask(boolean success) {
+            if (success) {
+                textStatus.setText(Html.fromHtml(getString(R.string.taskview_status, getString(R.string.taskview_status_open))));
+                fabMenuButtonOpenCloseTask.setImageDrawable(getDrawable(R.drawable.task_close));
+                fabMenuLabelOpenCloseTask.setText(getString(R.string.taskview_fab_close_task));
+                kanboardAPI.getTask(task.getId());
+            }
+        }
+    };
+    private OnCloseTaskListener closeTaskListener = new OnCloseTaskListener() {
+        @Override
+        public void onCloseTask(boolean success) {
+            if (success) {
+                textStatus.setText(Html.fromHtml(getString(R.string.taskview_status, getString(R.string.taskview_status_closed))));
+                fabMenuButtonOpenCloseTask.setImageDrawable(getDrawable(R.drawable.task_open));
+                fabMenuLabelOpenCloseTask.setText(getString(R.string.taskview_fab_open_task));
+                kanboardAPI.getTask(task.getId());
+            }
         }
     };
 
@@ -174,10 +196,11 @@ public class TaskDetailActivity extends AppCompatActivity {
     private ListView subtaskListview;
 
     private FloatingActionButton fabMenu;
-    private FloatingActionButton fabMenuButtonCloseTask;
+    private FloatingActionButton fabMenuButtonOpenCloseTask;
     private FloatingActionButton fabMenuButtonNewComment;
     private FloatingActionButton fabMenuButtonNewSubtask;
     private FloatingActionButton fabMenuButtonEditTask;
+    private TextView fabMenuLabelOpenCloseTask;
 
     private Animation fabCloseAnimation;
     private Animation fabOpenAnimation;
@@ -218,10 +241,11 @@ public class TaskDetailActivity extends AppCompatActivity {
         subtaskListview = (ListView) findViewById(R.id.subtask_listview);
 
         fabMenu = (FloatingActionButton) findViewById(R.id.fab);
-        fabMenuButtonCloseTask = (FloatingActionButton) findViewById(R.id.fab_menu_button_close_task);
+        fabMenuButtonOpenCloseTask = (FloatingActionButton) findViewById(R.id.fab_menu_button_open_close_task);
         fabMenuButtonNewComment = (FloatingActionButton) findViewById(R.id.fab_menu_button_new_comment);
         fabMenuButtonNewSubtask = (FloatingActionButton) findViewById(R.id.fab_menu_button_new_subtask);
-        fabMenuButtonEditTask = (FloatingActionButton) findViewById(R.id.fab_menu_button_edi_task_task);
+        fabMenuButtonEditTask = (FloatingActionButton) findViewById(R.id.fab_menu_button_edit_task_task);
+        fabMenuLabelOpenCloseTask = (TextView) findViewById(R.id.fab_menu_label_open_close_task);
 
         fabCloseAnimation = AnimationUtils.loadAnimation(this, R.anim.fab_close);
         fabOpenAnimation = AnimationUtils.loadAnimation(this, R.anim.fab_open);
@@ -326,6 +350,17 @@ public class TaskDetailActivity extends AppCompatActivity {
             }
         });
 
+        fabMenuButtonOpenCloseTask.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (task.getIsActive()) {
+                    kanboardAPI.closeTask(task.getId());
+                } else {
+                    kanboardAPI.openTask(task.getId());
+                }
+            }
+        });
+
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this.getApplicationContext());
         try {
             kanboardAPI = new KanboardAPI(preferences.getString("serverurl", ""), preferences.getString("username", ""), preferences.getString("password", ""));
@@ -338,6 +373,8 @@ public class TaskDetailActivity extends AppCompatActivity {
             kanboardAPI.addOnGetAllSubtasksListener(allSubtasksListener);
             kanboardAPI.addOnCreateCommentListener(createCommentListener);
             kanboardAPI.addOnCreateSubtaskListener(createSubtaskListener);
+            kanboardAPI.addOnOpenTaskListener(openTaskListener);
+            kanboardAPI.addOnCloseTaskListener(closeTaskListener);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -364,6 +401,14 @@ public class TaskDetailActivity extends AppCompatActivity {
 
         setTaskDetails();
 
+        if (task.getIsActive()) {
+            fabMenuButtonOpenCloseTask.setImageDrawable(getDrawable(R.drawable.task_close));
+            fabMenuLabelOpenCloseTask.setText(getString(R.string.taskview_fab_close_task));
+        } else {
+            fabMenuButtonOpenCloseTask.setImageDrawable(getDrawable(R.drawable.task_open));
+            fabMenuLabelOpenCloseTask.setText(getString(R.string.taskview_fab_open_task));
+        }
+
         kanboardAPI.getTask(task.getId());
         kanboardAPI.getProjectUsers(task.getProjectId());
         kanboardAPI.getAllComments(task.getId());
@@ -377,7 +422,7 @@ public class TaskDetailActivity extends AppCompatActivity {
         findViewById(R.id.fab_menu_item2).startAnimation(fabOpenAnimation);
         findViewById(R.id.fab_menu_item3).startAnimation(fabOpenAnimation);
         findViewById(R.id.fab_menu_item4).startAnimation(fabOpenAnimation);
-        fabMenuButtonCloseTask.setClickable(true);
+        fabMenuButtonOpenCloseTask.setClickable(true);
         fabMenuButtonNewComment.setClickable(true);
         fabMenuButtonNewSubtask.setClickable(true);
         fabMenuButtonEditTask.setClickable(true);
@@ -390,7 +435,7 @@ public class TaskDetailActivity extends AppCompatActivity {
         findViewById(R.id.fab_menu_item2).startAnimation(fabCloseAnimation);
         findViewById(R.id.fab_menu_item3).startAnimation(fabCloseAnimation);
         findViewById(R.id.fab_menu_item4).startAnimation(fabCloseAnimation);
-        fabMenuButtonCloseTask.setClickable(false);
+        fabMenuButtonOpenCloseTask.setClickable(false);
         fabMenuButtonNewComment.setClickable(false);
         fabMenuButtonNewSubtask.setClickable(false);
         fabMenuButtonEditTask.setClickable(false);

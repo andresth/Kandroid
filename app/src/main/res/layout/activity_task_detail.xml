@@ -298,6 +298,7 @@
             app:layout_constraintBottom_toTopOf="@+id/fab"
             app:layout_constraintEnd_toEndOf="@id/fab_menu">
             <TextView
+                android:id="@+id/fab_menu_label_open_close_task"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:background="@drawable/fab_label_shape"
@@ -305,11 +306,11 @@
                 android:padding="5dp"
                 android:text="@string/taskview_fab_close_task" />
             <android.support.design.widget.FloatingActionButton
-                android:id="@+id/fab_menu_button_close_task"
+                android:id="@+id/fab_menu_button_open_close_task"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_margin="8dp"
-                android:src="@drawable/close_task"
+                android:src="@drawable/task_close"
                 app:fabSize="mini" />
         </LinearLayout>
 
@@ -332,7 +333,7 @@
                 android:padding="5dp"
                 android:text="@string/taskview_fab_edit_task" />
             <android.support.design.widget.FloatingActionButton
-                android:id="@+id/fab_menu_button_edi_task_task"
+                android:id="@+id/fab_menu_button_edit_task_task"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_margin="8dp"
