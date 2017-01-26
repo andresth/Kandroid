@@ -5,6 +5,7 @@ import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.view.ViewCompat;
 import android.support.v4.widget.NestedScrollView;
@@ -13,19 +14,26 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Html;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.view.animation.OvershootInterpolator;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.Spinner;
 import android.widget.TextView;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.List;
+import java.util.Locale;
 
 import in.andres.kandroid.kanboard.KanboardAPI;
 import in.andres.kandroid.kanboard.KanboardCategory;
@@ -43,6 +51,7 @@ import in.andres.kandroid.kanboard.OnGetDefaultSwimlaneListener;
 import in.andres.kandroid.kanboard.OnGetProjectUsersListener;
 import in.andres.kandroid.kanboard.OnGetSwimlaneListener;
 import in.andres.kandroid.kanboard.OnGetTaskListener;
+import in.andres.kandroid.kanboard.events.OnCreateSubtaskListener;
 
 public class TaskDetailActivity extends AppCompatActivity {
     private KanboardTask task;
@@ -50,6 +59,7 @@ public class TaskDetailActivity extends AppCompatActivity {
     private KanboardSwimlane swimlane;
     private KanboardColumn column;
     private KanboardUserInfo me;
+    private Hashtable<Integer, String> users;
     Context self;
 
     private KanboardAPI kanboardAPI;
@@ -81,6 +91,7 @@ public class TaskDetailActivity extends AppCompatActivity {
         @Override
         public void onGetProjectUsers(boolean success, Hashtable<Integer, String> result) {
             if (success) {
+                users = result;
                 textOwner.setText(Html.fromHtml(getString(R.string.taskview_owner, result.get(task.getOwnerId()))));
                 textCreator.setText(Html.fromHtml(getString(R.string.taskview_creator, result.get(task.getCreatorId()))));
             }
@@ -116,7 +127,8 @@ public class TaskDetailActivity extends AppCompatActivity {
         @Override
         public void onGetAllSubtasks(boolean success, List<KanboardSubtask> result) {
             if (success && result.size() > 0) {
-                subtaskListview.setAdapter(new ArrayAdapter<>(getApplicationContext(), android.R.layout.simple_list_item_1, result));
+                subtaskListview.setAdapter(new SubtaskAdapter(getApplicationContext(), result));
+//                subtaskListview.setAdapter(new ArrayAdapter<>(getApplicationContext(), android.R.layout.simple_list_item_1, result));
                 findViewById(R.id.card_subtasks).setVisibility(View.VISIBLE);
             }
         }
@@ -127,6 +139,15 @@ public class TaskDetailActivity extends AppCompatActivity {
             Log.d("createComment", Boolean.toString(success));
             if (success)
                 kanboardAPI.getAllComments(task.getId());
+        }
+    };
+
+    private OnCreateSubtaskListener createSubtaskListener = new OnCreateSubtaskListener() {
+        @Override
+        public void onCreateSubtask(boolean success, Integer result) {
+            Log.d("createSubtask", Boolean.toString(success));
+            if (success)
+                kanboardAPI.getAllSubtasks(task.getId());
         }
     };
 
@@ -245,8 +266,54 @@ public class TaskDetailActivity extends AppCompatActivity {
                 builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        kanboardAPI.createComment(task.getId(), me.getId(), input.getText().toString());
-                        dialog.dismiss();
+                        if (!input.getText().toString().contentEquals("")) {
+                            kanboardAPI.createComment(task.getId(), me.getId(), input.getText().toString());
+                            dialog.dismiss();
+                        }
+                    }
+                });
+                builder.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.cancel();
+                    }
+                });
+                builder.show();
+            }
+        });
+
+        fabMenuButtonNewSubtask.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                View dlgView = getLayoutInflater().inflate(R.layout.dialog_new_subtask, null);
+                final Spinner userSpinner = (Spinner) dlgView.findViewById(R.id.user_spinner);
+                final EditText editTitle = (EditText) dlgView.findViewById(R.id.subtask_title);
+                ArrayList<String> possibleOwners = Collections.list(users.elements());
+                possibleOwners.add(0, "");
+                ArrayAdapter<String> adapter = new ArrayAdapter<>(self, android.R.layout.simple_spinner_item, possibleOwners);
+                adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                userSpinner.setAdapter(adapter);
+
+                AlertDialog.Builder builder = new AlertDialog.Builder(self);
+                builder.setTitle(getString(R.string.taskview_fab_new_subtask));
+                builder.setView(dlgView);
+                builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        Integer userid = null;
+                        if (userSpinner.getSelectedItem() != null) {
+                            for (Enumeration<Integer> iter = users.keys(); iter.hasMoreElements();) {
+                                Integer key = iter.nextElement();
+                                if (users.get(key).contentEquals((String) userSpinner.getSelectedItem())) {
+                                    userid = key;
+                                    break;
+                                }
+                            }
+                        }
+                        if (!editTitle.getText().toString().equalsIgnoreCase("")) {
+                            kanboardAPI.createSubtask(task.getId(), editTitle.getText().toString(), userid, null, null, null);
+                            dialog.dismiss();
+                        }
                     }
                 });
                 builder.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
@@ -270,6 +337,7 @@ public class TaskDetailActivity extends AppCompatActivity {
             kanboardAPI.addOnGetDefaultSwimlaneListener(defaultSwimlaneListener);
             kanboardAPI.addOnGetAllSubtasksListener(allSubtasksListener);
             kanboardAPI.addOnCreateCommentListener(createCommentListener);
+            kanboardAPI.addOnCreateSubtaskListener(createSubtaskListener);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -402,5 +470,37 @@ public class TaskDetailActivity extends AppCompatActivity {
             collapseFABMenu();
         else
             super.onBackPressed();
+    }
+
+    private class SubtaskAdapter extends ArrayAdapter<KanboardSubtask> {
+        private Context mContext;
+        private LayoutInflater mInflater;
+        List<KanboardSubtask> mObjects;
+
+        public SubtaskAdapter(Context context, List<KanboardSubtask> objects) {
+            super(context, android.R.layout.simple_list_item_1, objects);
+            mContext = context;
+            mInflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            mObjects = objects;
+
+        }
+
+        @NonNull
+        @Override
+        public View getView(int position, View convertView, @NonNull ViewGroup parent) {
+            if (convertView == null)
+                convertView = mInflater.inflate(android.R.layout.simple_list_item_1, parent, false);
+
+            TextView text = (TextView) convertView.findViewById(android.R.id.text1);
+            if (mObjects.get(position).getStatus() == 2) {
+                text.setText(Html.fromHtml(String.format(Locale.getDefault(), "<del>%s</del>", mObjects.get(position).getTitle())));
+            } else if (mObjects.get(position).getStatus() == 1) {
+                text.setText(Html.fromHtml(String.format(Locale.getDefault(), "<b>%s</b>", mObjects.get(position).getTitle())));
+            } else {
+                text.setText(mObjects.get(position).getTitle());
+            }
+
+            return convertView;
+        }
     }
 }
