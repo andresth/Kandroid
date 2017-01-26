@@ -196,7 +196,7 @@ public class KanboardRequest {
     }
 
     @NonNull
-    public static KanboardRequest createComment(int taskid, int userid, String comment) {
+    public static KanboardRequest createComment(int taskid, int userid, @NonNull String comment) {
         return new KanboardRequest("createComment", new String[] {String.format("" +
                 "{\n" +
                 "    \"jsonrpc\": \"2.0\",\n" +
@@ -208,6 +208,71 @@ public class KanboardRequest {
                 "        \"content\": \"%s\"\n" +
                 "    }\n" +
                 "}", taskid, userid, comment)});
+    }
+
+    @NonNull
+    public static KanboardRequest updateComment(int commentid, @NonNull String comment) {
+        return new KanboardRequest("updateComment", new String[] {String.format(
+                "{\n" +
+                "    \"jsonrpc\": \"2.0\",\n" +
+                "    \"method\": \"updateComment\",\n" +
+                "    \"id\": 496470023,\n" +
+                "    \"params\": {\n" +
+                "        \"id\": %d,\n" +
+                "        \"content\": \"%s\"\n" +
+                "    }\n" +
+                "}", commentid, comment)});
+    }
+
+    public static KanboardRequest removeComment(int commentid) {
+        return new KanboardRequest("updateComment", new String[] {String.format(
+                "{\n" +
+                "    \"jsonrpc\": \"2.0\",\n" +
+                "    \"method\": \"removeComment\",\n" +
+                "    \"id\": 328836871,\n" +
+                "    \"params\": {\n" +
+                "        \"comment_id\": %d\n" +
+                "    }\n" +
+                "}", commentid)});
+    }
+
+    @Nullable
+    public static KanboardRequest openTask(int taskid) {
+        return new KanboardRequest("openTask", new String[] {String.format(
+                "{\n" +
+                "    \"jsonrpc\": \"2.0\",\n" +
+                "    \"method\": \"openTask\",\n" +
+                "    \"id\": 1888531925,\n" +
+                "    \"params\": {\n" +
+                "        \"task_id\": %d\n" +
+                "    }\n" +
+                "}", taskid)});
+    }
+
+    @NonNull
+    public static KanboardRequest closeTask(int taskid) {
+        return new KanboardRequest("closeTask", new String[] {String.format(
+                "{\n" +
+                "    \"jsonrpc\": \"2.0\",\n" +
+                "    \"method\": \"closeTask\",\n" +
+                "    \"id\": 1654396960,\n" +
+                "    \"params\": {\n" +
+                "        \"task_id\": %d\n" +
+                "    }\n" +
+                "}", taskid)});
+    }
+
+    @NonNull
+    public static KanboardRequest removeTask(int taskid) {
+        return new KanboardRequest("removeTask", new String[] {String.format(
+                "{\n" +
+                "    \"jsonrpc\": \"2.0\",\n" +
+                "    \"method\": \"removeTask\",\n" +
+                "    \"id\": 1423501287,\n" +
+                "    \"params\": {\n" +
+                "        \"task_id\": %d\n" +
+                "    }\n" +
+                "}", taskid)});
     }
 
     @Nullable
@@ -230,13 +295,45 @@ public class KanboardRequest {
                     "        \"user_id\": %d", status);
         return new KanboardRequest("createSubtask", new String[] {String.format(
                 "{\n" +
-                "    \"jsonrpc\": \"2.0\",\n" +
-                "    \"method\": \"createSubtask\",\n" +
-                "    \"id\": 2041554661,\n" +
-                "    \"params\": {\n" +
-                "%s\n"+
-                "    }\n" +
-                "}", content)});
+                        "    \"jsonrpc\": \"2.0\",\n" +
+                        "    \"method\": \"createSubtask\",\n" +
+                        "    \"id\": 2041554661,\n" +
+                        "    \"params\": {\n" +
+                        "%s\n"+
+                        "    }\n" +
+                        "}", content)});
+    }
+
+    @Nullable
+    public static KanboardRequest updateSubtask(int subtaskid, int taskid, @Nullable String title, @Nullable Integer userid,
+                                                @Nullable Integer timeestimated, @Nullable Integer timespent, @Nullable Integer status) {
+        String content = String.format("" +
+                "        \"id\": %d,\n" +
+                "        \"task_id\": \"%s\"", subtaskid, taskid);
+        if (title != null)
+            content += String.format("" + ",\n" +
+                    "        \"title\": %s", title);
+        if (userid != null)
+            content += String.format("" + ",\n" +
+                    "        \"user_id\": %d", userid);
+        if (timeestimated != null)
+            content += String.format("" + ",\n" +
+                    "        \"user_id\": %d", timeestimated);
+        if (timespent != null)
+            content += String.format("" + ",\n" +
+                    "        \"user_id\": %d", timespent);
+        if (status != null)
+            content += String.format("" + ",\n" +
+                    "        \"user_id\": %d", status);
+        return new KanboardRequest("updateSubtask", new String[] {String.format(
+                "{\n" +
+                        "    \"jsonrpc\": \"2.0\",\n" +
+                        "    \"method\": \"updateSubtask\",\n" +
+                        "    \"id\": 191749979,\n" +
+                        "    \"params\": {\n" +
+                        "%s\n"+
+                        "    }\n" +
+                        "}", content)});
     }
 
     @NonNull
@@ -250,6 +347,19 @@ public class KanboardRequest {
                 "        \"task_id\":%d\n" +
                 "    }\n" +
                 "}", taskid)});
+    }
+
+    @NonNull
+    public static KanboardRequest removeSubtask(int subtaskid) {
+        return new KanboardRequest("removeSubtask", new String[] {String.format(
+                "{\n" +
+                "    \"jsonrpc\": \"2.0\",\n" +
+                "    \"method\": \"removeSubtask\",\n" +
+                "    \"id\": 1382487306,\n" +
+                "    \"params\": {\n" +
+                "        \"subtask_id\": %d\n" +
+                "    }\n" +
+                "}", subtaskid)});
     }
     //endregion
 

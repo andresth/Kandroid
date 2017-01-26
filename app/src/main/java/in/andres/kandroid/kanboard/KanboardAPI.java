@@ -29,7 +29,7 @@ import java.util.regex.Pattern;
 
 import javax.net.ssl.HttpsURLConnection;
 
-import in.andres.kandroid.kanboard.events.OnCreateSubtaskListener;
+import in.andres.kandroid.kanboard.events.*;
 
 public class KanboardAPI {
 
@@ -196,6 +196,39 @@ public class KanboardAPI {
                 return;
             }
 
+            if (s.Request.Command.equalsIgnoreCase("openTask")) {
+                try {
+                    success = s.Result[0].getBoolean("result");
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                for (OnOpenTaskListener l: onOpenTaskListeners)
+                    l.onOpenTask(success);
+                return;
+            }
+
+            if (s.Request.Command.equalsIgnoreCase("closeTask")) {
+                try {
+                    success = s.Result[0].getBoolean("result");
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                for (OnCloseTaskListener l: onCloseTaskListeners)
+                    l.onCloseTask(success);
+                return;
+            }
+
+            if (s.Request.Command.equalsIgnoreCase("removeTask")) {
+                try {
+                    success = s.Result[0].getBoolean("result");
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                for (OnRemoveTaskListener l: onRemoveTaskListeners)
+                    l.onRemoveTask(success);
+                return;
+            }
+
             if (s.Request.Command.equalsIgnoreCase("getDefaultSwimlane")) {
                 String res = null;
                 boolean active = false;
@@ -244,6 +277,21 @@ public class KanboardAPI {
                 return;
             }
 
+            if (s.Request.Command.equalsIgnoreCase("createComment")) {
+                Integer res = null;
+                try {
+                    if (!s.Result[0].getString("result").equalsIgnoreCase("false")) {
+                        success = true;
+                        res = s.Result[0].getInt("result");
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                for (OnCreateCommentListener l: onCreateCommentListeners)
+                    l.onCreateComment(success, res);
+                return;
+            }
+
             if (s.Request.Command.equalsIgnoreCase("getAllComments")) {
                 List<KanboardComment> res = null;
                 try {
@@ -259,6 +307,43 @@ public class KanboardAPI {
                 }
                 for (OnGetAllCommentsListener l: onGetAllCommentsListeners)
                     l.onGetAllComments(success, res);
+                return;
+            }
+
+            if (s.Request.Command.equalsIgnoreCase("updateComment")) {
+                try {
+                    success = s.Result[0].getBoolean("result");
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                for (OnUpdateCommentListener l: onUpdateCommentListeners)
+                    l.onUpdateComment(success);
+                return;
+            }
+
+            if (s.Request.Command.equalsIgnoreCase("removeComment")) {
+                try {
+                    success = s.Result[0].getBoolean("result");
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                for (OnRemoveCommentListener l: onRemoveCommentListeners)
+                    l.onRemoveComment(success);
+                return;
+            }
+
+            if (s.Request.Command.equalsIgnoreCase("createSubtask")) {
+                Integer res = null;
+                try {
+                    if (!s.Result[0].getString("result").equalsIgnoreCase("false")) {
+                        success = true;
+                        res = s.Result[0].getInt("result");
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                for (OnCreateSubtaskListener l: onCreateSubtaskListeners)
+                    l.onCreateSubtask(success, res);
                 return;
             }
 
@@ -280,33 +365,25 @@ public class KanboardAPI {
                 return;
             }
 
-            if (s.Request.Command.equalsIgnoreCase("createComment")) {
-                Integer res = null;
+            if (s.Request.Command.equalsIgnoreCase("updateSubtask")) {
                 try {
-                    if (!s.Result[0].getString("result").equalsIgnoreCase("false")) {
-                        success = true;
-                        res = s.Result[0].getInt("result");
-                    }
+                    success = s.Result[0].getBoolean("result");
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
-                for (OnCreateCommentListener l: onCreateCommentListeners)
-                    l.onCreateComment(success, res);
+                for (OnUpdateSubtaskListener l: onUpdateSubtaskListeners)
+                    l.onUpdateSubtask(success);
                 return;
             }
 
-            if (s.Request.Command.equalsIgnoreCase("createSubtask")) {
-                Integer res = null;
+            if (s.Request.Command.equalsIgnoreCase("removeSubtask")) {
                 try {
-                    if (!s.Result[0].getString("result").equalsIgnoreCase("false")) {
-                        success = true;
-                        res = s.Result[0].getInt("result");
-                    }
+                    success = s.Result[0].getBoolean("result");
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
-                for (OnCreateSubtaskListener l: onCreateSubtaskListeners)
-                    l.onCreateSubtask(success, res);
+                for (OnRemoveSubtaskListener l: onRemoveSubtaskListeners)
+                    l.onRemoveSubtask(success);
                 return;
             }
 
@@ -360,7 +437,14 @@ public class KanboardAPI {
     private HashSet<OnGetAllSubtasksListener> onGetAllSubtasksListeners = new HashSet<>();
     private HashSet<OnGetMeListener> onGetMeListeners = new HashSet<>();
     private HashSet<OnCreateCommentListener> onCreateCommentListeners = new HashSet<>();
+    private HashSet<OnUpdateCommentListener> onUpdateCommentListeners = new HashSet<>();
+    private HashSet<OnRemoveCommentListener> onRemoveCommentListeners = new HashSet<>();
     private HashSet<OnCreateSubtaskListener> onCreateSubtaskListeners = new HashSet<>();
+    private HashSet<OnUpdateSubtaskListener> onUpdateSubtaskListeners = new HashSet<>();
+    private HashSet<OnRemoveSubtaskListener> onRemoveSubtaskListeners = new HashSet<>();
+    private HashSet<OnOpenTaskListener> onOpenTaskListeners = new HashSet<>();
+    private HashSet<OnCloseTaskListener> onCloseTaskListeners = new HashSet<>();
+    private HashSet<OnRemoveTaskListener> onRemoveTaskListeners = new HashSet<>();
 
     public KanboardAPI(String serverURL, final String username, final String password) throws IOException {
         Authenticator.setDefault(new Authenticator() {
@@ -419,6 +503,30 @@ public class KanboardAPI {
         onGetTaskListeners.remove(listener);
     }
 
+    public void addOnOpenTaskListener(@NonNull OnOpenTaskListener listener) {
+        onOpenTaskListeners.add(listener);
+    }
+
+    public void removeOnOpenTaskListener(@NonNull OnOpenTaskListener listener) {
+        onOpenTaskListeners.remove(listener);
+    }
+
+    public void addOnCloseTaskListener(@NonNull OnCloseTaskListener listener) {
+        onCloseTaskListeners.add(listener);
+    }
+
+    public void removeOnCloseTaskListener(@NonNull OnCloseTaskListener listener) {
+        onCloseTaskListeners.remove(listener);
+    }
+
+    public void addOnRemoveTaskListener(@NonNull OnRemoveTaskListener listener) {
+        onRemoveTaskListeners.add(listener);
+    }
+
+    public void removeOnRemoveTaskListener(@NonNull OnRemoveTaskListener listener) {
+        onRemoveTaskListeners.remove(listener);
+    }
+
     public void addOnGetCategoryListener(@NonNull OnGetCategoryListener listener) {
         onGetCategoryListeners.add(listener);
     }
@@ -459,12 +567,44 @@ public class KanboardAPI {
         onCreateCommentListeners.remove(listener);
     }
 
+    public void addOnUpdateCommentListener(@NonNull OnUpdateCommentListener listener) {
+        onUpdateCommentListeners.add(listener);
+    }
+
+    public void removeOnUpdateCommentListener(@NonNull OnUpdateCommentListener listener) {
+        onUpdateCommentListeners.remove(listener);
+    }
+
+    public void addOnRemoveCommentListener(@NonNull OnRemoveCommentListener listener) {
+        onRemoveCommentListeners.add(listener);
+    }
+
+    public void removeOnRemoveCommentListener(@NonNull OnRemoveCommentListener listener) {
+        onRemoveCommentListeners.remove(listener);
+    }
+
     public void addOnCreateSubtaskListener(@NonNull OnCreateSubtaskListener listener) {
         onCreateSubtaskListeners.add(listener);
     }
 
-    public void removeOnSubtaskCommentListener(@NonNull OnCreateSubtaskListener listener) {
+    public void removeOnCreateSubtaskListener(@NonNull OnCreateSubtaskListener listener) {
         onCreateSubtaskListeners.remove(listener);
+    }
+
+    public void addOnUpdateSubtaskListener(@NonNull OnUpdateSubtaskListener listener) {
+        onUpdateSubtaskListeners.add(listener);
+    }
+
+    public void removeOnUpdateSubtaskListener(@NonNull OnUpdateSubtaskListener listener) {
+        onUpdateSubtaskListeners.remove(listener);
+    }
+
+    public void addOnRemoveSubtaskListener(@NonNull OnRemoveSubtaskListener listener) {
+        onRemoveSubtaskListeners.add(listener);
+    }
+
+    public void removeOnRemoveSubtaskListener(@NonNull OnRemoveSubtaskListener listener) {
+        onRemoveSubtaskListeners.remove(listener);
     }
 
     public void getMe() {
@@ -487,12 +627,32 @@ public class KanboardAPI {
         new KanboardAsync().execute(KanboardRequest.getTask(taskid));
     }
 
+    public void openTask(int taskid) {
+        new KanboardAsync().execute(KanboardRequest.openTask(taskid));
+    }
+
+    public void closeTask(int taskid) {
+        new KanboardAsync().execute(KanboardRequest.closeTask(taskid));
+    }
+
+    public void removeTask(int taskid) {
+        new KanboardAsync().execute(KanboardRequest.removeTask(taskid));
+    }
+
     public void getAllComments(int taskid) {
         new KanboardAsync().execute(KanboardRequest.getAllComments(taskid));
     }
 
     public void createComment(int taskid, int userid, String comment) {
         new KanboardAsync().execute(KanboardRequest.createComment(taskid, userid, comment));
+    }
+
+    public void updateComment(int commentid, @NonNull String comment) {
+        new KanboardAsync().execute(KanboardRequest.updateComment(commentid, comment));
+    }
+
+    public void removeComment(int commentid) {
+        new KanboardAsync().execute(KanboardRequest.removeComment(commentid));
     }
 
     public void getDefaultSwimlane(int projectid) {
@@ -514,6 +674,15 @@ public class KanboardAPI {
     public void createSubtask(int taskid, @NonNull String title, @Nullable Integer userid,
                               @Nullable Integer timeestimated, @Nullable Integer timespent, @Nullable Integer status) {
         new KanboardAsync().execute(KanboardRequest.createSubtask(taskid, title, userid, timeestimated, timespent, status));
+    }
+
+    public void updateSubtask(int subtaskid, int taskid, @Nullable String title, @Nullable Integer userid,
+                              @Nullable Integer timeestimated, @Nullable Integer timespent, @Nullable Integer status) {
+        new KanboardAsync().execute(KanboardRequest.updateSubtask(subtaskid, taskid, title, userid, timeestimated, timespent, status));
+    }
+
+    public void removeSubtask(int subtaskid) {
+        new KanboardAsync().execute(KanboardRequest.removeSubtask(subtaskid));
     }
 
     public void KB_getDashboard() {
