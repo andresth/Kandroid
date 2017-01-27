@@ -5,6 +5,7 @@ import android.graphics.Color;
 import android.os.AsyncTask;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.util.Log;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -37,12 +38,13 @@ public class KanboardAPI {
         @Override
         protected KanboardResult doInBackground(KanboardRequest... params) {
             HttpsURLConnection con = null;
-            try {
-                List<JSONObject> responseList = new ArrayList<>();
-                for (String s: params[0].JSON) {
+            List<JSONObject> responseList = new ArrayList<>();
+            for (String s: params[0].JSON) {
+                try {
+                    Log.d("Send Request", s);
                     con = (HttpsURLConnection) kanboardURL.openConnection();
                     if (con == null)
-                        return new KanboardResult(params[0], new JSONObject[] {new JSONObject("{\"jsonrpc\":\"2.0\",\"error\":{\"code\":0,\"message\":\"Unable to open connection\"},\"id\":null}")}, 0);
+                        return new KanboardResult(params[0], new JSONObject[]{new JSONObject("{\"jsonrpc\":\"2.0\",\"error\":{\"code\":0,\"message\":\"Unable to open connection\"},\"id\":null}")}, 0);
                     con.setRequestMethod("POST");
                     con.setConnectTimeout(120000);
                     con.setReadTimeout(120000);
@@ -68,22 +70,30 @@ public class KanboardAPI {
                         response = null;
                     }
                     responseList.add(response);
+                } catch (SocketTimeoutException e) {
+                    Log.e("JSON Request", "Connection timed out");
+                    e.printStackTrace();
+                    try {
+                        responseList.add(new JSONObject("{\"jsonrpc\":\"2.0\",\"error\":{\"code\":0,\"message\":\"Network Timeout\"},\"id\":null}"));
+                    } catch (JSONException e1) {
+                        e1.printStackTrace();
+                    }
+                } catch (Exception e) {
+                    Log.e("JSON Request", "Some Other Error");
+                    e.printStackTrace();
+                    try {
+                        responseList.add(new JSONObject("{\"jsonrpc\":\"2.0\",\"error\":{\"code\":-1,\"message\":\"\" + e.getMessage() + \"\\\"},\\\"id\\\":null}\""));
+                    } catch (JSONException e1) {
+                        e1.printStackTrace();
+                    }
                 }
+            }
 
-                assert con != null;
-                return new KanboardResult(params[0], responseList.toArray(new JSONObject[] {}), con.getResponseCode());
-            } catch (SocketTimeoutException e) {
-                try {
-                    return new KanboardResult(params[0], new JSONObject[] {new JSONObject("{\"jsonrpc\":\"2.0\",\"error\":{\"code\":0,\"message\":\"Network Timeout\"},\"id\":null}")}, 0);
-                } catch (JSONException e1) {
-                    e1.printStackTrace();
-                }
-            } catch (Exception e) {
-                try {
-                    return new KanboardResult(params[0], new JSONObject[] {new JSONObject("{\"jsonrpc\":\"2.0\",\"error\":{\"code\":-1,\"message\":\"" + e.getMessage() + "\"},\"id\":null}")}, 0);
-                } catch (JSONException e1) {
-                    e1.printStackTrace();
-                }
+            assert con != null;
+            try {
+                return new KanboardResult(params[0], responseList.toArray(new JSONObject[]{}), con.getResponseCode());
+            } catch (IOException e) {
+                e.printStackTrace();
             }
             return null;
         }
