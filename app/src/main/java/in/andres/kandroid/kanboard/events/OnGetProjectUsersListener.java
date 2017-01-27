@@ -1,4 +1,4 @@
-package in.andres.kandroid.kanboard;
+package in.andres.kandroid.kanboard.events;
 
 import java.util.Hashtable;
 

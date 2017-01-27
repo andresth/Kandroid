@@ -1,4 +1,6 @@
-package in.andres.kandroid.kanboard;
+package in.andres.kandroid.kanboard.events;
+
+import in.andres.kandroid.kanboard.KanboardUserInfo;
 
 /**
  * Created by Thomas Andres on 24.01.17.
