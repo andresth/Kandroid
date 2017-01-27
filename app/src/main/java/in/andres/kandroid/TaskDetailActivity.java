@@ -70,7 +70,8 @@ public class TaskDetailActivity extends AppCompatActivity {
         public void onGetTask(boolean success, KanboardTask result) {
             if (success) {
                 task = result;
-                kanboardAPI.getCategory(task.getCategoryId());
+                if (task.getCategoryId() > 0)
+                    kanboardAPI.getCategory(task.getCategoryId());
                 if (task.getSwimlaneId() == 0)
                     kanboardAPI.getDefaultSwimlane(task.getProjectId());
                 else

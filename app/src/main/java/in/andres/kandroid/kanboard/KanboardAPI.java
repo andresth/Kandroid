@@ -63,10 +63,12 @@ public class KanboardAPI {
                     }
                     in.close();
 
+                    Log.d("Got Response", responseStr.toString());
                     JSONObject response;
                     try {
                         response = new JSONObject(responseStr.toString());
                     } catch (JSONException e) {
+                        e.printStackTrace();
                         response = null;
                     }
                     responseList.add(response);
