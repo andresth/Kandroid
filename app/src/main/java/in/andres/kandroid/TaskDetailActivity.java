@@ -43,17 +43,7 @@ import in.andres.kandroid.kanboard.KanboardSubtask;
 import in.andres.kandroid.kanboard.KanboardSwimlane;
 import in.andres.kandroid.kanboard.KanboardTask;
 import in.andres.kandroid.kanboard.KanboardUserInfo;
-import in.andres.kandroid.kanboard.OnCreateCommentListener;
-import in.andres.kandroid.kanboard.OnGetAllCommentsListener;
-import in.andres.kandroid.kanboard.OnGetAllSubtasksListener;
-import in.andres.kandroid.kanboard.OnGetCategoryListener;
-import in.andres.kandroid.kanboard.OnGetDefaultSwimlaneListener;
-import in.andres.kandroid.kanboard.OnGetProjectUsersListener;
-import in.andres.kandroid.kanboard.OnGetSwimlaneListener;
-import in.andres.kandroid.kanboard.OnGetTaskListener;
-import in.andres.kandroid.kanboard.events.OnCloseTaskListener;
-import in.andres.kandroid.kanboard.events.OnCreateSubtaskListener;
-import in.andres.kandroid.kanboard.events.OnOpenTaskListener;
+import in.andres.kandroid.kanboard.events.*;
 
 public class TaskDetailActivity extends AppCompatActivity {
     private KanboardTask task;

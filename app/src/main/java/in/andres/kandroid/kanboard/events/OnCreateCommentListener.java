@@ -1,4 +1,4 @@
-package in.andres.kandroid.kanboard;
+package in.andres.kandroid.kanboard.events;
 
 /**
  * Created by Thomas Andres on 24.01.17.
