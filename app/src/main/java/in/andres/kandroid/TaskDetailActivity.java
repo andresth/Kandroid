@@ -13,14 +13,16 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Html;
-import android.util.Log;
+import android.view.ContextMenu;
 import android.view.LayoutInflater;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.view.animation.OvershootInterpolator;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ListView;
@@ -43,7 +45,19 @@ import in.andres.kandroid.kanboard.KanboardSubtask;
 import in.andres.kandroid.kanboard.KanboardSwimlane;
 import in.andres.kandroid.kanboard.KanboardTask;
 import in.andres.kandroid.kanboard.KanboardUserInfo;
-import in.andres.kandroid.kanboard.events.*;
+import in.andres.kandroid.kanboard.events.OnCloseTaskListener;
+import in.andres.kandroid.kanboard.events.OnCreateCommentListener;
+import in.andres.kandroid.kanboard.events.OnCreateSubtaskListener;
+import in.andres.kandroid.kanboard.events.OnGetAllCommentsListener;
+import in.andres.kandroid.kanboard.events.OnGetAllSubtasksListener;
+import in.andres.kandroid.kanboard.events.OnGetCategoryListener;
+import in.andres.kandroid.kanboard.events.OnGetDefaultSwimlaneListener;
+import in.andres.kandroid.kanboard.events.OnGetProjectUsersListener;
+import in.andres.kandroid.kanboard.events.OnGetSwimlaneListener;
+import in.andres.kandroid.kanboard.events.OnGetTaskListener;
+import in.andres.kandroid.kanboard.events.OnOpenTaskListener;
+import in.andres.kandroid.kanboard.events.OnRemoveCommentListener;
+import in.andres.kandroid.kanboard.events.OnRemoveSubtaskListener;
 
 public class TaskDetailActivity extends AppCompatActivity {
     private KanboardTask task;
@@ -62,6 +76,8 @@ public class TaskDetailActivity extends AppCompatActivity {
             if (success && result.size() > 0) {
                 commentListview.setAdapter(new ArrayAdapter<> (getApplicationContext(),android.R.layout.simple_list_item_1, result));
                 findViewById(R.id.card_comments).setVisibility(View.VISIBLE);
+            } else {
+                findViewById(R.id.card_comments).setVisibility(View.GONE);
             }
         }
     };
@@ -122,13 +138,21 @@ public class TaskDetailActivity extends AppCompatActivity {
             if (success && result.size() > 0) {
                 subtaskListview.setAdapter(new SubtaskAdapter(getApplicationContext(), result));
                 findViewById(R.id.card_subtasks).setVisibility(View.VISIBLE);
+            } else {
+                findViewById(R.id.card_subtasks).setVisibility(View.GONE);
             }
         }
     };
     private OnCreateCommentListener createCommentListener = new OnCreateCommentListener() {
         @Override
         public void onCreateComment(boolean success, Integer commentid) {
-            Log.d("createComment", Boolean.toString(success));
+            if (success)
+                kanboardAPI.getAllComments(task.getId());
+        }
+    };
+    private OnRemoveCommentListener removeCommentListener = new OnRemoveCommentListener() {
+        @Override
+        public void onRemoveComment(boolean success) {
             if (success)
                 kanboardAPI.getAllComments(task.getId());
         }
@@ -136,7 +160,13 @@ public class TaskDetailActivity extends AppCompatActivity {
     private OnCreateSubtaskListener createSubtaskListener = new OnCreateSubtaskListener() {
         @Override
         public void onCreateSubtask(boolean success, Integer result) {
-            Log.d("createSubtask", Boolean.toString(success));
+            if (success)
+                kanboardAPI.getAllSubtasks(task.getId());
+        }
+    };
+    private OnRemoveSubtaskListener removeSubtaskListener = new OnRemoveSubtaskListener() {
+        @Override
+        public void onRemoveSubtask(boolean success) {
             if (success)
                 kanboardAPI.getAllSubtasks(task.getId());
         }
@@ -199,6 +229,44 @@ public class TaskDetailActivity extends AppCompatActivity {
     private boolean isFABMenuOpen = false;
 
     @Override
+    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
+        super.onCreateContextMenu(menu, v, menuInfo);
+        if (v.getId() == R.id.comment_listview) {
+            menu.setHeaderTitle(getString(R.string.menu_caption_comment,
+                    ((KanboardComment)commentListview.getAdapter().getItem(((AdapterView.AdapterContextMenuInfo)menuInfo).position)).getId()
+            ));
+            MenuInflater inflater = getMenuInflater();
+            inflater.inflate(R.menu.activity_taskdetail_context_comment, menu);
+        }
+        if (v.getId() == R.id.subtask_listview) {
+            menu.setHeaderTitle(getString(R.string.menu_caption_subtask,
+                    ((KanboardSubtask)subtaskListview.getAdapter().getItem(((AdapterView.AdapterContextMenuInfo)menuInfo).position)).getId()
+            ));
+            MenuInflater inflater = getMenuInflater();
+            inflater.inflate(R.menu.activity_taskdetail_context_subtask, menu);
+        }
+    }
+
+    @Override
+    public boolean onContextItemSelected(MenuItem item) {
+        AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
+        switch (item.getItemId()) {
+            case R.id.action_edit_comment:
+                return super.onContextItemSelected(item);
+            case R.id.action_delete_comment:
+                kanboardAPI.removeComment(((KanboardComment)commentListview.getAdapter().getItem(info.position)).getId());
+                return true;
+            case R.id.action_edit_subtask:
+                return super.onContextItemSelected(item);
+            case R.id.action_delete_subtask:
+                kanboardAPI.removeSubtask(((KanboardSubtask)subtaskListview.getAdapter().getItem(info.position)).getId());
+                return true;
+            default:
+                return super.onContextItemSelected(item);
+        }
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_task_detail);
@@ -228,8 +296,10 @@ public class TaskDetailActivity extends AppCompatActivity {
         textDescription = (TextView) findViewById(R.id.text_Description);
 
         commentListview = (ListView) findViewById(R.id.comment_listview);
+        registerForContextMenu(commentListview);
 
         subtaskListview = (ListView) findViewById(R.id.subtask_listview);
+        registerForContextMenu(subtaskListview);
 
         fabMenu = (FloatingActionButton) findViewById(R.id.fab);
         fabMenuButtonOpenCloseTask = (FloatingActionButton) findViewById(R.id.fab_menu_button_open_close_task);
@@ -363,7 +433,9 @@ public class TaskDetailActivity extends AppCompatActivity {
             kanboardAPI.addOnGetDefaultSwimlaneListener(defaultSwimlaneListener);
             kanboardAPI.addOnGetAllSubtasksListener(allSubtasksListener);
             kanboardAPI.addOnCreateCommentListener(createCommentListener);
+            kanboardAPI.addOnRemoveCommentListener(removeCommentListener);
             kanboardAPI.addOnCreateSubtaskListener(createSubtaskListener);
+            kanboardAPI.addOnRemoveSubtaskListener(removeSubtaskListener);
             kanboardAPI.addOnOpenTaskListener(openTaskListener);
             kanboardAPI.addOnCloseTaskListener(closeTaskListener);
         } catch (IOException e) {
