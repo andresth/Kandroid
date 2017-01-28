@@ -104,4 +104,9 @@
     <string name="subtask_dlg_owner">Zuständig:</string>
     <string name="subtask_dlg_title">Titel:</string>
 
+    <!--Menu strings-->
+    <string name="action_edit">Bearbeiten</string>
+    <string name="action_delete">Löschen</string>
+    <string name="menu_caption_comment">Kommentar #%d</string>
+    <string name="menu_caption_subtask">Teilaugabe #%d</string>
 </resources>
