@@ -228,7 +228,7 @@ public class KanboardRequest {
 
     @NonNull
     public static KanboardRequest removeComment(int commentid) {
-        return new KanboardRequest("updateComment", new String[] {String.format(
+        return new KanboardRequest("removeComment", new String[] {String.format(
                 "{\n" +
                 "    \"jsonrpc\": \"2.0\",\n" +
                 "    \"method\": \"removeComment\",\n" +
