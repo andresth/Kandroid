@@ -198,7 +198,7 @@ public class MainActivity extends AppCompatActivity
 
         if (mDashboard != null && (progressBarCount <= 0) && (mode == 0))
             showDashboard();
-        if (mProject != null && progressBarCount <= 0 && mode == 1)
+        if (mProject != null && progressBarCount <= 0 && mode > 0)
             showProject();
 
         mViewPager.setCurrentItem(savedInstanceState.getInt("ViewPagerItem"));
@@ -207,6 +207,9 @@ public class MainActivity extends AppCompatActivity
     @Override
     protected void onStart() {
         super.onStart();
+        createKandoardAPI();
+        if ((mDashboard == null && mode == 0) || (mProject == null && mode > 0))
+            refresh();
     }
 
     @Override
@@ -218,10 +221,9 @@ public class MainActivity extends AppCompatActivity
     protected void onResume() {
         Log.d("Lifecycle", "onResume");
         super.onResume();
-        createKandoardAPI();
-        if (mDashboard == null && (progressBarCount <= 0) && (mode == 0))
-            refresh();
-        if (mProject != null && progressBarCount <= 0 && mode == 1)
+        if (mDashboard != null && (progressBarCount <= 0) && (mode == 0))
+            showDashboard();
+        if (mProject != null && progressBarCount <= 0 && mode > 0)
             showProject();
     }
 
@@ -264,6 +266,8 @@ public class MainActivity extends AppCompatActivity
         int id = item.getItemId();
 
         if (id == R.id.nav_dashboard) {
+            if (mode != 0)
+                mViewPager.setCurrentItem(0);
             mode = 0;
             showDashboard();
         } else if (id == R.id.nav_sign_in) {
@@ -277,7 +281,9 @@ public class MainActivity extends AppCompatActivity
         } else {
             showProgress(true);
             Log.d("Drawer Menu", String.format("Project %d selected", id));
-            mode = 1;
+            if (mode != id)
+                mViewPager.setCurrentItem(0);
+            mode = id;
             kanboardAPI.KB_getProjectById(id);
         }
 
@@ -373,6 +379,10 @@ public class MainActivity extends AppCompatActivity
     }
 
     private boolean createKandoardAPI() {
+        // Check if API object already exists
+        if (kanboardAPI != null)
+            return true;
+
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this.getApplicationContext());
         boolean showLoginScreen = false;
         if (!preferences.contains("serverurl"))
@@ -407,14 +417,17 @@ public class MainActivity extends AppCompatActivity
         if (!createKandoardAPI())
             return;
 
+
         showProgress(true);
         kanboardAPI.getMe();
 
-//        kanboardAPI.getMyProjectsList();
-
-        showProgress(true);
-        kanboardAPI.KB_getDashboard();
-//        kanboardAPI.getMyDashboard();
+        if (mode == 0) {
+            showProgress(true);
+            kanboardAPI.KB_getDashboard();
+        } else {
+            showProgress(true);
+            kanboardAPI.KB_getProjectById(mode);
+        }
     }
     //endregion
 
