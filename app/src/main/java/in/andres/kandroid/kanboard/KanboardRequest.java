@@ -3,6 +3,8 @@ package in.andres.kandroid.kanboard;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
+import org.apache.commons.lang3.StringEscapeUtils;
+
 public class KanboardRequest {
     public final String Command;
     public final String[] JSON;
@@ -207,7 +209,7 @@ public class KanboardRequest {
                 "        \"user_id\": %d,\n" +
                 "        \"content\": \"%s\"\n" +
                 "    }\n" +
-                "}", taskid, userid, comment)});
+                "}", taskid, userid, StringEscapeUtils.escapeJson(comment))});
     }
 
     @NonNull
@@ -221,7 +223,7 @@ public class KanboardRequest {
                 "        \"id\": %d,\n" +
                 "        \"content\": \"%s\"\n" +
                 "    }\n" +
-                "}", commentid, comment)});
+                "}", commentid, StringEscapeUtils.escapeJson(comment))});
     }
 
     public static KanboardRequest removeComment(int commentid) {
@@ -280,7 +282,7 @@ public class KanboardRequest {
                                                 @Nullable Integer timeestimated, @Nullable Integer timespent, @Nullable Integer status) {
         String content = String.format("" +
                 "        \"task_id\": %d,\n" +
-                "        \"title\": \"%s\"", taskid, title);
+                "        \"title\": \"%s\"", taskid, StringEscapeUtils.escapeJson(title));
         if (userid != null)
             content += String.format("" + ",\n" +
                     "        \"user_id\": %d", userid);
@@ -312,7 +314,7 @@ public class KanboardRequest {
                 "        \"task_id\": \"%s\"", subtaskid, taskid);
         if (title != null)
             content += String.format("" + ",\n" +
-                    "        \"title\": %s", title);
+                    "        \"title\": %s", StringEscapeUtils.escapeJson(title));
         if (userid != null)
             content += String.format("" + ",\n" +
                     "        \"user_id\": %d", userid);
