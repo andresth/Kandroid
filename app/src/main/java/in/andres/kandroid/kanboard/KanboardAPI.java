@@ -45,11 +45,14 @@ public class KanboardAPI {
                     con = (HttpsURLConnection) kanboardURL.openConnection();
                     if (con == null)
                         return new KanboardResult(params[0], new JSONObject[]{new JSONObject("{\"jsonrpc\":\"2.0\",\"error\":{\"code\":0,\"message\":\"Unable to open connection\"},\"id\":null}")}, 0);
-                    con.setRequestMethod("POST");
                     con.setConnectTimeout(120000);
                     con.setReadTimeout(120000);
                     con.setDoOutput(true);
                     con.setDoInput(true);
+                    con.setInstanceFollowRedirects(false);
+                    con.setRequestMethod("POST");
+                    con.setRequestProperty("Content-Type", "application/json");
+                    con.setRequestProperty("charset", "utf-8");
                     DataOutputStream out = new DataOutputStream(con.getOutputStream());
                     out.writeBytes(s);
                     out.flush();
