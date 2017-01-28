@@ -53,7 +53,7 @@ public class KanboardRequest {
                 "}", projectid)});
     }
 
-    @Nullable
+    @NonNull
     public static KanboardRequest getProjectUsers(int projectid) {
         return new KanboardRequest("getProjectUsers", new String[] {String.format(
                 "{\n" +
@@ -226,6 +226,7 @@ public class KanboardRequest {
                 "}", commentid, StringEscapeUtils.escapeJson(comment))});
     }
 
+    @NonNull
     public static KanboardRequest removeComment(int commentid) {
         return new KanboardRequest("updateComment", new String[] {String.format(
                 "{\n" +
@@ -238,7 +239,7 @@ public class KanboardRequest {
                 "}", commentid)});
     }
 
-    @Nullable
+    @NonNull
     public static KanboardRequest openTask(int taskid) {
         return new KanboardRequest("openTask", new String[] {String.format(
                 "{\n" +
@@ -306,7 +307,7 @@ public class KanboardRequest {
                         "}", content)});
     }
 
-    @Nullable
+    @NonNull
     public static KanboardRequest updateSubtask(int subtaskid, int taskid, @Nullable String title, @Nullable Integer userid,
                                                 @Nullable Integer timeestimated, @Nullable Integer timespent, @Nullable Integer status) {
         String content = String.format("" +
