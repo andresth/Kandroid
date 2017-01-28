@@ -6,6 +6,7 @@
 * Create and remove subtasks (in tasks details)
 
 #### improvements
+* New text in about activity
 
 #### fixes
 
