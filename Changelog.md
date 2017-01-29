@@ -1,5 +1,12 @@
 ## development
 #### new features
+
+#### improvements
+
+#### fixes
+
+## v0.2
+#### new features
 * FAB menu in Task Details
 * Create, edit and remove task comments (in tasks details)
 * Open and close tasks (in tasks details)
