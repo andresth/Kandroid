@@ -3,6 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="in.andres.kandroid.TaskDetailActivity"
+    android:id="@+id/root_layout"
     android:layout_height="match_parent"
     android:layout_width="match_parent">
 
@@ -273,7 +274,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/fab_margin"
-            android:src="@drawable/plus"
+            android:src="@drawable/dotdotdot"
             android:clickable="true"
             app:layout_constraintEnd_toEndOf="@+id/fab_menu"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -287,7 +288,7 @@
             <!--app:layout_constraintEnd_toEndOf="@+id/fab_menu"-->
             <!--app:layout_constraintBottom_toBottomOf="@+id/fab_menu" />-->
         <LinearLayout
-            android:id="@+id/fab_menu_item1"
+            android:id="@+id/fab_menu_item0"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
@@ -296,6 +297,34 @@
             android:layout_marginBottom="6dp"
             android:layout_marginEnd="16dp"
             app:layout_constraintBottom_toTopOf="@+id/fab"
+            app:layout_constraintEnd_toEndOf="@id/fab_menu">
+            <TextView
+                android:id="@+id/fab_menu_label_remove_task"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/fab_label_shape"
+                android:textColor="@android:color/white"
+                android:padding="5dp"
+                android:text="@string/taskview_fab_remove_task" />
+            <android.support.design.widget.FloatingActionButton
+                android:id="@+id/fab_menu_button_remove_task"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="8dp"
+                android:src="@drawable/delete_white"
+                app:fabSize="mini" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/fab_menu_item1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:visibility="invisible"
+            android:layout_marginBottom="6dp"
+            android:layout_marginEnd="16dp"
+            app:layout_constraintBottom_toTopOf="@+id/fab_menu_item0"
             app:layout_constraintEnd_toEndOf="@id/fab_menu">
             <TextView
                 android:id="@+id/fab_menu_label_open_close_task"

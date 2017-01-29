@@ -2,6 +2,7 @@
 #### new features
 
 #### improvements
+* New icon for FAB menu
 
 #### fixes
 
