@@ -6,6 +6,7 @@
 * New icon for FAB menu
 
 #### fixes
+* Read HTTP error stream correctly
 
 ## v0.2
 #### new features
