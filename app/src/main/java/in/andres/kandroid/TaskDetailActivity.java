@@ -8,6 +8,7 @@ import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.v4.view.ViewCompat;
 import android.support.v4.widget.NestedScrollView;
 import android.support.v7.app.ActionBar;
@@ -59,6 +60,7 @@ import in.andres.kandroid.kanboard.events.OnGetTaskListener;
 import in.andres.kandroid.kanboard.events.OnOpenTaskListener;
 import in.andres.kandroid.kanboard.events.OnRemoveCommentListener;
 import in.andres.kandroid.kanboard.events.OnRemoveSubtaskListener;
+import in.andres.kandroid.kanboard.events.OnRemoveTaskListener;
 import in.andres.kandroid.kanboard.events.OnUpdateCommentListener;
 import in.andres.kandroid.kanboard.events.OnUpdateSubtaskListener;
 
@@ -97,6 +99,15 @@ public class TaskDetailActivity extends AppCompatActivity {
                     kanboardAPI.getSwimlane(task.getSwimlaneId());
                 setTaskDetails();
             }
+        }
+    };
+    private OnRemoveTaskListener removeTaskListener = new OnRemoveTaskListener() {
+        @Override
+        public void onRemoveTask(boolean success) {
+            if (success)
+                finish();
+            else
+                Snackbar.make(findViewById(R.id.root_layout), "Error removing task", Snackbar.LENGTH_SHORT);
         }
     };
     private OnGetProjectUsersListener usersListener = new OnGetProjectUsersListener() {
@@ -234,6 +245,7 @@ public class TaskDetailActivity extends AppCompatActivity {
     private ListView subtaskListview;
 
     private FloatingActionButton fabMenu;
+    private FloatingActionButton fabMenuButtonRemoveTask;
     private FloatingActionButton fabMenuButtonOpenCloseTask;
     private FloatingActionButton fabMenuButtonNewComment;
     private FloatingActionButton fabMenuButtonNewSubtask;
@@ -321,6 +333,7 @@ public class TaskDetailActivity extends AppCompatActivity {
         registerForContextMenu(subtaskListview);
 
         fabMenu = (FloatingActionButton) findViewById(R.id.fab);
+        fabMenuButtonRemoveTask = (FloatingActionButton) findViewById(R.id.fab_menu_button_remove_task);
         fabMenuButtonOpenCloseTask = (FloatingActionButton) findViewById(R.id.fab_menu_button_open_close_task);
         fabMenuButtonNewComment = (FloatingActionButton) findViewById(R.id.fab_menu_button_new_comment);
         fabMenuButtonNewSubtask = (FloatingActionButton) findViewById(R.id.fab_menu_button_new_subtask);
@@ -391,11 +404,20 @@ public class TaskDetailActivity extends AppCompatActivity {
             }
         });
 
+        fabMenuButtonRemoveTask.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                collapseFABMenu();
+                kanboardAPI.removeTask(task.getId());
+            }
+        });
+
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this.getApplicationContext());
         try {
             kanboardAPI = new KanboardAPI(preferences.getString("serverurl", ""), preferences.getString("username", ""), preferences.getString("password", ""));
             kanboardAPI.addOnGetAllCommentsListener(commentsListener);
             kanboardAPI.addOnGetTaskListener(taskListener);
+            kanboardAPI.addOnRemoveTaskListener(removeTaskListener);
             kanboardAPI.addOnGetProjectUsersListener(usersListener);
             kanboardAPI.addOnGetCategoryListener(categoryListener);
             kanboardAPI.addOnGetSwimlaneListener(swimlaneListener);
@@ -451,11 +473,13 @@ public class TaskDetailActivity extends AppCompatActivity {
     }
 
     private void expandFABMenu() {
-        ViewCompat.animate(fabMenu).rotation(45.0F).withLayer().setDuration(300).setInterpolator(new OvershootInterpolator(10.0F)).start();
+        ViewCompat.animate(fabMenu).rotation(90.0F).withLayer().setDuration(300).setInterpolator(new OvershootInterpolator(5.0F)).start();
+        findViewById(R.id.fab_menu_item0).startAnimation(fabOpenAnimation);
         findViewById(R.id.fab_menu_item1).startAnimation(fabOpenAnimation);
         findViewById(R.id.fab_menu_item2).startAnimation(fabOpenAnimation);
         findViewById(R.id.fab_menu_item3).startAnimation(fabOpenAnimation);
         findViewById(R.id.fab_menu_item4).startAnimation(fabOpenAnimation);
+        fabMenuButtonRemoveTask.setClickable(true);
         fabMenuButtonOpenCloseTask.setClickable(true);
         fabMenuButtonNewComment.setClickable(true);
         fabMenuButtonNewSubtask.setClickable(true);
@@ -464,11 +488,13 @@ public class TaskDetailActivity extends AppCompatActivity {
     }
 
     private void collapseFABMenu() {
-        ViewCompat.animate(fabMenu).rotation(0.0F).withLayer().setDuration(300).setInterpolator(new OvershootInterpolator(10.0F)).start();
+        ViewCompat.animate(fabMenu).rotation(0.0F).withLayer().setDuration(300).setInterpolator(new OvershootInterpolator(5.0F)).start();
+        findViewById(R.id.fab_menu_item0).startAnimation(fabCloseAnimation);
         findViewById(R.id.fab_menu_item1).startAnimation(fabCloseAnimation);
         findViewById(R.id.fab_menu_item2).startAnimation(fabCloseAnimation);
         findViewById(R.id.fab_menu_item3).startAnimation(fabCloseAnimation);
         findViewById(R.id.fab_menu_item4).startAnimation(fabCloseAnimation);
+        fabMenuButtonRemoveTask.setClickable(false);
         fabMenuButtonOpenCloseTask.setClickable(false);
         fabMenuButtonNewComment.setClickable(false);
         fabMenuButtonNewSubtask.setClickable(false);
