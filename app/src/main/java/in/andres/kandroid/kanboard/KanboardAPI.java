@@ -41,24 +41,30 @@ public class KanboardAPI {
             List<JSONObject> responseList = new ArrayList<>();
             for (String s: params[0].JSON) {
                 try {
-                    Log.d("Send Request", s);
+                    Log.v("KanboardAPI", String.format("Send Request:\n%s", s));
                     con = (HttpsURLConnection) kanboardURL.openConnection();
                     if (con == null)
                         return new KanboardResult(params[0], new JSONObject[]{new JSONObject("{\"jsonrpc\":\"2.0\",\"error\":{\"code\":0,\"message\":\"Unable to open connection\"},\"id\":null}")}, 0);
                     con.setConnectTimeout(120000);
                     con.setReadTimeout(120000);
-                    con.setDoOutput(true);
-                    con.setDoInput(true);
                     con.setInstanceFollowRedirects(false);
                     con.setRequestMethod("POST");
                     con.setRequestProperty("Content-Type", "application/json");
                     con.setRequestProperty("charset", "utf-8");
+                    con.setDoOutput(true);
+                    con.setDoInput(true);
                     DataOutputStream out = new DataOutputStream(con.getOutputStream());
                     out.writeBytes(s);
                     out.flush();
                     out.close();
 
-                    BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
+                    Log.v("KanboardAPI", String.format("HTTP Return Code: %d", con.getResponseCode()));
+
+                    BufferedReader in;
+                    if ((con.getResponseCode() / 100) < 4)
+                        in = new BufferedReader(new InputStreamReader(con.getInputStream()));
+                    else
+                        in = new BufferedReader(new InputStreamReader(con.getErrorStream()));
                     String line;
                     StringBuilder responseStr = new StringBuilder();
                     while ((line = in.readLine()) != null) {
@@ -66,7 +72,7 @@ public class KanboardAPI {
                     }
                     in.close();
 
-                    Log.d("Got Response", responseStr.toString());
+                    Log.v("KanboardAPI", String.format("Received Response:\n%s", responseStr.toString()));
                     JSONObject response;
                     try {
                         response = new JSONObject(responseStr.toString());
@@ -76,7 +82,7 @@ public class KanboardAPI {
                     }
                     responseList.add(response);
                 } catch (SocketTimeoutException e) {
-                    Log.e("JSON Request", "Connection timed out");
+                    Log.e("KanboardAPI", "Connection timed out");
                     e.printStackTrace();
                     try {
                         responseList.add(new JSONObject("{\"jsonrpc\":\"2.0\",\"error\":{\"code\":0,\"message\":\"Network Timeout\"},\"id\":null}"));
@@ -84,10 +90,10 @@ public class KanboardAPI {
                         e1.printStackTrace();
                     }
                 } catch (Exception e) {
-                    Log.e("JSON Request", "Some Other Error");
+                    Log.e("KanboardAPI", "CatchAll");
                     e.printStackTrace();
                     try {
-                        responseList.add(new JSONObject("{\"jsonrpc\":\"2.0\",\"error\":{\"code\":-1,\"message\":\"\" + e.getMessage() + \"\\\"},\\\"id\\\":null}\""));
+                        responseList.add(new JSONObject("{\"jsonrpc\":\"2.0\",\"error\":{\"code\":-1,\"message\":\"" + e.getMessage() + "\"},\"id\":null}\""));
                     } catch (JSONException e1) {
                         e1.printStackTrace();
                     }
@@ -116,7 +122,6 @@ public class KanboardAPI {
                 KanboardError res = new KanboardError(s.Request, err, s.ReturnCode);
                 for (KanbordEvents l: listeners)
                     l.onError(res);
-                return;
             }
 
             // Handle Return Messages
