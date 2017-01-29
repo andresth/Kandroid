@@ -1,5 +1,6 @@
 ## development
 #### new features
+* Remove task from FAB in task view
 
 #### improvements
 * New icon for FAB menu
