@@ -691,7 +691,7 @@ public class KanboardAPI {
         new KanboardAsync().execute(KanboardRequest.createSubtask(taskid, title, userid, timeestimated, timespent, status));
     }
 
-    public void updateSubtask(int subtaskid, int taskid, @Nullable String title, @Nullable Integer userid,
+    public void updateSubtask(int subtaskid, int taskid, @NonNull String title, @Nullable Integer userid,
                               @Nullable Integer timeestimated, @Nullable Integer timespent, @Nullable Integer status) {
         new KanboardAsync().execute(KanboardRequest.updateSubtask(subtaskid, taskid, title, userid, timeestimated, timespent, status));
     }
