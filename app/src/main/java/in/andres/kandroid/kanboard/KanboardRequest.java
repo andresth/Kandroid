@@ -308,14 +308,14 @@ public class KanboardRequest {
     }
 
     @NonNull
-    public static KanboardRequest updateSubtask(int subtaskid, int taskid, @Nullable String title, @Nullable Integer userid,
+    public static KanboardRequest updateSubtask(int subtaskid, int taskid, @NonNull String title, @Nullable Integer userid,
                                                 @Nullable Integer timeestimated, @Nullable Integer timespent, @Nullable Integer status) {
         String content = String.format("" +
                 "        \"id\": %d,\n" +
-                "        \"task_id\": \"%s\"", subtaskid, taskid);
+                "        \"task_id\": %d", subtaskid, taskid);
         if (title != null)
             content += String.format("" + ",\n" +
-                    "        \"title\": %s", StringEscapeUtils.escapeJson(title));
+                    "        \"title\": \"%s\"", StringEscapeUtils.escapeJson(title));
         if (userid != null)
             content += String.format("" + ",\n" +
                     "        \"user_id\": %d", userid);
