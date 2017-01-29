@@ -106,6 +106,16 @@
     <string name="taskview_fab_open_task">Aufgabe öffnen</string>
     <string name="subtask_dlg_owner">Zuständig:</string>
     <string name="subtask_dlg_title">Titel:</string>
+    <string name="error_msg_remove_task">Fehler beim entfernen der Aufgabe!</string>
+    <string name="error_msg_open_task">Fehler beim öffnen der Aufgabe!</string>
+    <string name="error_msg_close_task">Fehler beim schließen der Aufgabe!</string>
+    <string name="error_msg_create_comment">Fehler beim erstellen des Kommentars!</string>
+    <string name="error_msg_update_comment">Fehler beim aktualisieren des Kommentars!</string>
+    <string name="error_msg_remove_comment">Fehler beim entfernen des Kommentars!</string>
+    <string name="error_msg_create_subtask">Fehler beim erstellen der Teilaufgabe!</string>
+    <string name="error_msg_update_subtask">Fehler beim aktualisieren der Teilaufgabe!</string>
+    <string name="error_msg_remove_subtask">Fehler beim entfernen der Teilaufgabe!</string>
+    <string name="error_msg_not_implemented">Funktion noch nicht implementiert!</string>
 
     <!--Menu strings-->
     <string name="action_edit">Bearbeiten</string>

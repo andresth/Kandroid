@@ -27,30 +27,6 @@
     <string name="action_about">About</string>
     <string name="title_activity_about">About Kandroid</string>
     <string name="txt_about" translatable="false">A JSON RPC client for http://kanboard.net\n\nCopyright © 2016-2017 Thomas Andres\n\nThis program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.\n        \nThis program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.\n\nYou should have received a copy of the GNU General Public License along with this program.  If not, see http://www.gnu.org/licenses.\n\n\nLibraries\n\nhttps://commons.apache.org/proper/commons-lang\n(Apache License, Version 2.0)\n\nhttp://emojione.com\n(CC BY 4.0)</string>
-    <!--<string name="txt_about" translatable="false"><![CDATA[-->
-<!--<html>-->
-  <!--<body>-->
-    <!--<p>A JSON RPC client for Kanboard.</p>-->
-    <!--<p>Copyright &copy; 2016-2017 Thomas Andres</p>-->
-    <!--<p>-->
-    <!--This program is free software: you can redistribute it and/or modify-->
-    <!--it under the terms of the GNU General Public License as published by-->
-    <!--the Free Software Foundation, either version 3 of the License, or-->
-    <!--(at your option) any later version.-->
-    <!--</p>-->
-    <!--<p>-->
-    <!--This program is distributed in the hope that it will be useful,-->
-    <!--but WITHOUT ANY WARRANTY; without even the implied warranty of-->
-    <!--MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the-->
-    <!--GNU General Public License for more details.-->
-    <!--</p>-->
-    <!--<p>-->
-    <!--You should have received a copy of the GNU General Public License-->
-    <!--along with this program.  If not, see &lt;http://www.gnu.org/licenses&gt;.-->
-    <!--</p>-->
-  <!--</body>-->
-<!--</html>-->
-    <!--]]></string>-->
 
     <!-- Strings related to Settings -->
     <string name="settings_cat_projects">Projects</string>
@@ -135,6 +111,16 @@
     <string name="taskview_fab_edit_task">Edit Task</string>
     <string name="subtask_dlg_owner">Owner:</string>
     <string name="subtask_dlg_title">Title:</string>
+    <string name="error_msg_remove_task">Error while removing task!</string>
+    <string name="error_msg_open_task">Error while opening task!</string>
+    <string name="error_msg_close_task">Error while closing task!</string>
+    <string name="error_msg_create_comment">Error while removing task!</string>
+    <string name="error_msg_update_comment">Error while creating comment!</string>
+    <string name="error_msg_remove_comment">Error while updating comment!</string>
+    <string name="error_msg_create_subtask">Error while creating subtask!</string>
+    <string name="error_msg_update_subtask">Error while updating subtask!</string>
+    <string name="error_msg_remove_subtask">Error while removing subtask!</string>
+    <string name="error_msg_not_implemented">Function not yet implemented!</string>
 
     <!--Menu strings-->
     <string name="action_edit">Edit</string>
