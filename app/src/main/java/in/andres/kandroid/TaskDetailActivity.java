@@ -359,6 +359,7 @@ public class TaskDetailActivity extends AppCompatActivity {
         fabMenuButtonNewComment.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                collapseFABMenu();
                 showCommentDialog(null);
             }
         });
@@ -366,6 +367,7 @@ public class TaskDetailActivity extends AppCompatActivity {
         fabMenuButtonNewSubtask.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                collapseFABMenu();
                 showSubtaskDialog(null);
             }
         });
@@ -373,11 +375,19 @@ public class TaskDetailActivity extends AppCompatActivity {
         fabMenuButtonOpenCloseTask.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                collapseFABMenu();
                 if (task.getIsActive()) {
                     kanboardAPI.closeTask(task.getId());
                 } else {
                     kanboardAPI.openTask(task.getId());
                 }
+            }
+        });
+
+        fabMenuButtonEditTask.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                collapseFABMenu();
             }
         });
 
