@@ -6,6 +6,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.view.ViewCompat;
 import android.support.v4.widget.NestedScrollView;
@@ -58,6 +59,8 @@ import in.andres.kandroid.kanboard.events.OnGetTaskListener;
 import in.andres.kandroid.kanboard.events.OnOpenTaskListener;
 import in.andres.kandroid.kanboard.events.OnRemoveCommentListener;
 import in.andres.kandroid.kanboard.events.OnRemoveSubtaskListener;
+import in.andres.kandroid.kanboard.events.OnUpdateCommentListener;
+import in.andres.kandroid.kanboard.events.OnUpdateSubtaskListener;
 
 public class TaskDetailActivity extends AppCompatActivity {
     private KanboardTask task;
@@ -150,6 +153,13 @@ public class TaskDetailActivity extends AppCompatActivity {
                 kanboardAPI.getAllComments(task.getId());
         }
     };
+    private OnUpdateCommentListener updateCommentListener = new OnUpdateCommentListener() {
+        @Override
+        public void onUpdateComment(boolean success) {
+            if (success)
+                kanboardAPI.getAllComments(task.getId());
+        }
+    };
     private OnRemoveCommentListener removeCommentListener = new OnRemoveCommentListener() {
         @Override
         public void onRemoveComment(boolean success) {
@@ -160,6 +170,13 @@ public class TaskDetailActivity extends AppCompatActivity {
     private OnCreateSubtaskListener createSubtaskListener = new OnCreateSubtaskListener() {
         @Override
         public void onCreateSubtask(boolean success, Integer result) {
+            if (success)
+                kanboardAPI.getAllSubtasks(task.getId());
+        }
+    };
+    private OnUpdateSubtaskListener updateSubtaskListener = new OnUpdateSubtaskListener() {
+        @Override
+        public void onUpdateSubtask(boolean success) {
             if (success)
                 kanboardAPI.getAllSubtasks(task.getId());
         }
@@ -252,11 +269,13 @@ public class TaskDetailActivity extends AppCompatActivity {
         AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
         switch (item.getItemId()) {
             case R.id.action_edit_comment:
-                return super.onContextItemSelected(item);
+                showCommentDialog((KanboardComment)commentListview.getAdapter().getItem(info.position));
+                return true;
             case R.id.action_delete_comment:
                 kanboardAPI.removeComment(((KanboardComment)commentListview.getAdapter().getItem(info.position)).getId());
                 return true;
             case R.id.action_edit_subtask:
+                showSubtaskDialog((KanboardSubtask)subtaskListview.getAdapter().getItem(info.position));
                 return super.onContextItemSelected(item);
             case R.id.action_delete_subtask:
                 kanboardAPI.removeSubtask(((KanboardSubtask)subtaskListview.getAdapter().getItem(info.position)).getId());
@@ -340,74 +359,14 @@ public class TaskDetailActivity extends AppCompatActivity {
         fabMenuButtonNewComment.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                AlertDialog.Builder builder = new AlertDialog.Builder(self);
-                builder.setTitle(getString(R.string.taskview_fab_new_comment));
-                final EditText input = new EditText(getApplicationContext());
-                input.setSingleLine(false);
-                input.setMinLines(5);
-                input.setMaxLines(10);
-                input.setVerticalScrollBarEnabled(true);
-                builder.setView(input);
-                builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        if (!input.getText().toString().contentEquals("")) {
-                            kanboardAPI.createComment(task.getId(), me.getId(), input.getText().toString());
-                            dialog.dismiss();
-                        }
-                    }
-                });
-                builder.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.cancel();
-                    }
-                });
-                builder.show();
+                showCommentDialog(null);
             }
         });
 
         fabMenuButtonNewSubtask.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                View dlgView = getLayoutInflater().inflate(R.layout.dialog_new_subtask, null);
-                final Spinner userSpinner = (Spinner) dlgView.findViewById(R.id.user_spinner);
-                final EditText editTitle = (EditText) dlgView.findViewById(R.id.subtask_title);
-                ArrayList<String> possibleOwners = Collections.list(users.elements());
-                possibleOwners.add(0, "");
-                ArrayAdapter<String> adapter = new ArrayAdapter<>(self, android.R.layout.simple_spinner_item, possibleOwners);
-                adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                userSpinner.setAdapter(adapter);
-
-                AlertDialog.Builder builder = new AlertDialog.Builder(self);
-                builder.setTitle(getString(R.string.taskview_fab_new_subtask));
-                builder.setView(dlgView);
-                builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        Integer userid = null;
-                        if (userSpinner.getSelectedItem() != null) {
-                            for (Enumeration<Integer> iter = users.keys(); iter.hasMoreElements();) {
-                                Integer key = iter.nextElement();
-                                if (users.get(key).contentEquals((String) userSpinner.getSelectedItem())) {
-                                    userid = key;
-                                    break;
-                                }
-                            }
-                        }
-                        if (!editTitle.getText().toString().equalsIgnoreCase("")) {
-                            kanboardAPI.createSubtask(task.getId(), editTitle.getText().toString(), userid, null, null, null);
-                            dialog.dismiss();
-                        }
-                    }
-                });
-                builder.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.cancel();
-                    }
-                });
-                builder.show();
+                showSubtaskDialog(null);
             }
         });
 
@@ -433,8 +392,10 @@ public class TaskDetailActivity extends AppCompatActivity {
             kanboardAPI.addOnGetDefaultSwimlaneListener(defaultSwimlaneListener);
             kanboardAPI.addOnGetAllSubtasksListener(allSubtasksListener);
             kanboardAPI.addOnCreateCommentListener(createCommentListener);
+            kanboardAPI.addOnUpdateCommentListener(updateCommentListener);
             kanboardAPI.addOnRemoveCommentListener(removeCommentListener);
             kanboardAPI.addOnCreateSubtaskListener(createSubtaskListener);
+            kanboardAPI.addOnUpdateSubtaskListener(updateSubtaskListener);
             kanboardAPI.addOnRemoveSubtaskListener(removeSubtaskListener);
             kanboardAPI.addOnOpenTaskListener(openTaskListener);
             kanboardAPI.addOnCloseTaskListener(closeTaskListener);
@@ -503,6 +464,84 @@ public class TaskDetailActivity extends AppCompatActivity {
         fabMenuButtonNewSubtask.setClickable(false);
         fabMenuButtonEditTask.setClickable(false);
         isFABMenuOpen = false;
+    }
+
+    private void showCommentDialog(@Nullable final KanboardComment comment) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(self);
+        builder.setTitle(getString(comment == null ? R.string.taskview_fab_new_comment : R.string.taskview_dlg_update_comment));
+        final EditText input = new EditText(getApplicationContext());
+        input.setText(comment == null ? "" : comment.getContent());
+        input.setSingleLine(false);
+        input.setMinLines(5);
+        input.setMaxLines(10);
+        input.setVerticalScrollBarEnabled(true);
+        builder.setView(input);
+        builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                if (!input.getText().toString().contentEquals("")) {
+                    if (comment == null)
+                        kanboardAPI.createComment(task.getId(), me.getId(), input.getText().toString());
+                    else
+                        kanboardAPI.updateComment(comment.getId(), input.getText().toString());
+                    dialog.dismiss();
+                }
+            }
+        });
+        builder.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.cancel();
+            }
+        });
+        builder.show();
+    }
+
+    private void showSubtaskDialog(@Nullable final KanboardSubtask subtask) {
+        View dlgView = getLayoutInflater().inflate(R.layout.dialog_new_subtask, null);
+        final EditText editTitle = (EditText) dlgView.findViewById(R.id.subtask_title);
+        editTitle.setText(subtask == null ? "" : subtask.getTitle());
+        final Spinner userSpinner = (Spinner) dlgView.findViewById(R.id.user_spinner);
+        ArrayList<String> possibleOwners = Collections.list(users.elements());
+        possibleOwners.add(0, "");
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(self, android.R.layout.simple_spinner_item, possibleOwners);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        userSpinner.setAdapter(adapter);
+        if (subtask != null)
+            userSpinner.setSelection(possibleOwners.indexOf(users.get(subtask.getUserId())));
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(self);
+        builder.setTitle(getString(subtask == null ? R.string.taskview_fab_new_subtask : R.string.taskview_dlg_update_subtask));
+        builder.setView(dlgView);
+        builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                Integer userid = null;
+                if (userSpinner.getSelectedItem() != null) {
+                    for (Enumeration<Integer> iter = users.keys(); iter.hasMoreElements();) {
+                        Integer key = iter.nextElement();
+                        if (users.get(key).contentEquals((String) userSpinner.getSelectedItem())) {
+                            userid = key;
+                            break;
+                        }
+                    }
+                }
+                if (!editTitle.getText().toString().equalsIgnoreCase("")) {
+                    if (subtask == null)
+                        kanboardAPI.createSubtask(task.getId(), editTitle.getText().toString(), userid, null, null, null);
+                    else
+                        kanboardAPI.updateSubtask(subtask.getId(),subtask.getTaskId(), editTitle.getText().toString(), userid, null, null, null);
+                    dialog.dismiss();
+                }
+            }
+        });
+        builder.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.cancel();
+            }
+        });
+        builder.show();
     }
 
     private void  setupActionBar() {
