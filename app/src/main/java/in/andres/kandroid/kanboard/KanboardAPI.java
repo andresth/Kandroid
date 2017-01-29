@@ -217,33 +217,21 @@ public class KanboardAPI {
             }
 
             if (s.Request.Command.equalsIgnoreCase("openTask")) {
-                try {
-                    success = s.Result[0].getBoolean("result");
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
+                success = s.Result[0].optBoolean("result", false);
                 for (OnOpenTaskListener l: onOpenTaskListeners)
                     l.onOpenTask(success);
                 return;
             }
 
             if (s.Request.Command.equalsIgnoreCase("closeTask")) {
-                try {
-                    success = s.Result[0].getBoolean("result");
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
+                success = s.Result[0].optBoolean("result", false);
                 for (OnCloseTaskListener l: onCloseTaskListeners)
                     l.onCloseTask(success);
                 return;
             }
 
             if (s.Request.Command.equalsIgnoreCase("removeTask")) {
-                try {
-                    success = s.Result[0].getBoolean("result");
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
+                success = s.Result[0].optBoolean("result", false);
                 for (OnRemoveTaskListener l: onRemoveTaskListeners)
                     l.onRemoveTask(success);
                 return;
@@ -331,22 +319,14 @@ public class KanboardAPI {
             }
 
             if (s.Request.Command.equalsIgnoreCase("updateComment")) {
-                try {
-                    success = s.Result[0].getBoolean("result");
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
+                success = s.Result[0].optBoolean("result", false);
                 for (OnUpdateCommentListener l: onUpdateCommentListeners)
                     l.onUpdateComment(success);
                 return;
             }
 
             if (s.Request.Command.equalsIgnoreCase("removeComment")) {
-                try {
-                    success = s.Result[0].getBoolean("result");
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
+                success = s.Result[0].optBoolean("result", false);
                 for (OnRemoveCommentListener l: onRemoveCommentListeners)
                     l.onRemoveComment(success);
                 return;
@@ -386,22 +366,14 @@ public class KanboardAPI {
             }
 
             if (s.Request.Command.equalsIgnoreCase("updateSubtask")) {
-                try {
-                    success = s.Result[0].getBoolean("result");
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
+                success = s.Result[0].optBoolean("result", false);
                 for (OnUpdateSubtaskListener l: onUpdateSubtaskListeners)
                     l.onUpdateSubtask(success);
                 return;
             }
 
             if (s.Request.Command.equalsIgnoreCase("removeSubtask")) {
-                try {
-                    success = s.Result[0].getBoolean("result");
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
+                success = s.Result[0].optBoolean("result", false);
                 for (OnRemoveSubtaskListener l: onRemoveSubtaskListeners)
                     l.onRemoveSubtask(success);
                 return;
