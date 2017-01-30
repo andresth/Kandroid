@@ -1,6 +1,6 @@
 package in.andres.kandroid.kanboard.events;
 
-import java.util.Hashtable;
+import java.util.List;
 
 import in.andres.kandroid.kanboard.KanboardSwimlane;
 
@@ -9,5 +9,5 @@ import in.andres.kandroid.kanboard.KanboardSwimlane;
  */
 
 public interface OnGetActiveSwimlanesListener {
-    void onGetActiveSwimlanes(boolean success, Hashtable<Integer, KanboardSwimlane> result);
+    void onGetActiveSwimlanes(boolean success, List<KanboardSwimlane> result);
 }
