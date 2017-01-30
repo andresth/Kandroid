@@ -5,6 +5,7 @@
 #### improvements
 * New icon for FAB menu
 * Show error messages in Snackbars
+* Improved network speed
 
 #### fixes
 * Read HTTP error stream correctly
