@@ -25,12 +25,29 @@ import java.util.HashSet;
 import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.List;
+import java.util.concurrent.ThreadPoolExecutor;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import javax.net.ssl.HttpsURLConnection;
 
-import in.andres.kandroid.kanboard.events.*;
+import in.andres.kandroid.kanboard.events.OnCloseTaskListener;
+import in.andres.kandroid.kanboard.events.OnCreateCommentListener;
+import in.andres.kandroid.kanboard.events.OnCreateSubtaskListener;
+import in.andres.kandroid.kanboard.events.OnGetAllCommentsListener;
+import in.andres.kandroid.kanboard.events.OnGetAllSubtasksListener;
+import in.andres.kandroid.kanboard.events.OnGetCategoryListener;
+import in.andres.kandroid.kanboard.events.OnGetDefaultSwimlaneListener;
+import in.andres.kandroid.kanboard.events.OnGetMeListener;
+import in.andres.kandroid.kanboard.events.OnGetProjectUsersListener;
+import in.andres.kandroid.kanboard.events.OnGetSwimlaneListener;
+import in.andres.kandroid.kanboard.events.OnGetTaskListener;
+import in.andres.kandroid.kanboard.events.OnOpenTaskListener;
+import in.andres.kandroid.kanboard.events.OnRemoveCommentListener;
+import in.andres.kandroid.kanboard.events.OnRemoveSubtaskListener;
+import in.andres.kandroid.kanboard.events.OnRemoveTaskListener;
+import in.andres.kandroid.kanboard.events.OnUpdateCommentListener;
+import in.andres.kandroid.kanboard.events.OnUpdateSubtaskListener;
 
 public class KanboardAPI {
 
@@ -419,6 +436,7 @@ public class KanboardAPI {
     }
 
     private URL kanboardURL;
+    private ThreadPoolExecutor threadPoolExecutor;
     private HashSet<KanbordEvents> listeners = new HashSet<>();
     private HashSet<OnGetAllCommentsListener> onGetAllCommentsListeners = new HashSet<>();
     private HashSet<OnGetTaskListener> onGetTaskListeners = new HashSet<>();
@@ -453,6 +471,10 @@ public class KanboardAPI {
             tmpURL += "jsonrpc.php";
         }
         kanboardURL = new URL(tmpURL);
+//        threadPoolExecutor = new ThreadPoolExecutor(12, 12,20, TimeUnit.SECONDS, new ArrayBlockingQueue<Runnable>(120));
+        threadPoolExecutor = (ThreadPoolExecutor) AsyncTask.THREAD_POOL_EXECUTOR;
+        threadPoolExecutor.setCorePoolSize(12);
+        threadPoolExecutor.setMaximumPoolSize(12);
     }
 
     public void addListener(@NonNull KanbordEvents listener) {
@@ -600,89 +622,89 @@ public class KanboardAPI {
     }
 
     public void getMe() {
-        new KanboardAsync().execute(KanboardRequest.getMe());
+        new KanboardAsync().executeOnExecutor(threadPoolExecutor, KanboardRequest.getMe());
     }
 
     public void getMyProjectsList() {
-        new KanboardAsync().execute(KanboardRequest.getMyProjectsList());
+        new KanboardAsync().executeOnExecutor(threadPoolExecutor, KanboardRequest.getMyProjectsList());
     }
 
     public void getMyDashboard() {
-        new KanboardAsync().execute(KanboardRequest.getMyDashboard());
+        new KanboardAsync().executeOnExecutor(threadPoolExecutor, KanboardRequest.getMyDashboard());
     }
 
     public void getProjectUsers(int projectid) {
-        new KanboardAsync().execute(KanboardRequest.getProjectUsers(projectid));
+        new KanboardAsync().executeOnExecutor(threadPoolExecutor, KanboardRequest.getProjectUsers(projectid));
     }
 
     public void getTask(int taskid) {
-        new KanboardAsync().execute(KanboardRequest.getTask(taskid));
+        new KanboardAsync().executeOnExecutor(threadPoolExecutor, KanboardRequest.getTask(taskid));
     }
 
     public void openTask(int taskid) {
-        new KanboardAsync().execute(KanboardRequest.openTask(taskid));
+        new KanboardAsync().executeOnExecutor(threadPoolExecutor, KanboardRequest.openTask(taskid));
     }
 
     public void closeTask(int taskid) {
-        new KanboardAsync().execute(KanboardRequest.closeTask(taskid));
+        new KanboardAsync().executeOnExecutor(threadPoolExecutor, KanboardRequest.closeTask(taskid));
     }
 
     public void removeTask(int taskid) {
-        new KanboardAsync().execute(KanboardRequest.removeTask(taskid));
+        new KanboardAsync().executeOnExecutor(threadPoolExecutor, KanboardRequest.removeTask(taskid));
     }
 
     public void getAllComments(int taskid) {
-        new KanboardAsync().execute(KanboardRequest.getAllComments(taskid));
+        new KanboardAsync().executeOnExecutor(threadPoolExecutor, KanboardRequest.getAllComments(taskid));
     }
 
     public void createComment(int taskid, int userid, String comment) {
-        new KanboardAsync().execute(KanboardRequest.createComment(taskid, userid, comment));
+        new KanboardAsync().executeOnExecutor(threadPoolExecutor, KanboardRequest.createComment(taskid, userid, comment));
     }
 
     public void updateComment(int commentid, @NonNull String comment) {
-        new KanboardAsync().execute(KanboardRequest.updateComment(commentid, comment));
+        new KanboardAsync().executeOnExecutor(threadPoolExecutor, KanboardRequest.updateComment(commentid, comment));
     }
 
     public void removeComment(int commentid) {
-        new KanboardAsync().execute(KanboardRequest.removeComment(commentid));
+        new KanboardAsync().executeOnExecutor(threadPoolExecutor, KanboardRequest.removeComment(commentid));
     }
 
     public void getDefaultSwimlane(int projectid) {
-        new KanboardAsync().execute(KanboardRequest.getDefaultSwimlane(projectid));
+        new KanboardAsync().executeOnExecutor(threadPoolExecutor, KanboardRequest.getDefaultSwimlane(projectid));
     }
 
     public void getSwimlane(int swimlaneid) {
-        new KanboardAsync().execute(KanboardRequest.getSwimlane(swimlaneid));
+        new KanboardAsync().executeOnExecutor(threadPoolExecutor, KanboardRequest.getSwimlane(swimlaneid));
     }
 
     public void getCategory(int categoryid) {
-        new KanboardAsync().execute(KanboardRequest.getCategrory(categoryid));
+        new KanboardAsync().executeOnExecutor(threadPoolExecutor, KanboardRequest.getCategrory(categoryid));
     }
 
     public void getAllSubtasks(int taskid) {
-        new KanboardAsync().execute(KanboardRequest.getAllSubtasks(taskid));
+        new KanboardAsync().executeOnExecutor(threadPoolExecutor, KanboardRequest.getAllSubtasks(taskid));
     }
 
     public void createSubtask(int taskid, @NonNull String title, @Nullable Integer userid,
                               @Nullable Integer timeestimated, @Nullable Integer timespent, @Nullable Integer status) {
-        new KanboardAsync().execute(KanboardRequest.createSubtask(taskid, title, userid, timeestimated, timespent, status));
+        new KanboardAsync().executeOnExecutor(threadPoolExecutor, KanboardRequest.createSubtask(taskid, title, userid, timeestimated, timespent, status));
     }
 
     public void updateSubtask(int subtaskid, int taskid, @NonNull String title, @Nullable Integer userid,
                               @Nullable Integer timeestimated, @Nullable Integer timespent, @Nullable Integer status) {
-        new KanboardAsync().execute(KanboardRequest.updateSubtask(subtaskid, taskid, title, userid, timeestimated, timespent, status));
+        new KanboardAsync().executeOnExecutor(threadPoolExecutor, KanboardRequest.updateSubtask(subtaskid, taskid, title, userid, timeestimated, timespent, status));
     }
 
     public void removeSubtask(int subtaskid) {
-        new KanboardAsync().execute(KanboardRequest.removeSubtask(subtaskid));
+        new KanboardAsync().executeOnExecutor(threadPoolExecutor, KanboardRequest.removeSubtask(subtaskid));
     }
 
     public void KB_getDashboard() {
-        new KanboardAsync().execute(KanboardRequest.KD_getDashboard());
+        new KanboardAsync().executeOnExecutor(threadPoolExecutor, KanboardRequest.KD_getDashboard());
     }
 
     public void KB_getProjectById(int projectid) {
-        new KanboardAsync().execute(KanboardRequest.KD_getProjectById(projectid));
+        new KanboardAsync().executeOnExecutor(threadPoolExecutor, KanboardRequest.KD_getProjectById(projectid));
     }
 
     // TODO: add API calls
