@@ -26,6 +26,7 @@ import android.view.animation.AnimationUtils;
 import android.view.animation.OvershootInterpolator;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.CheckedTextView;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Spinner;
@@ -34,8 +35,8 @@ import android.widget.TextView;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Dictionary;
 import java.util.Enumeration;
-import java.util.Hashtable;
 import java.util.List;
 import java.util.Locale;
 
@@ -70,7 +71,7 @@ public class TaskDetailActivity extends AppCompatActivity {
     private KanboardSwimlane swimlane;
     private KanboardColumn column;
     private KanboardUserInfo me;
-    private Hashtable<Integer, String> users;
+    private Dictionary<Integer, String> users;
     Context self;
 
     private KanboardAPI kanboardAPI;
@@ -112,7 +113,7 @@ public class TaskDetailActivity extends AppCompatActivity {
     };
     private OnGetProjectUsersListener usersListener = new OnGetProjectUsersListener() {
         @Override
-        public void onGetProjectUsers(boolean success, Hashtable<Integer, String> result) {
+        public void onGetProjectUsers(boolean success, Dictionary<Integer, String> result) {
             if (success) {
                 users = result;
                 textOwner.setText(Html.fromHtml(getString(R.string.taskview_owner, result.get(task.getOwnerId()))));
@@ -676,7 +677,7 @@ public class TaskDetailActivity extends AppCompatActivity {
         List<KanboardSubtask> mObjects;
 
         public SubtaskAdapter(Context context, List<KanboardSubtask> objects) {
-            super(context, android.R.layout.simple_list_item_1, objects);
+            super(context, android.R.layout.simple_list_item_checked, objects);
             mContext = context;
             mInflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             mObjects = objects;
@@ -687,11 +688,12 @@ public class TaskDetailActivity extends AppCompatActivity {
         @Override
         public View getView(int position, View convertView, @NonNull ViewGroup parent) {
             if (convertView == null)
-                convertView = mInflater.inflate(android.R.layout.simple_list_item_1, parent, false);
+                convertView = mInflater.inflate(android.R.layout.simple_list_item_checked, parent, false);
 
-            TextView text = (TextView) convertView.findViewById(android.R.id.text1);
+            CheckedTextView text = (CheckedTextView) convertView.findViewById(android.R.id.text1);
             if (mObjects.get(position).getStatus() == 2) {
                 text.setText(Html.fromHtml(String.format(Locale.getDefault(), "<del>%s</del>", mObjects.get(position).getTitle())));
+                text.setChecked(true);
             } else if (mObjects.get(position).getStatus() == 1) {
                 text.setText(Html.fromHtml(String.format(Locale.getDefault(), "<b>%s</b>", mObjects.get(position).getTitle())));
             } else {
