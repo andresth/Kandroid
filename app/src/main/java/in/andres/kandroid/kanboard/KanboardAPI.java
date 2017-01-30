@@ -47,6 +47,7 @@ import in.andres.kandroid.kanboard.events.OnGetMyActivityStreamListener;
 import in.andres.kandroid.kanboard.events.OnGetMyDashboardListener;
 import in.andres.kandroid.kanboard.events.OnGetMyOverdueTasksListener;
 import in.andres.kandroid.kanboard.events.OnGetOverdueTasksByProjectListener;
+import in.andres.kandroid.kanboard.events.OnGetProjectByIdListener;
 import in.andres.kandroid.kanboard.events.OnGetProjectUsersListener;
 import in.andres.kandroid.kanboard.events.OnGetSwimlaneListener;
 import in.andres.kandroid.kanboard.events.OnGetTaskListener;
@@ -242,6 +243,21 @@ public class KanboardAPI {
                 }
                 for (OnGetMyOverdueTasksListener l: onGetMyOverdueTasksListeners)
                     l.onGetMyOverdueTasks(success, res);
+                return;
+            }
+
+            if (s.Request.Command.equalsIgnoreCase("getProjectById")) {
+                KanboardProject res = null;
+                try {
+                    if (s.Result[0].has("result")) {
+                        success = true;
+                        res = new KanboardProject(s.Result[0].getJSONObject("result"));
+                    }
+                } catch (JSONException | MalformedURLException e) {
+                    e.printStackTrace();
+                }
+                for (OnGetProjectByIdListener l: onGetProjectByIdListeners)
+                    l.onGetProjectById(success, res);
                 return;
             }
 
@@ -587,6 +603,7 @@ public class KanboardAPI {
     private HashSet<OnGetMyDashboardListener> onGetMyDashboardListeners = new HashSet<>();
     private HashSet<OnGetMyActivityStreamListener> onGetMyActivityStreamListeners = new HashSet<>();
     private HashSet<OnGetMyOverdueTasksListener> onGetMyOverdueTasksListeners = new HashSet<>();
+    private HashSet<OnGetProjectByIdListener> onGetProjectByIdListeners = new HashSet<>();
     private HashSet<OnGetColumnsListener> onGetColumnsListeners = new HashSet<>();
     private HashSet<OnGetAllCommentsListener> onGetAllCommentsListeners = new HashSet<>();
     private HashSet<OnGetAllTasksListener> onGetAllTasksListener = new HashSet<>();
@@ -663,6 +680,14 @@ public class KanboardAPI {
 
     public void removeOnGetMyOverdueTasksListener(@NonNull OnGetMyOverdueTasksListener listener) {
         onGetMyOverdueTasksListeners.remove(listener);
+    }
+
+    public void addOnGetProjectByIdListener(@NonNull OnGetProjectByIdListener listener) {
+        onGetProjectByIdListeners.add(listener);
+    }
+
+    public void removeOnGetProjectByIdListener(@NonNull OnGetProjectByIdListener listener) {
+        onGetProjectByIdListeners.remove(listener);
     }
 
     public void addOnGetColumnsListener(@NonNull OnGetColumnsListener listener) {
@@ -861,6 +886,10 @@ public class KanboardAPI {
 
     public void getMyOverdueTasks() {
         new KanboardAsync().executeOnExecutor(threadPoolExecutor, KanboardRequest.getMyOverdueTasks());
+    }
+
+    public void getProjectById(int projectid) {
+        new KanboardAsync().executeOnExecutor(threadPoolExecutor, KanboardRequest.getProjectById(projectid));
     }
 
     public void getProjectUsers(int projectid) {
