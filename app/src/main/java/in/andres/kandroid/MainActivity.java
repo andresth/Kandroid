@@ -31,16 +31,32 @@ import android.widget.TextView;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Dictionary;
 import java.util.List;
 
 import in.andres.kandroid.kanboard.KanboardAPI;
+import in.andres.kandroid.kanboard.KanboardActivity;
+import in.andres.kandroid.kanboard.KanboardCategory;
 import in.andres.kandroid.kanboard.KanboardColumn;
 import in.andres.kandroid.kanboard.KanboardDashboard;
 import in.andres.kandroid.kanboard.KanboardError;
 import in.andres.kandroid.kanboard.KanboardProject;
 import in.andres.kandroid.kanboard.KanboardProjectInfo;
+import in.andres.kandroid.kanboard.KanboardSwimlane;
+import in.andres.kandroid.kanboard.KanboardTask;
 import in.andres.kandroid.kanboard.KanboardUserInfo;
 import in.andres.kandroid.kanboard.KanbordEvents;
+import in.andres.kandroid.kanboard.events.OnGetActiveSwimlanesListener;
+import in.andres.kandroid.kanboard.events.OnGetAllCategoriesListener;
+import in.andres.kandroid.kanboard.events.OnGetAllTasksListener;
+import in.andres.kandroid.kanboard.events.OnGetColumnsListener;
+import in.andres.kandroid.kanboard.events.OnGetMeListener;
+import in.andres.kandroid.kanboard.events.OnGetMyActivityStreamListener;
+import in.andres.kandroid.kanboard.events.OnGetMyDashboardListener;
+import in.andres.kandroid.kanboard.events.OnGetMyOverdueTasksListener;
+import in.andres.kandroid.kanboard.events.OnGetOverdueTasksByProjectListener;
+import in.andres.kandroid.kanboard.events.OnGetProjectByIdListener;
+import in.andres.kandroid.kanboard.events.OnGetProjectUsersListener;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -65,11 +81,21 @@ public class MainActivity extends AppCompatActivity
     private KanboardProject mProject = null;
     private KanboardDashboard mDashboard = null;
 
+    private List<KanboardActivity> mMyActivities = null;
+    private List<KanboardTask> mMyOverduetasks = null;
+    private List<KanboardColumn> mColumns = null;
+    private List<KanboardSwimlane> mSwimlanes = null;
+    private List<KanboardCategory> mCategories = null;
+    private List<KanboardTask> mActiveTasks = null;
+    private List<KanboardTask> mInactiveTasks = null;
+    private List<KanboardTask> mOverdueTasks = null;
+    private Dictionary<Integer, String> mProjectUsers = null;
+
     private KanbordEvents eventHandler = new KanbordEvents() {
         @Override
         public void onGetMe(boolean success, KanboardUserInfo userInfo) {
-            showProgress(false);
-            Me = userInfo;
+//            showProgress(false);
+//            Me = userInfo;
         }
 
         @Override
@@ -87,10 +113,10 @@ public class MainActivity extends AppCompatActivity
 
         @Override
         public void onGetMyDashboard(boolean success, KanboardDashboard dash) {
-            showProgress(false);
-            mDashboard = dash;
-            populateProjectsMenu();
-            showDashboard();
+//            showProgress(false);
+//            mDashboard = dash;
+//            populateProjectsMenu();
+//            showDashboard();
         }
 
         public void onGetProjectById(boolean success, KanboardProject project) {
@@ -115,6 +141,130 @@ public class MainActivity extends AppCompatActivity
         @Override
         public void onDebug(boolean success, String message) {
 
+        }
+    };
+    private OnGetMeListener getMeListener = new OnGetMeListener() {
+        @Override
+        public void onGetMe(boolean success, KanboardUserInfo result) {
+            showProgress(false);
+            Me = result;
+        }
+    };
+    private OnGetMyDashboardListener getMyDashboardListener = new OnGetMyDashboardListener() {
+        @Override
+        public void onGetMyDashboard(boolean success, KanboardDashboard result) {
+            if (success) {
+                mDashboard = result;
+                if (!showProgress(false)) {
+                    combineDashboard();
+                }
+            }
+        }
+    };
+    private OnGetMyActivityStreamListener getMyActivityStreamListener = new OnGetMyActivityStreamListener() {
+        @Override
+        public void onGetMyActivityStream(boolean success, List<KanboardActivity> result) {
+            if (success) {
+                mMyActivities = result;
+                if (!showProgress(false)) {
+                    combineDashboard();
+                }
+            }
+        }
+    };
+    private OnGetMyOverdueTasksListener getMyOverdueTasksListener = new OnGetMyOverdueTasksListener() {
+        @Override
+        public void onGetMyOverdueTasks(boolean success, List<KanboardTask> result) {
+            if (success) {
+                mMyOverduetasks = result;
+                if (!showProgress(false)) {
+                    combineDashboard();
+                }
+            }
+        }
+    };
+    private OnGetProjectByIdListener getProjectByIdListener = new OnGetProjectByIdListener() {
+        @Override
+        public void onGetProjectById(boolean success, KanboardProject result) {
+            if (success) {
+                mProject = result;
+                if (!showProgress(false)) {
+                    combineProject();
+                }
+            }
+        }
+    };
+    private OnGetColumnsListener getColumnsListener = new OnGetColumnsListener() {
+        @Override
+        public void onGetColumns(boolean success, List<KanboardColumn> result) {
+            if (success) {
+                mColumns = result;
+                if (!showProgress(false)) {
+                    combineProject();
+                }
+            }
+        }
+    };
+    private OnGetActiveSwimlanesListener getActiveSwimlanesListener = new OnGetActiveSwimlanesListener() {
+        @Override
+        public void onGetActiveSwimlanes(boolean success, List<KanboardSwimlane> result) {
+            if (success) {
+                mSwimlanes = result;
+                if (!showProgress(false)) {
+                    combineProject();
+                }
+            }
+        }
+    };
+    private OnGetAllCategoriesListener getAllCategoriesListener = new OnGetAllCategoriesListener() {
+        @Override
+        public void onGetAllCategories(boolean success, List<KanboardCategory> result) {
+            if (success) {
+                mCategories = result;
+                if (!showProgress(false)) {
+                    combineProject();
+                }
+            }
+        }
+    };
+    private OnGetAllTasksListener getAllTasksListener = new OnGetAllTasksListener() {
+        @Override
+        public void onGetAllTasks(boolean success, int status, List<KanboardTask> result) {
+            if (success) {
+                if (status == 0) {
+                    mInactiveTasks = result;
+                    if (!showProgress(false)) {
+                        combineProject();
+                    }
+                } else if (status == 1) {
+                    mActiveTasks = result;
+                    if (!showProgress(false)) {
+                        combineProject();
+                    }
+                }
+            }
+        }
+    };
+    private OnGetOverdueTasksByProjectListener getOverdueTasksByProjectListener = new OnGetOverdueTasksByProjectListener() {
+        @Override
+        public void onGetOverdueTasksByProject(boolean success, List<KanboardTask> result) {
+            if (success) {
+                mOverdueTasks = result;
+                if (!showProgress(false)) {
+                    combineProject();
+                }
+            }
+        }
+    };
+    private OnGetProjectUsersListener getProjectUsersListener = new OnGetProjectUsersListener() {
+        @Override
+        public void onGetProjectUsers(boolean success, Dictionary<Integer, String> result) {
+            if (success) {
+                mProjectUsers = result;
+                if (!showProgress(false)) {
+                    combineProject();
+                }
+            }
         }
     };
 
@@ -294,6 +444,23 @@ public class MainActivity extends AppCompatActivity
     //endregion
 
     //region private methods
+
+    private void combineDashboard() {
+        if (mDashboard != null && mMyOverduetasks != null && mMyActivities != null) {
+            mDashboard.setExtra(mMyOverduetasks, mMyActivities);
+            populateProjectsMenu();
+            showDashboard();
+        }
+    }
+
+    private void combineProject() {
+        if (mProject != null && mColumns != null && mSwimlanes != null && mCategories != null &&
+                mActiveTasks != null && mInactiveTasks != null && mOverdueTasks != null && mProjectUsers != null) {
+            mProject.setExtra(mColumns, mSwimlanes, mCategories, mActiveTasks, mInactiveTasks, mOverdueTasks, mProjectUsers);
+            showProject();
+        }
+    }
+
     private void populateProjectsMenu() {
         if (mDashboard == null) {
             return;
@@ -342,7 +509,7 @@ public class MainActivity extends AppCompatActivity
     }
 
     @TargetApi(Build.VERSION_CODES.HONEYCOMB_MR2)
-    private void showProgress(final boolean show) {
+    private boolean showProgress(final boolean show) {
         // On Honeycomb MR2 we have the ViewPropertyAnimator APIs, which allow
         // for very easy animations. If available, use these APIs to fade-in
         // the progress spinner.
@@ -376,6 +543,8 @@ public class MainActivity extends AppCompatActivity
             mProgress.setVisibility(progressBarCount > 0 ? View.VISIBLE : View.GONE);
             mMainView.setVisibility(progressBarCount > 0 ? View.GONE : View.VISIBLE);
         }
+        Log.d("Progress", Integer.toString(progressBarCount));
+        return progressBarCount != 0;
     }
 
     private boolean createKandoardAPI() {
@@ -405,6 +574,17 @@ public class MainActivity extends AppCompatActivity
             try {
                 kanboardAPI = new KanboardAPI(serverURL, username, password);
                 kanboardAPI.addListener(eventHandler);
+                kanboardAPI.addOnGetMeListener(getMeListener);
+                kanboardAPI.addOnGetMyDashboardListener(getMyDashboardListener);
+                kanboardAPI.addOnGetMyActivityStreamListener(getMyActivityStreamListener);
+                kanboardAPI.addOnGetMyOverdueTasksListener(getMyOverdueTasksListener);
+                kanboardAPI.addOnGetProjectByIdListener(getProjectByIdListener);
+                kanboardAPI.addOnGetColumnsListener(getColumnsListener);
+                kanboardAPI.addOnGetActiveSwimlanesListener(getActiveSwimlanesListener);
+                kanboardAPI.addOnGetAllCategoriesListener(getAllCategoriesListener);
+                kanboardAPI.addOnGetAllTasksListener(getAllTasksListener);
+                kanboardAPI.addOnGetOverdueTasksByProjectListener(getOverdueTasksByProjectListener);
+                kanboardAPI.addOnGetProjectUsersListener(getProjectUsersListener);
                 return true;
             } catch (IOException e) {
                 e.printStackTrace();
@@ -422,11 +602,33 @@ public class MainActivity extends AppCompatActivity
         kanboardAPI.getMe();
 
         if (mode == 0) {
+//            showProgress(true);
+//            kanboardAPI.KB_getDashboard();
             showProgress(true);
-            kanboardAPI.KB_getDashboard();
+            kanboardAPI.getMyDashboard();
+            showProgress(true);
+            kanboardAPI.getMyActivityStream();
+            showProgress(true);
+            kanboardAPI.getMyOverdueTasks();
         } else {
+//            showProgress(true);
+//            kanboardAPI.KB_getProjectById(mode);
             showProgress(true);
-            kanboardAPI.KB_getProjectById(mode);
+            kanboardAPI.getProjectById(mode);
+            showProgress(true);
+            kanboardAPI.getColumns(mode);
+            showProgress(true);
+            kanboardAPI.getActiveSwimlanes(mode);
+            showProgress(true);
+            kanboardAPI.getAllCategories(mode);
+            showProgress(true);
+            kanboardAPI.getAllTasks(mode, 1);
+            showProgress(true);
+            kanboardAPI.getAllTasks(mode, 0);
+            showProgress(true);
+            kanboardAPI.getOverdueTasksByProject(mode);
+            showProgress(true);
+            kanboardAPI.getProjectUsers(mode);
         }
     }
     //endregion
