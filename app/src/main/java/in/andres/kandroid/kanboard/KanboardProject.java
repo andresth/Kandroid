@@ -181,7 +181,7 @@ public class KanboardProject implements Comparable<KanboardProject>, Serializabl
     public void setExtra(@NonNull List<KanboardColumn> columns, @NonNull List<KanboardSwimlane> swimlanes,
                           @NonNull List<KanboardCategory> categories, @NonNull List<KanboardTask> activetasks,
                           @NonNull List<KanboardTask> inactivetasks, @NonNull List<KanboardTask> overduetasks,
-                          @NonNull Hashtable<Integer, String> projectusers) {
+                          @NonNull Dictionary<Integer, String> projectusers) {
         Columns = columns;
         Swimlanes = swimlanes;
         for (KanboardColumn col: Columns) {
