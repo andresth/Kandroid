@@ -178,6 +178,41 @@ public class KanboardProject implements Comparable<KanboardProject>, Serializabl
         }
     }
 
+    public void setExtra(@NonNull List<KanboardColumn> columns, @NonNull List<KanboardSwimlane> swimlanes,
+                          @NonNull List<KanboardCategory> categories, @NonNull List<KanboardTask> activetasks,
+                          @NonNull List<KanboardTask> inactivetasks, @NonNull List<KanboardTask> overduetasks,
+                          @NonNull Hashtable<Integer, String> projectusers) {
+        Columns = columns;
+        Swimlanes = swimlanes;
+        for (KanboardColumn col: Columns) {
+            Dictionary<Integer, List<KanboardTask>> tmpTable = new Hashtable<>();
+            for (KanboardSwimlane swim: Swimlanes) {
+                tmpTable.put(swim.getId(), new ArrayList<KanboardTask>());
+                GroupedInactiveTasks.put(swim.getId(), new ArrayList<KanboardTask>());
+                GroupedOverdueTasks.put(swim.getId(), new ArrayList<KanboardTask>());
+            }
+            GroupedActiveTasks.put(col.getId(), tmpTable);
+        }
+        Categories = categories;
+        for (KanboardCategory cat: Categories)
+            CategoryHashtable.put(cat.getId(), cat);
+        ActiveTasks = activetasks;
+        for (KanboardTask task: ActiveTasks) {
+            GroupedActiveTasks.get(task.getColumnId()).get(task.getSwimlaneId()).add(task);
+            TaskHashtable.put(task.getId(), task);
+        }
+        InactiveTasks = inactivetasks;
+        for (KanboardTask task: InactiveTasks) {
+            GroupedActiveTasks.get(task.getColumnId()).get(task.getSwimlaneId()).add(task);
+            TaskHashtable.put(task.getId(), task);
+        }
+        for (KanboardTask task: overduetasks) {
+            OverdueTasks.add(TaskHashtable.get(task.getId()));
+            GroupedOverdueTasks.get(TaskHashtable.get(task.getId()).getSwimlaneId()).add(TaskHashtable.get(task.getId()));
+        }
+        ProjectUsers = projectusers;
+    }
+
     public int getId() {
         return Id;
     }

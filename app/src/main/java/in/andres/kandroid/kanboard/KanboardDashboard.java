@@ -72,6 +72,11 @@ public class KanboardDashboard implements Serializable {
         }
     }
 
+    public void setExtra(List<KanboardTask> overdueTasks, List<KanboardActivity> activities) {
+        OverdueTasks = overdueTasks;
+        Activities = activities;
+    }
+
     public List<KanboardProject> getProjects() {
         return Projects;
     }

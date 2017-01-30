@@ -34,11 +34,19 @@ import javax.net.ssl.HttpsURLConnection;
 import in.andres.kandroid.kanboard.events.OnCloseTaskListener;
 import in.andres.kandroid.kanboard.events.OnCreateCommentListener;
 import in.andres.kandroid.kanboard.events.OnCreateSubtaskListener;
+import in.andres.kandroid.kanboard.events.OnGetActiveSwimlanesListener;
+import in.andres.kandroid.kanboard.events.OnGetAllCategoriesListener;
 import in.andres.kandroid.kanboard.events.OnGetAllCommentsListener;
 import in.andres.kandroid.kanboard.events.OnGetAllSubtasksListener;
+import in.andres.kandroid.kanboard.events.OnGetAllTasksListener;
 import in.andres.kandroid.kanboard.events.OnGetCategoryListener;
+import in.andres.kandroid.kanboard.events.OnGetColumnsListener;
 import in.andres.kandroid.kanboard.events.OnGetDefaultSwimlaneListener;
 import in.andres.kandroid.kanboard.events.OnGetMeListener;
+import in.andres.kandroid.kanboard.events.OnGetMyActivityStreamListener;
+import in.andres.kandroid.kanboard.events.OnGetMyDashboardListener;
+import in.andres.kandroid.kanboard.events.OnGetMyOverdueTasksListener;
+import in.andres.kandroid.kanboard.events.OnGetOverdueTasksByProjectListener;
 import in.andres.kandroid.kanboard.events.OnGetProjectUsersListener;
 import in.andres.kandroid.kanboard.events.OnGetSwimlaneListener;
 import in.andres.kandroid.kanboard.events.OnGetTaskListener;
@@ -194,6 +202,65 @@ public class KanboardAPI {
                 }
                 for (KanbordEvents l: listeners)
                     l.onGetMyDashboard(success, res);
+                for (OnGetMyDashboardListener l: onGetMyDashboardListeners)
+                    l.onGetMyDashboard(success, res);
+                return;
+            }
+
+            if (s.Request.Command.equalsIgnoreCase("getMyActivityStream")) {
+                List<KanboardActivity> res = null;
+                try {
+                    if (s.Result[0].has("result")) {
+                        success = true;
+                        res = new ArrayList<>();
+                        JSONArray jsa = s.Result[0].getJSONArray("result");
+                        for (int i = 0; i < jsa.length(); i++) {
+                            res.add(new KanboardActivity(jsa.getJSONObject(i)));
+                        }
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                for (OnGetMyActivityStreamListener l: onGetMyActivityStreamListeners)
+                    l.onGetMyActivityStream(success, res);
+                return;
+            }
+
+            if (s.Request.Command.equalsIgnoreCase("getMyOverdueTasks")) {
+                List<KanboardTask> res = null;
+                try {
+                    if (s.Result[0].has("result")) {
+                        success = true;
+                        res = new ArrayList<>();
+                        JSONArray jsa = s.Result[0].getJSONArray("result");
+                        for (int i = 0; i < jsa.length(); i++) {
+                            res.add(new KanboardTask(jsa.getJSONObject(i)));
+                        }
+                    }
+                } catch (JSONException | MalformedURLException e) {
+                    e.printStackTrace();
+                }
+                for (OnGetMyOverdueTasksListener l: onGetMyOverdueTasksListeners)
+                    l.onGetMyOverdueTasks(success, res);
+                return;
+            }
+
+            if (s.Request.Command.equalsIgnoreCase("getColumns")) {
+                List<KanboardColumn> res = null;
+                try {
+                    if (s.Result[0].has("result")) {
+                        success = true;
+                        res = new ArrayList<>();
+                        JSONArray jsa = s.Result[0].getJSONArray("result");
+                        for (int i = 0; i < jsa.length(); i++) {
+                            res.add(new KanboardColumn(jsa.getJSONObject(i)));
+                        }
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                for (OnGetColumnsListener l: onGetColumnsListeners)
+                    l.onGetColumns(success, res);
                 return;
             }
 
@@ -215,6 +282,47 @@ public class KanboardAPI {
                 }
                 for (OnGetProjectUsersListener l: onGetProjectUsersListeners)
                     l.onGetProjectUsers(success, res);
+                return;
+            }
+
+            if (s.Request.Command.equalsIgnoreCase("getAllTasks")) {
+                List<KanboardTask> res = null;
+                int status = 0;
+                try {
+                    if (s.Result[0].has("result")) {
+                        success = true;
+                        status = (new JSONObject(s.Request.JSON[0])).getJSONObject("params").getInt("status_id");
+                        res = new ArrayList<>();
+                        JSONArray jsa = s.Result[0].getJSONArray("result");
+                        for (int i = 0; i < jsa.length(); i++) {
+                            res.add(new KanboardTask(jsa.getJSONObject(i)));
+                        }
+                    }
+                } catch (JSONException | MalformedURLException e) {
+                    e.printStackTrace();
+                }
+                for (OnGetAllTasksListener l: onGetAllTasksListener)
+                    l.onGetAllTasks(success, status, res);
+                return;
+            }
+
+            if (s.Request.Command.equalsIgnoreCase("getOverdueTasksByProject")) {
+                List<KanboardTask> res = null;
+                int status = 0;
+                try {
+                    if (s.Result[0].has("result")) {
+                        success = true;
+                        res = new ArrayList<>();
+                        JSONArray jsa = s.Result[0].getJSONArray("result");
+                        for (int i = 0; i < jsa.length(); i++) {
+                            res.add(new KanboardTask(jsa.getJSONObject(i)));
+                        }
+                    }
+                } catch (JSONException | MalformedURLException e) {
+                    e.printStackTrace();
+                }
+                for (OnGetOverdueTasksByProjectListener l: onGetOverdueTasksByProjectListeners)
+                    l.onGetOverdueTasksByProject(success, res);
                 return;
             }
 
@@ -254,6 +362,25 @@ public class KanboardAPI {
                 return;
             }
 
+            if (s.Request.Command.equalsIgnoreCase("getActiveSwimlanes")) {
+                List<KanboardSwimlane> res = null;
+                try {
+                    if (s.Result[0].has("result")) {
+                        success = true;
+                        res = new ArrayList<>();
+                        JSONArray jsa = s.Result[0].getJSONArray("result");
+                        for (int i = 0; i < jsa.length(); i++) {
+                            res.add(new KanboardSwimlane(jsa.getJSONObject(i)));
+                        }
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                for (OnGetActiveSwimlanesListener l: onGetActiveSwimlanesListeners)
+                    l.onGetActiveSwimlanes(success, res);
+                return;
+            }
+
             if (s.Request.Command.equalsIgnoreCase("getDefaultSwimlane")) {
                 String res = null;
                 boolean active = false;
@@ -284,6 +411,25 @@ public class KanboardAPI {
                 }
                 for (OnGetSwimlaneListener l: onGetSwimlaneListeners)
                     l.onGetSwimlane(success, res);
+                return;
+            }
+
+            if (s.Request.Command.equalsIgnoreCase("getAllCategories")) {
+                List<KanboardCategory> res = null;
+                try {
+                    if (s.Result[0].has("result")) {
+                        success = true;
+                        res = new ArrayList<>();
+                        JSONArray jsa = s.Result[0].getJSONArray("result");
+                        for (int i = 0; i < jsa.length(); i++) {
+                            res.add(new KanboardCategory(jsa.getJSONObject(i)));
+                        }
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                for (OnGetAllCategoriesListener l: onGetAllCategoriesListeners)
+                    l.onGetAllCategories(success, res);
                 return;
             }
 
@@ -438,11 +584,19 @@ public class KanboardAPI {
     private URL kanboardURL;
     private ThreadPoolExecutor threadPoolExecutor;
     private HashSet<KanbordEvents> listeners = new HashSet<>();
+    private HashSet<OnGetMyDashboardListener> onGetMyDashboardListeners = new HashSet<>();
+    private HashSet<OnGetMyActivityStreamListener> onGetMyActivityStreamListeners = new HashSet<>();
+    private HashSet<OnGetMyOverdueTasksListener> onGetMyOverdueTasksListeners = new HashSet<>();
+    private HashSet<OnGetColumnsListener> onGetColumnsListeners = new HashSet<>();
     private HashSet<OnGetAllCommentsListener> onGetAllCommentsListeners = new HashSet<>();
+    private HashSet<OnGetAllTasksListener> onGetAllTasksListener = new HashSet<>();
+    private HashSet<OnGetOverdueTasksByProjectListener> onGetOverdueTasksByProjectListeners = new HashSet<>();
     private HashSet<OnGetTaskListener> onGetTaskListeners = new HashSet<>();
-    private HashSet<OnGetSwimlaneListener> onGetSwimlaneListeners = new HashSet<>();
+    private HashSet<OnGetAllCategoriesListener> onGetAllCategoriesListeners = new HashSet<>();
     private HashSet<OnGetCategoryListener> onGetCategoryListeners = new HashSet<>();
     private HashSet<OnGetProjectUsersListener> onGetProjectUsersListeners = new HashSet<>();
+    private HashSet<OnGetSwimlaneListener> onGetSwimlaneListeners = new HashSet<>();
+    private HashSet<OnGetActiveSwimlanesListener> onGetActiveSwimlanesListeners = new HashSet<>();
     private HashSet<OnGetDefaultSwimlaneListener> onGetDefaultSwimlaneListeners = new HashSet<>();
     private HashSet<OnGetAllSubtasksListener> onGetAllSubtasksListeners = new HashSet<>();
     private HashSet<OnGetMeListener> onGetMeListeners = new HashSet<>();
@@ -477,6 +631,8 @@ public class KanboardAPI {
         threadPoolExecutor.setMaximumPoolSize(12);
     }
 
+    // Event Listeners
+
     public void addListener(@NonNull KanbordEvents listener) {
         listeners.add(listener);
     }
@@ -485,12 +641,52 @@ public class KanboardAPI {
         listeners.remove(listener);
     }
 
+    public void addOnGetMyDashboardListener(@NonNull OnGetMyDashboardListener listener) {
+        onGetMyDashboardListeners.add(listener);
+    }
+
+    public void removeOnGetMyDashboardListener(@NonNull OnGetMyDashboardListener listener) {
+        onGetMyDashboardListeners.remove(listener);
+    }
+
+    public void addOnGetMyActivityStreamListener(@NonNull OnGetMyActivityStreamListener listener) {
+        onGetMyActivityStreamListeners.add(listener);
+    }
+
+    public void removeOnGetMyActivityStreamListener(@NonNull OnGetMyActivityStreamListener listener) {
+        onGetMyActivityStreamListeners.remove(listener);
+    }
+
+    public void addOnGetMyOverdueTasksListener(@NonNull OnGetMyOverdueTasksListener listener) {
+        onGetMyOverdueTasksListeners.add(listener);
+    }
+
+    public void removeOnGetMyOverdueTasksListener(@NonNull OnGetMyOverdueTasksListener listener) {
+        onGetMyOverdueTasksListeners.remove(listener);
+    }
+
+    public void addOnGetColumnsListener(@NonNull OnGetColumnsListener listener) {
+        onGetColumnsListeners.add(listener);
+    }
+
+    public void removeOnGetColumnsListener(@NonNull OnGetColumnsListener listener) {
+        onGetColumnsListeners.remove(listener);
+    }
+
     public void addOnGetAllCommentsListener(@NonNull OnGetAllCommentsListener listener) {
         onGetAllCommentsListeners.add(listener);
     }
 
     public void removeOnGetAllCommentsListener(@NonNull OnGetAllCommentsListener listener) {
         onGetAllCommentsListeners.remove(listener);
+    }
+
+    public void addOnGetActiveSwimlanesListener(@NonNull OnGetActiveSwimlanesListener listener) {
+        onGetActiveSwimlanesListeners.add(listener);
+    }
+
+    public void removeOnGetActiveSwimlanesListener(@NonNull OnGetActiveSwimlanesListener listener) {
+        onGetActiveSwimlanesListeners.remove(listener);
     }
 
     public void addOnGetSwimlaneListener(@NonNull OnGetSwimlaneListener listener) {
@@ -507,6 +703,22 @@ public class KanboardAPI {
 
     public void removeOnGetDefaultSwimlaneListener(@NonNull OnGetDefaultSwimlaneListener listener) {
         onGetDefaultSwimlaneListeners.remove(listener);
+    }
+
+    public void addOnGetAllTasksListener(@NonNull OnGetAllTasksListener listener) {
+        onGetAllTasksListener.add(listener);
+    }
+
+    public void removeGetAllTasksListener(@NonNull OnGetAllTasksListener listener) {
+        onGetAllTasksListener.remove(listener);
+    }
+
+    public void addOnGetOverdueTasksByProjectListener(@NonNull OnGetOverdueTasksByProjectListener listener) {
+        onGetOverdueTasksByProjectListeners.add(listener);
+    }
+
+    public void removeGetOverdueTasksByProjectListener(@NonNull OnGetOverdueTasksByProjectListener listener) {
+        onGetOverdueTasksByProjectListeners.remove(listener);
     }
 
     public void addOnGetTaskListener(@NonNull OnGetTaskListener listener) {
@@ -539,6 +751,14 @@ public class KanboardAPI {
 
     public void removeOnRemoveTaskListener(@NonNull OnRemoveTaskListener listener) {
         onRemoveTaskListeners.remove(listener);
+    }
+
+    public void addOnGetAllCategoriesListener(@NonNull OnGetAllCategoriesListener listener) {
+        onGetAllCategoriesListeners.add(listener);
+    }
+
+    public void removeOnGetAllCategoriesListener(@NonNull OnGetAllCategoriesListener listener) {
+        onGetAllCategoriesListeners.remove(listener);
     }
 
     public void addOnGetCategoryListener(@NonNull OnGetCategoryListener listener) {
@@ -621,6 +841,8 @@ public class KanboardAPI {
         onRemoveSubtaskListeners.remove(listener);
     }
 
+    // API Calls
+
     public void getMe() {
         new KanboardAsync().executeOnExecutor(threadPoolExecutor, KanboardRequest.getMe());
     }
@@ -633,8 +855,28 @@ public class KanboardAPI {
         new KanboardAsync().executeOnExecutor(threadPoolExecutor, KanboardRequest.getMyDashboard());
     }
 
+    public void getMyActivityStream() {
+        new KanboardAsync().executeOnExecutor(threadPoolExecutor, KanboardRequest.getMyActivityStream());
+    }
+
+    public void getMyOverdueTasks() {
+        new KanboardAsync().executeOnExecutor(threadPoolExecutor, KanboardRequest.getMyOverdueTasks());
+    }
+
     public void getProjectUsers(int projectid) {
         new KanboardAsync().executeOnExecutor(threadPoolExecutor, KanboardRequest.getProjectUsers(projectid));
+    }
+
+    public void getColumns(int projectid) {
+        new KanboardAsync().executeOnExecutor(threadPoolExecutor, KanboardRequest.getColumns(projectid));
+    }
+
+    public void getAllTasks(int projectid, int status) {
+        new KanboardAsync().executeOnExecutor(threadPoolExecutor, KanboardRequest.getAllTasks(projectid, status));
+    }
+
+    public void getOverdueTasksByProject(int projectid) {
+        new KanboardAsync().executeOnExecutor(threadPoolExecutor, KanboardRequest.getOverdueTasksByProject(projectid));
     }
 
     public void getTask(int taskid) {
@@ -669,12 +911,20 @@ public class KanboardAPI {
         new KanboardAsync().executeOnExecutor(threadPoolExecutor, KanboardRequest.removeComment(commentid));
     }
 
+    public void getActiveSwimlanes(int projectid) {
+        new KanboardAsync().executeOnExecutor(threadPoolExecutor, KanboardRequest.getActiveSwimlanes(projectid));
+    }
+
     public void getDefaultSwimlane(int projectid) {
         new KanboardAsync().executeOnExecutor(threadPoolExecutor, KanboardRequest.getDefaultSwimlane(projectid));
     }
 
     public void getSwimlane(int swimlaneid) {
         new KanboardAsync().executeOnExecutor(threadPoolExecutor, KanboardRequest.getSwimlane(swimlaneid));
+    }
+
+    public void getAllCategories(int projectid) {
+        new KanboardAsync().executeOnExecutor(threadPoolExecutor, KanboardRequest.getAllCategories(projectid));
     }
 
     public void getCategory(int categoryid) {
