@@ -77,6 +77,7 @@ public class TaskDetailActivity extends AppCompatActivity {
     private Dictionary<Integer, String> users;
     private MenuItem refreshAction;
     private int activeRequests = 0;
+    private boolean progressVisible = false;
     private Context self;
 
     private KanboardAPI kanboardAPI;
@@ -97,8 +98,6 @@ public class TaskDetailActivity extends AppCompatActivity {
     private OnGetTaskListener taskListener = new OnGetTaskListener() {
         @Override
         public void onGetTask(boolean success, KanboardTask result) {
-            hideProgress();
-            Log.d("Hide Progress", "OnGetTaskListener");
             if (success) {
                 task = result;
                 if (task.getCategoryId() > 0) {
@@ -115,6 +114,8 @@ public class TaskDetailActivity extends AppCompatActivity {
                     Log.d("Show Progress", "getSwimlane");
                     kanboardAPI.getSwimlane(task.getSwimlaneId());
                 }
+                hideProgress();
+                Log.d("Hide Progress", "OnGetTaskListener");
                 setTaskDetails();
             }
         }
@@ -533,6 +534,7 @@ public class TaskDetailActivity extends AppCompatActivity {
         if (activeRequests > 0 && refreshAction != null) {
             refreshAction.setActionView(new ProgressBar(self));
             refreshAction.expandActionView();
+            progressVisible = true;
         }
         return true;
     }
@@ -593,18 +595,20 @@ public class TaskDetailActivity extends AppCompatActivity {
     private void showProgress() {
         activeRequests++;
         Log.d("Show Progress", Integer.toString(activeRequests));
-        if (activeRequests > 0 && refreshAction != null) {
+        if (activeRequests > 0 && refreshAction != null && !progressVisible) {
             refreshAction.setActionView(new ProgressBar(self));
             refreshAction.expandActionView();
+            progressVisible = true;
         }
     }
 
     private void hideProgress() {
         activeRequests = activeRequests > 0 ? --activeRequests : 0;
         Log.d("Hide Progress", Integer.toString(activeRequests));
-        if (activeRequests == 0 && refreshAction != null) {
+        if (activeRequests == 0 && refreshAction != null && progressVisible) {
             refreshAction.collapseActionView();
             refreshAction.setActionView(null);
+            progressVisible = false;
         }
     }
 
