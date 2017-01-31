@@ -429,12 +429,11 @@ public class MainActivity extends AppCompatActivity
             Intent iAboutScreen = new Intent(this, AboutActivity.class);
             startActivity(iAboutScreen);
         } else {
-            showProgress(true);
             Log.d("Drawer Menu", String.format("Project %d selected", id));
             if (mode != id)
                 mViewPager.setCurrentItem(0);
             mode = id;
-            kanboardAPI.KB_getProjectById(id);
+            refresh();
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
