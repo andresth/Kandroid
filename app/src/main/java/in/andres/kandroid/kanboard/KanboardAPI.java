@@ -87,7 +87,7 @@ public class KanboardAPI {
                     Log.v("KanboardAPI", String.format("HTTP Return Code: %d", con.getResponseCode()));
 
                     BufferedReader in;
-                    if ((con.getResponseCode() / 100) < 4)
+                    if (con.getResponseCode() < 400)
                         in = new BufferedReader(new InputStreamReader(con.getInputStream()));
                     else
                         in = new BufferedReader(new InputStreamReader(con.getErrorStream()));
@@ -103,8 +103,17 @@ public class KanboardAPI {
                     try {
                         response = new JSONObject(responseStr.toString());
                     } catch (JSONException e) {
-                        e.printStackTrace();
-                        response = null;
+                        if (con.getResponseCode() >= 400) {
+                            response = new JSONObject();
+                            response.put("jsonrpc", "2.0");
+                            response.put("id", null);
+                            response.put("error", new JSONObject()
+                                                    .put("code", con.getResponseCode())
+                                                    .put("message", con.getResponseMessage()));
+                        } else {
+                            e.printStackTrace();
+                            response = null;
+                        }
                     }
                     responseList.add(response);
                 } catch (SocketTimeoutException e) {
