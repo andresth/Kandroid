@@ -6,6 +6,7 @@
 * New icon for FAB menu
 * Show error messages in Snackbars
 * Improved network speed
+* Refresh button in top action bar
 
 #### fixes
 * Read HTTP error stream correctly

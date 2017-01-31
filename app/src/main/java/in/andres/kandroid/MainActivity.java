@@ -26,6 +26,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.SubMenu;
 import android.view.View;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import java.io.IOException;
@@ -71,6 +72,8 @@ public class MainActivity extends AppCompatActivity
     private ArrayPagerAdapter mArrayPager;
     private View mMainView;
     private View mProgress;
+    private MenuItem refreshAction;
+    private boolean progressVisible = false;
     private int progressBarCount = 0;
 
     private int mode = 0;
@@ -94,8 +97,6 @@ public class MainActivity extends AppCompatActivity
     private KanbordEvents eventHandler = new KanbordEvents() {
         @Override
         public void onGetMe(boolean success, KanboardUserInfo userInfo) {
-//            showProgress(false);
-//            Me = userInfo;
         }
 
         @Override
@@ -113,17 +114,9 @@ public class MainActivity extends AppCompatActivity
 
         @Override
         public void onGetMyDashboard(boolean success, KanboardDashboard dash) {
-//            showProgress(false);
-//            mDashboard = dash;
-//            populateProjectsMenu();
-//            showDashboard();
         }
 
         public void onGetProjectById(boolean success, KanboardProject project) {
-            showProgress(false);
-            mProject = project;
-            Log.d("Event", String.format("Received Project %s", mProject.getName()));
-            showProject();
         }
 
         @Override
@@ -387,12 +380,18 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
-//    @Override
-//    public boolean onCreateOptionsMenu(Menu menu) {
-//        // Inflate the menu; this adds items to the action bar if it is present.
-//        getMenuInflater().inflate(R.menu.main, menu);
-//        return true;
-//    }
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.main, menu);
+        refreshAction = menu.findItem(R.id.action_refresh);
+        if (progressBarCount > 0) {
+            refreshAction.setActionView(new ProgressBar(self));
+            refreshAction.expandActionView();
+            progressVisible = true;
+        }
+        return true;
+    }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -402,7 +401,8 @@ public class MainActivity extends AppCompatActivity
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
+        if (id == R.id.action_refresh) {
+            refresh();
             return true;
         }
 
@@ -516,7 +516,8 @@ public class MainActivity extends AppCompatActivity
         if (show)
             progressBarCount++;
         else
-            progressBarCount -= progressBarCount > 0 ? 1 : 0;
+            progressBarCount = progressBarCount > 0 ? --progressBarCount : 0;
+
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB_MR2) {
             int shortAnimTime = getResources().getInteger(android.R.integer.config_shortAnimTime);
             mMainView.setVisibility(progressBarCount > 0 ? View.GONE : View.VISIBLE);
@@ -536,13 +537,24 @@ public class MainActivity extends AppCompatActivity
                             mProgress.setVisibility(progressBarCount > 0 ? View.VISIBLE : View.GONE);
                         }
                     });
-
         } else {
             // The ViewPropertyAnimator APIs are not available, so simply show
             // and hide the relevant UI components.
             mProgress.setVisibility(progressBarCount > 0 ? View.VISIBLE : View.GONE);
             mMainView.setVisibility(progressBarCount > 0 ? View.GONE : View.VISIBLE);
         }
+
+        if (progressBarCount > 0 && refreshAction != null && !progressVisible) {
+            refreshAction.setActionView(new ProgressBar(self));
+            refreshAction.expandActionView();
+            progressVisible = true;
+        }
+        if (progressBarCount == 0 && refreshAction != null && progressVisible) {
+            refreshAction.collapseActionView();
+            refreshAction.setActionView(null);
+            progressVisible = false;
+        }
+
         Log.d("Progress", Integer.toString(progressBarCount));
         return progressBarCount != 0;
     }
