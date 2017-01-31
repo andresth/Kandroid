@@ -58,6 +58,7 @@ import in.andres.kandroid.kanboard.events.OnRemoveTaskListener;
 import in.andres.kandroid.kanboard.events.OnUpdateCommentListener;
 import in.andres.kandroid.kanboard.events.OnUpdateSubtaskListener;
 
+@SuppressWarnings("unused")
 public class KanboardAPI {
 
     private class KanboardAsync extends AsyncTask<KanboardRequest, Void, KanboardResult> {
@@ -333,7 +334,6 @@ public class KanboardAPI {
 
             if (s.Request.Command.equalsIgnoreCase("getOverdueTasksByProject")) {
                 List<KanboardTask> res = null;
-                int status = 0;
                 try {
                     if (s.Result[0].has("result")) {
                         success = true;
