@@ -419,7 +419,7 @@
                 android:id="@+id/fab_menu_button_new_subtask"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/subtask"
+                android:src="@drawable/subtask_white"
                 android:layout_margin="8dp"
                 app:fabSize="mini" />
         </LinearLayout>

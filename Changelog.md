@@ -7,6 +7,7 @@
 * Show error messages in Snackbars
 * Improved network speed
 * Refresh button in top action bar
+* New Icons
 
 #### fixes
 * Read HTTP error stream correctly
