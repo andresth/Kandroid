@@ -722,8 +722,8 @@ public class TaskDetailActivity extends AppCompatActivity {
 
         textPosition.setText(Html.fromHtml(getString(R.string.taskview_position, task.getPosition())));
         textPriority.setText(Html.fromHtml(getString(R.string.taskview_priority, task.getPriority())));
-        textOwner.setText(Html.fromHtml(getString(R.string.taskview_owner, Integer.toString(task.getOwnerId()))));
-        textCreator.setText(Html.fromHtml(getString(R.string.taskview_creator, Integer.toString(task.getCreatorId()))));
+        textOwner.setText(Html.fromHtml(getString(R.string.taskview_owner, users == null ? Integer.toString(task.getOwnerId()) : users.get(task.getOwnerId()))));
+        textCreator.setText(Html.fromHtml(getString(R.string.taskview_creator, users == null ? Integer.toString(task.getCreatorId()) : users.get(task.getCreatorId()))));
         textDateCreated.setText(Html.fromHtml(getString(R.string.taskview_date_created, task.getDateCreation())));
         textDateModified.setText(Html.fromHtml(getString(R.string.taskview_date_modified, task.getDateModification())));
         textDateMoved.setText(Html.fromHtml(getString(R.string.taskview_date_moved, task.getDateMoved())));
