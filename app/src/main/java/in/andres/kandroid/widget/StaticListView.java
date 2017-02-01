@@ -1,4 +1,4 @@
-package in.andres.kandroid;
+package in.andres.kandroid.widget;
 
 import android.content.Context;
 import android.util.AttributeSet;
