@@ -5,6 +5,7 @@
 
 #### improvements
 * New icon for FAB menu
+* Color of FAB matches Actionbar
 * Show error messages in Snackbars
 * Improved network speed
 * Refresh button in top action bar
