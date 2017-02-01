@@ -29,112 +29,94 @@
                 app:cardCornerRadius="@dimen/cardview_radius"
                 app:contentPadding="@dimen/cardview_padding">
 
-                <TableLayout
+                <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent">
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
 
-                    <TableRow
+                    <TextView
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent">
-                        <TextView
-                            android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/taskview_caption_information"
+                        android:textAlignment="center"
+                        />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
+                        <LinearLayout
+                            android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:text="@string/taskview_caption_information"
-                            android:textAlignment="center"
-                            />
-                    </TableRow>
+                            android:orientation="vertical">
+                            <TextView
+                                android:id="@+id/text_status"
+                                tools:text="Status:"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content" />
 
-                    <TableRow
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent">
+                            <TextView
+                                tools:text="Priorität:"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:id="@+id/text_priority" />
+                            <TextView
+                                android:id="@+id/text_position"
+                                tools:text="Position:"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content" />
 
-                        <TextView
-                            android:id="@+id/text_status"
-                            tools:text="Status:"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1" />
+                            <TextView
+                                android:id="@+id/text_category"
+                                tools:text="Kategorie:"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content" />
 
-                        <TextView
-                            tools:text="Priorität:"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:id="@+id/text_priority" />
-                        <TextView
-                            android:id="@+id/text_position"
-                            tools:text="Position:"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1" />
-                    </TableRow>
-
-                    <TableRow
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent">
-
-                        <TextView
-                            android:id="@+id/text_category"
-                            tools:text="Kategorie:"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1" />
-
-                        <TextView
-                            tools:text="Swimlane:"
-                            android:layout_width="wrap_content"
+                            <TextView
+                                tools:text="Swimlane:"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:id="@+id/text_swimlane" />
+                        </LinearLayout>
+                        <LinearLayout
+                            android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:id="@+id/text_swimlane" />
-                    </TableRow>
+                            android:orientation="vertical">
+                            <TextView
+                                android:id="@+id/text_owner"
+                                tools:text="Zuständig:"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content" />
 
-                    <TableRow
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent">
+                            <TextView
+                                tools:text="Ersteller:"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:id="@+id/text_creator" />
+                            <TextView
+                                android:id="@+id/text_DateCreated"
+                                tools:text="Erstellt:"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content" />
 
-                        <TextView
-                            android:id="@+id/text_owner"
-                            tools:text="Zuständig:"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1" />
+                            <TextView
+                                tools:text="Verändert:"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:id="@+id/text_DateModified" />
+                            <TextView
+                                android:id="@+id/text_DateMoved"
+                                tools:text="Verschoben:"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content" />
 
-                        <TextView
-                            tools:text="Ersteller:"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:id="@+id/text_creator" />
+                        </LinearLayout>
+                    </LinearLayout>
+                </LinearLayout>
 
-                    </TableRow>
-
-                    <TableRow
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent">
-
-                        <TextView
-                            android:id="@+id/text_DateCreated"
-                            tools:text="Erstellt:"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1" />
-
-                        <TextView
-                            tools:text="Verändert:"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:id="@+id/text_DateModified" />
-                        <TextView
-                            android:id="@+id/text_DateMoved"
-                            tools:text="Verschoben:"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1" />
-
-                    </TableRow>
-                </TableLayout>
             </android.support.v7.widget.CardView>
 
             <android.support.v7.widget.CardView
@@ -168,46 +150,57 @@
                 android:layout_marginBottom="@dimen/cardview_vertical_margin"
                 app:cardCornerRadius="@dimen/cardview_radius"
                 app:contentPadding="@dimen/cardview_padding">
-                <TableLayout
+
+                <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent">
-                    <TableRow>
-                        <TextView
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:text="@string/taskview_caption_timetracking"
-                            android:textAlignment="center"
-                            android:layout_weight="1"/>
-                    </TableRow>
-                    <TableRow>
-                        <TextView
-                            android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:text="@string/taskview_caption_timetracking"
+                        android:textAlignment="center" />
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+                        <LinearLayout
+                            android:layout_width="0dp"
                             android:layout_height="wrap_content"
-                            tools:text="Geplant:"
                             android:layout_weight="1"
-                            android:id="@+id/text_HoursEstimated"/>
-                        <TextView
-                            android:layout_width="match_parent"
+                            android:orientation="vertical">
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                tools:text="Geplant:"
+                                android:id="@+id/text_HoursEstimated"/>
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                tools:text="Verbraucht:"
+                                android:id="@+id/text_HoursUsed"/>
+
+                        </LinearLayout>
+                        <LinearLayout
+                            android:layout_width="0dp"
                             android:layout_height="wrap_content"
-                            tools:text="Verbraucht:"
                             android:layout_weight="1"
-                            android:id="@+id/text_HoursUsed"/>
-                    </TableRow>
-                    <TableRow>
-                        <TextView
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            tools:text="Start:"
-                            android:layout_weight="1"
-                            android:id="@+id/text_DateStart"/>
-                        <TextView
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            tools:text="Ende:"
-                            android:layout_weight="1"
-                            android:id="@+id/text_DateDue"/>
-                    </TableRow>
-                </TableLayout>
+                            android:orientation="vertical">
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                tools:text="Start:"
+                                android:id="@+id/text_DateStart"/>
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                tools:text="Ende:"
+                                android:id="@+id/text_DateDue"/>
+
+                        </LinearLayout>
+                    </LinearLayout>
+
+                </LinearLayout>
             </android.support.v7.widget.CardView>
 
             <android.support.v7.widget.CardView
@@ -277,16 +270,7 @@
             android:src="@drawable/dotdotdot"
             android:clickable="true"
             app:layout_constraintEnd_toEndOf="@+id/fab_menu"
-            app:layout_constraintBottom_toBottomOf="parent"
-            tools:layout_editor_absoluteX="304dp" />
-       <!--<android.support.design.widget.FloatingActionButton-->
-            <!--android:id="@+id/fab"-->
-            <!--android:layout_width="wrap_content"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:layout_margin="@dimen/fab_margin"-->
-            <!--android:src="@drawable/plus"-->
-            <!--app:layout_constraintEnd_toEndOf="@+id/fab_menu"-->
-            <!--app:layout_constraintBottom_toBottomOf="@+id/fab_menu" />-->
+            app:layout_constraintBottom_toBottomOf="parent" />
         <LinearLayout
             android:id="@+id/fab_menu_item0"
             android:layout_width="wrap_content"
@@ -294,7 +278,7 @@
             android:orientation="horizontal"
             android:gravity="center_vertical"
             android:visibility="invisible"
-            android:layout_marginBottom="6dp"
+            android:layout_marginBottom="@dimen/fab_bottom_margin"
             android:layout_marginEnd="16dp"
             app:layout_constraintBottom_toTopOf="@+id/fab"
             app:layout_constraintEnd_toEndOf="@id/fab_menu">
@@ -322,7 +306,7 @@
             android:orientation="horizontal"
             android:gravity="center_vertical"
             android:visibility="invisible"
-            android:layout_marginBottom="6dp"
+            android:layout_marginBottom="@dimen/fab_bottom_margin"
             android:layout_marginEnd="16dp"
             app:layout_constraintBottom_toTopOf="@+id/fab_menu_item0"
             app:layout_constraintEnd_toEndOf="@id/fab_menu">
@@ -350,7 +334,7 @@
             android:orientation="horizontal"
             android:gravity="center_vertical"
             android:visibility="invisible"
-            android:layout_marginBottom="6dp"
+            android:layout_marginBottom="@dimen/fab_bottom_margin"
             android:layout_marginEnd="16dp"
             app:layout_constraintBottom_toTopOf="@+id/fab_menu_item1"
             app:layout_constraintEnd_toEndOf="@id/fab_menu">
@@ -377,7 +361,7 @@
             android:orientation="horizontal"
             android:gravity="center_vertical"
             android:visibility="invisible"
-            android:layout_marginBottom="-2dp"
+            android:layout_marginBottom="@dimen/fab_bottom_margin"
             android:layout_marginEnd="16dp"
             app:layout_constraintBottom_toTopOf="@+id/fab_menu_item2"
             app:layout_constraintEnd_toEndOf="@id/fab_menu">
@@ -404,7 +388,7 @@
             android:orientation="horizontal"
             android:gravity="center_vertical"
             android:visibility="invisible"
-            android:layout_marginBottom="-2dp"
+            android:layout_marginBottom="@dimen/fab_bottom_margin"
             android:layout_marginEnd="16dp"
             app:layout_constraintBottom_toTopOf="@+id/fab_menu_item3"
             app:layout_constraintEnd_toEndOf="@id/fab_menu">

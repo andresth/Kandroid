@@ -89,9 +89,9 @@
     <string name="taskview_priority"><![CDATA[<b>Priority:</b> %d]]></string>
     <string name="taskview_owner"><![CDATA[<b>Owner:</b> %s]]></string>
     <string name="taskview_creator"><![CDATA[<b>Creator:</b> %s]]></string>
-    <string name="taskview_date_created"><![CDATA[<b>Created:</b><br />%tF]]></string>
-    <string name="taskview_date_modified"><![CDATA[<b>Modified:</b><br />%tF]]></string>
-    <string name="taskview_date_moved"><![CDATA[<b>Moved:</b><br />%tF]]></string>
+    <string name="taskview_date_created"><![CDATA[<b>Created:</b> %tF]]></string>
+    <string name="taskview_date_modified"><![CDATA[<b>Modified:</b> %tF]]></string>
+    <string name="taskview_date_moved"><![CDATA[<b>Moved:</b> %tF]]></string>
     <string name="taskview_hours_estimated"><![CDATA[<b>Hours estimated:</b> %.2fh]]></string>
     <string name="taskview_hours_spent"><![CDATA[<b>Hours spent:</b> %.2fh]]></string>
     <string name="taskview_date_start"><![CDATA[<b>Start date:</b> %tF]]></string>
