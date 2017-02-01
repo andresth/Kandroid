@@ -40,6 +40,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Dictionary;
 import java.util.Enumeration;
+import java.util.Hashtable;
 import java.util.List;
 import java.util.Locale;
 
@@ -57,7 +58,6 @@ import in.andres.kandroid.kanboard.events.OnCreateSubtaskListener;
 import in.andres.kandroid.kanboard.events.OnGetAllCommentsListener;
 import in.andres.kandroid.kanboard.events.OnGetAllSubtasksListener;
 import in.andres.kandroid.kanboard.events.OnGetCategoryListener;
-import in.andres.kandroid.kanboard.events.OnGetDefaultSwimlaneListener;
 import in.andres.kandroid.kanboard.events.OnGetProjectUsersListener;
 import in.andres.kandroid.kanboard.events.OnGetSwimlaneListener;
 import in.andres.kandroid.kanboard.events.OnGetTaskListener;
@@ -74,6 +74,8 @@ public class TaskDetailActivity extends AppCompatActivity {
     private KanboardSwimlane swimlane;
     private KanboardColumn column;
     private KanboardUserInfo me;
+    private List<KanboardComment> comments;
+    private List<KanboardSubtask> subtasks;
     private Dictionary<Integer, String> users;
     private MenuItem refreshAction;
     private int activeRequests = 0;
@@ -82,13 +84,15 @@ public class TaskDetailActivity extends AppCompatActivity {
 
     private KanboardAPI kanboardAPI;
 
+    //region Event Listeners
     private OnGetAllCommentsListener commentsListener = new OnGetAllCommentsListener() {
         @Override
         public void onGetAllComments(boolean success, List<KanboardComment> result) {
             hideProgress();
             Log.d("Hide Progress", "OnGetAllCommentsListener");
             if (success && result.size() > 0) {
-                commentListview.setAdapter(new ArrayAdapter<> (getApplicationContext(),android.R.layout.simple_list_item_1, result));
+                comments = result;
+                commentListview.setAdapter(new ArrayAdapter<> (getApplicationContext(),android.R.layout.simple_list_item_1, comments));
                 findViewById(R.id.card_comments).setVisibility(View.VISIBLE);
             } else {
                 findViewById(R.id.card_comments).setVisibility(View.GONE);
@@ -163,23 +167,14 @@ public class TaskDetailActivity extends AppCompatActivity {
             }
         }
     };
-    private OnGetDefaultSwimlaneListener defaultSwimlaneListener = new OnGetDefaultSwimlaneListener() {
-        @Override
-        public void onGetDefaultSwimlane(boolean success, String name, boolean isActive) {
-            hideProgress();
-            Log.d("Hide Progress", "OnGetDefaultSwimlaneListener");
-            if (success) {
-                setSwimlaneDetails(name);
-            }
-        }
-    };
     private OnGetAllSubtasksListener allSubtasksListener = new OnGetAllSubtasksListener() {
         @Override
         public void onGetAllSubtasks(boolean success, List<KanboardSubtask> result) {
             hideProgress();
             Log.d("Hide Progress", "OnGetAllSubtasksListener");
             if (success && result.size() > 0) {
-                subtaskListview.setAdapter(new SubtaskAdapter(getApplicationContext(), result));
+                subtasks = result;
+                subtaskListview.setAdapter(new SubtaskAdapter(getApplicationContext(), subtasks));
                 findViewById(R.id.card_subtasks).setVisibility(View.VISIBLE);
             } else {
                 findViewById(R.id.card_subtasks).setVisibility(View.GONE);
@@ -278,6 +273,7 @@ public class TaskDetailActivity extends AppCompatActivity {
                 Snackbar.make(findViewById(R.id.root_layout), getString(R.string.error_msg_close_task), Snackbar.LENGTH_LONG).show();
         }
     };
+    //endregion
 
     private TextView textCategory;
     private TextView textStatus;
@@ -439,7 +435,7 @@ public class TaskDetailActivity extends AppCompatActivity {
             kanboardAPI.addOnGetProjectUsersListener(usersListener);
             kanboardAPI.addOnGetCategoryListener(categoryListener);
             kanboardAPI.addOnGetSwimlaneListener(swimlaneListener);
-            kanboardAPI.addOnGetDefaultSwimlaneListener(defaultSwimlaneListener);
+            kanboardAPI.addOnGetDefaultSwimlaneListener(swimlaneListener);
             kanboardAPI.addOnGetAllSubtasksListener(allSubtasksListener);
             kanboardAPI.addOnCreateCommentListener(createCommentListener);
             kanboardAPI.addOnUpdateCommentListener(updateCommentListener);
@@ -453,38 +449,60 @@ public class TaskDetailActivity extends AppCompatActivity {
             e.printStackTrace();
         }
 
-        me = (KanboardUserInfo) getIntent().getSerializableExtra("me");
-        task = (KanboardTask) getIntent().getSerializableExtra("task");
-        if (getIntent().hasExtra("column")) {
-            column = (KanboardColumn) getIntent().getSerializableExtra("column");
-        }
-
-        if (getIntent().hasExtra("swimlane")) {
-            swimlane = (KanboardSwimlane) getIntent().getSerializableExtra("swimlane");
-            setSwimlaneDetails(swimlane.getName());
+        if (savedInstanceState != null) {
+            restoreSavedState(savedInstanceState);
         } else {
-            textSwimlane.setVisibility(View.INVISIBLE);
+            me = (KanboardUserInfo) getIntent().getSerializableExtra("me");
+            task = (KanboardTask) getIntent().getSerializableExtra("task");
+            if (getIntent().hasExtra("column")) {
+                column = (KanboardColumn) getIntent().getSerializableExtra("column");
+            }
+
+            if (getIntent().hasExtra("swimlane")) {
+                swimlane = (KanboardSwimlane) getIntent().getSerializableExtra("swimlane");
+                setSwimlaneDetails(swimlane.getName());
+            } else {
+                textSwimlane.setVisibility(View.INVISIBLE);
+            }
+
+            if (getIntent().hasExtra("category")) {
+                category = (KanboardCategory) getIntent().getSerializableExtra("category");
+                setCategoryDetails();
+            } else {
+                textCategory.setVisibility(View.INVISIBLE);
+            }
+
+            setTaskDetails();
+
+            if (task.getIsActive()) {
+                fabMenuButtonOpenCloseTask.setImageDrawable(getDrawable(R.drawable.task_close));
+                fabMenuLabelOpenCloseTask.setText(getString(R.string.taskview_fab_close_task));
+            } else {
+                fabMenuButtonOpenCloseTask.setImageDrawable(getDrawable(R.drawable.task_open));
+                fabMenuLabelOpenCloseTask.setText(getString(R.string.taskview_fab_open_task));
+            }
+
+            refresh();
         }
-
-        if (getIntent().hasExtra("category")) {
-            category = (KanboardCategory) getIntent().getSerializableExtra("category");
-            setCategoryDetails();
-        } else {
-            textCategory.setVisibility(View.INVISIBLE);
-        }
-
-        setTaskDetails();
-
-        if (task.getIsActive()) {
-            fabMenuButtonOpenCloseTask.setImageDrawable(getDrawable(R.drawable.task_close));
-            fabMenuLabelOpenCloseTask.setText(getString(R.string.taskview_fab_close_task));
-        } else {
-            fabMenuButtonOpenCloseTask.setImageDrawable(getDrawable(R.drawable.task_open));
-            fabMenuLabelOpenCloseTask.setText(getString(R.string.taskview_fab_open_task));
-        }
-
-        refresh();
         setupActionBar();
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putSerializable("task", task);
+        outState.putSerializable("category", category);
+        outState.putSerializable("swimlane", swimlane);
+        outState.putSerializable("me", me);
+        outState.putSerializable("users", (Hashtable<Integer, String>) users);
+        outState.putSerializable("comments", (ArrayList<KanboardComment>) comments);
+        outState.putSerializable("subtasks", (ArrayList<KanboardSubtask>) subtasks);
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        restoreSavedState(savedInstanceState);
     }
 
     @Override
@@ -560,6 +578,35 @@ public class TaskDetailActivity extends AppCompatActivity {
             collapseFABMenu();
         else
             super.onBackPressed();
+    }
+
+    private void restoreSavedState(Bundle savedInstanceState) {
+        task = (KanboardTask) savedInstanceState.getSerializable("task");
+        category = (KanboardCategory) savedInstanceState.getSerializable("category");
+        swimlane = (KanboardSwimlane) savedInstanceState.getSerializable("swimlane");
+        me = (KanboardUserInfo) savedInstanceState.getSerializable("me");
+        users = (Hashtable<Integer, String>) savedInstanceState.getSerializable("users");
+        comments = (ArrayList<KanboardComment>) savedInstanceState.getSerializable("comments");
+        subtasks = (ArrayList<KanboardSubtask>) savedInstanceState.getSerializable("subtasks");
+
+        setTaskDetails();
+        setCategoryDetails();
+        setSwimlaneDetails(swimlane.getName());
+
+        if (comments != null){
+            commentListview.setAdapter(new ArrayAdapter<> (getApplicationContext(),android.R.layout.simple_list_item_1, comments));
+            findViewById(R.id.card_comments).setVisibility(View.VISIBLE);
+        } else {
+            findViewById(R.id.card_comments).setVisibility(View.GONE);
+        }
+
+        if (subtasks != null) {
+            subtaskListview.setAdapter(new SubtaskAdapter(getApplicationContext(), subtasks));
+            findViewById(R.id.card_subtasks).setVisibility(View.VISIBLE);
+        } else {
+            findViewById(R.id.card_subtasks).setVisibility(View.GONE);
+        }
+
     }
 
     private void expandFABMenu() {
@@ -758,8 +805,12 @@ public class TaskDetailActivity extends AppCompatActivity {
     }
 
     private void setCategoryDetails() {
-        textCategory.setText(Html.fromHtml(getString(R.string.taskview_category, category.getName())));
-        textCategory.setVisibility(View.VISIBLE);
+        if (category != null) {
+            textCategory.setText(Html.fromHtml(getString(R.string.taskview_category, category.getName())));
+            textCategory.setVisibility(View.VISIBLE);
+        } else {
+            textCategory.setVisibility(View.INVISIBLE);
+        }
     }
 
     private class SubtaskAdapter extends ArrayAdapter<KanboardSubtask> {
