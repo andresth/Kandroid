@@ -41,7 +41,6 @@ import in.andres.kandroid.kanboard.events.OnGetAllSubtasksListener;
 import in.andres.kandroid.kanboard.events.OnGetAllTasksListener;
 import in.andres.kandroid.kanboard.events.OnGetCategoryListener;
 import in.andres.kandroid.kanboard.events.OnGetColumnsListener;
-import in.andres.kandroid.kanboard.events.OnGetDefaultSwimlaneListener;
 import in.andres.kandroid.kanboard.events.OnGetMeListener;
 import in.andres.kandroid.kanboard.events.OnGetMyActivityStreamListener;
 import in.andres.kandroid.kanboard.events.OnGetMyDashboardListener;
@@ -407,20 +406,21 @@ public class KanboardAPI {
             }
 
             if (s.Request.Command.equalsIgnoreCase("getDefaultSwimlane")) {
-                String res = null;
+                KanboardSwimlane res = null;
                 boolean active = false;
                 try {
                     if (s.Result[0].has("result")) {
                         success = true;
                         JSONObject jso = s.Result[0].getJSONObject("result");
-                        res = jso.getString("default_swimlane");
-                        active = KanboardAPI.StringToBoolean(jso.optString("show_default_swimlane"));
+                        res = new KanboardSwimlane(jso);
+//                        res = jso.getString("default_swimlane");
+//                        active = KanboardAPI.StringToBoolean(jso.optString("show_default_swimlane"));
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
-                for (OnGetDefaultSwimlaneListener l: onGetDefaultSwimlaneListeners)
-                    l.onGetDefaultSwimlane(success, res, active);
+                for (OnGetSwimlaneListener l: onGetDefaultSwimlaneListeners)
+                    l.onGetSwimlane(success, res);
                 return;
             }
 
@@ -623,7 +623,7 @@ public class KanboardAPI {
     private HashSet<OnGetProjectUsersListener> onGetProjectUsersListeners = new HashSet<>();
     private HashSet<OnGetSwimlaneListener> onGetSwimlaneListeners = new HashSet<>();
     private HashSet<OnGetActiveSwimlanesListener> onGetActiveSwimlanesListeners = new HashSet<>();
-    private HashSet<OnGetDefaultSwimlaneListener> onGetDefaultSwimlaneListeners = new HashSet<>();
+    private HashSet<OnGetSwimlaneListener> onGetDefaultSwimlaneListeners = new HashSet<>();
     private HashSet<OnGetAllSubtasksListener> onGetAllSubtasksListeners = new HashSet<>();
     private HashSet<OnGetMeListener> onGetMeListeners = new HashSet<>();
     private HashSet<OnCreateCommentListener> onCreateCommentListeners = new HashSet<>();
@@ -731,11 +731,11 @@ public class KanboardAPI {
         onGetSwimlaneListeners.remove(listener);
     }
 
-    public void addOnGetDefaultSwimlaneListener(@NonNull OnGetDefaultSwimlaneListener listener) {
+    public void addOnGetDefaultSwimlaneListener(@NonNull OnGetSwimlaneListener listener) {
         onGetDefaultSwimlaneListeners.add(listener);
     }
 
-    public void removeOnGetDefaultSwimlaneListener(@NonNull OnGetDefaultSwimlaneListener listener) {
+    public void removeOnGetDefaultSwimlaneListener(@NonNull OnGetSwimlaneListener listener) {
         onGetDefaultSwimlaneListeners.remove(listener);
     }
 
