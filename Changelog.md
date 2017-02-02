@@ -1,5 +1,12 @@
 ## development
 #### new features
+
+#### improvements
+
+#### fixes
+
+## v0.3
+#### new features
 * Remove task from FAB in task view
 * Landscape layout for task view
 
