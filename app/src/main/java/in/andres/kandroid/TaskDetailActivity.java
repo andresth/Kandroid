@@ -3,6 +3,7 @@ package in.andres.kandroid;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
@@ -550,7 +551,9 @@ public class TaskDetailActivity extends AppCompatActivity {
         getMenuInflater().inflate(R.menu.main, menu);
         refreshAction = menu.findItem(R.id.action_refresh);
         if (activeRequests > 0 && refreshAction != null) {
-            refreshAction.setActionView(new ProgressBar(self));
+            ProgressBar prog = new ProgressBar(self);
+            prog.getIndeterminateDrawable().setColorFilter(Color.WHITE, android.graphics.PorterDuff.Mode.MULTIPLY);
+            refreshAction.setActionView(prog);
             refreshAction.expandActionView();
             progressVisible = true;
         }
@@ -643,7 +646,9 @@ public class TaskDetailActivity extends AppCompatActivity {
         activeRequests++;
         Log.d("Show Progress", Integer.toString(activeRequests));
         if (activeRequests > 0 && refreshAction != null && !progressVisible) {
-            refreshAction.setActionView(new ProgressBar(self));
+            ProgressBar prog = new ProgressBar(self);
+            prog.getIndeterminateDrawable().setColorFilter(Color.WHITE, android.graphics.PorterDuff.Mode.MULTIPLY);
+            refreshAction.setActionView(prog);
             refreshAction.expandActionView();
             progressVisible = true;
         }
@@ -752,7 +757,7 @@ public class TaskDetailActivity extends AppCompatActivity {
         builder.show();
     }
 
-    private void  setupActionBar() {
+    private void setupActionBar() {
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
             // Show the Up button in the action bar.

@@ -6,6 +6,7 @@ import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -386,7 +387,9 @@ public class MainActivity extends AppCompatActivity
         getMenuInflater().inflate(R.menu.main, menu);
         refreshAction = menu.findItem(R.id.action_refresh);
         if (progressBarCount > 0) {
-            refreshAction.setActionView(new ProgressBar(self));
+            ProgressBar prog = new ProgressBar(self);
+            prog.getIndeterminateDrawable().setColorFilter(Color.WHITE, android.graphics.PorterDuff.Mode.MULTIPLY);
+            refreshAction.setActionView(prog);
             refreshAction.expandActionView();
             progressVisible = true;
         }
@@ -544,7 +547,9 @@ public class MainActivity extends AppCompatActivity
         }
 
         if (progressBarCount > 0 && refreshAction != null && !progressVisible) {
-            refreshAction.setActionView(new ProgressBar(self));
+            ProgressBar prog = new ProgressBar(self);
+            prog.getIndeterminateDrawable().setColorFilter(Color.WHITE, android.graphics.PorterDuff.Mode.MULTIPLY);
+            refreshAction.setActionView(prog);
             refreshAction.expandActionView();
             progressVisible = true;
         }
