@@ -33,7 +33,7 @@ public class DashActivitiesFragment extends ListFragment {
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         if (((MainActivity)getActivity()).getDashboard() != null) {
-            DashActivityAdapter listAdapter = new DashActivityAdapter(getActivity(), ((MainActivity)getActivity()).getDashboard().getActivities());
+            DashActivityAdapter listAdapter = new DashActivityAdapter(getContext(), ((MainActivity)getActivity()).getDashboard().getActivities());
             setListAdapter(listAdapter);
         }
     }

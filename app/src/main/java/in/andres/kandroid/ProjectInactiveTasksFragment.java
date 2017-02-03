@@ -38,7 +38,7 @@ public class ProjectInactiveTasksFragment extends Fragment {
             assert getView() != null : "ProjectInactiveTasksFragment: getView() returned null";
             getView().findViewById(R.id.fragment_dash_errortext).setVisibility(View.GONE);
             getView().findViewById(R.id.expandable_list).setVisibility(View.VISIBLE);
-            ProjectTaskAdapter listAdapter = new ProjectTaskAdapter(getActivity(), ((MainActivity)getActivity()).getProject(), ((MainActivity)getActivity()).getProject().getGroupedInactiveTasks());
+            ProjectTaskAdapter listAdapter = new ProjectTaskAdapter(getContext(), ((MainActivity)getActivity()).getProject(), ((MainActivity)getActivity()).getProject().getGroupedInactiveTasks());
             ((ExpandableListView) getView().findViewById(R.id.expandable_list)).setAdapter(listAdapter);
             for (int i = 0; i < listAdapter.getGroupCount(); i++)
                 ((ExpandableListView) getView().findViewById(R.id.expandable_list)).expandGroup(i);

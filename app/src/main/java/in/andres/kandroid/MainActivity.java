@@ -467,7 +467,7 @@ public class MainActivity extends AppCompatActivity
         if (mDashboard == null) {
             return;
         }
-        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this.getApplicationContext());
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this.getBaseContext());
         List<KanboardProject> projList = new ArrayList<>(mDashboard.getProjects());
         if (preferences.getBoolean("projects_sort_alphabetic", false))
             Collections.sort(projList);
@@ -568,7 +568,7 @@ public class MainActivity extends AppCompatActivity
         if (kanboardAPI != null)
             return true;
 
-        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this.getApplicationContext());
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this.getBaseContext());
         boolean showLoginScreen = false;
         if (!preferences.contains("serverurl"))
             showLoginScreen = true;
