@@ -15,6 +15,7 @@ import android.support.v4.widget.NestedScrollView;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.SearchView;
 import android.text.Html;
 import android.util.Log;
 import android.view.ContextMenu;
@@ -93,7 +94,7 @@ public class TaskDetailActivity extends AppCompatActivity {
             Log.d("Hide Progress", "OnGetAllCommentsListener");
             if (success && result.size() > 0) {
                 comments = result;
-                commentListview.setAdapter(new ArrayAdapter<> (getApplicationContext(),android.R.layout.simple_list_item_1, comments));
+                commentListview.setAdapter(new ArrayAdapter<> (getBaseContext(),android.R.layout.simple_list_item_1, comments));
                 findViewById(R.id.card_comments).setVisibility(View.VISIBLE);
             } else {
                 findViewById(R.id.card_comments).setVisibility(View.GONE);
@@ -175,7 +176,7 @@ public class TaskDetailActivity extends AppCompatActivity {
             Log.d("Hide Progress", "OnGetAllSubtasksListener");
             if (success && result.size() > 0) {
                 subtasks = result;
-                subtaskListview.setAdapter(new SubtaskAdapter(getApplicationContext(), subtasks));
+                subtaskListview.setAdapter(new SubtaskAdapter(getBaseContext(), subtasks));
                 findViewById(R.id.card_subtasks).setVisibility(View.VISIBLE);
             } else {
                 findViewById(R.id.card_subtasks).setVisibility(View.GONE);
@@ -427,7 +428,7 @@ public class TaskDetailActivity extends AppCompatActivity {
             }
         });
 
-        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this.getApplicationContext());
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this.getBaseContext());
         try {
             kanboardAPI = new KanboardAPI(preferences.getString("serverurl", ""), preferences.getString("username", ""), preferences.getString("password", ""));
             kanboardAPI.addOnGetAllCommentsListener(commentsListener);
@@ -597,14 +598,14 @@ public class TaskDetailActivity extends AppCompatActivity {
         setSwimlaneDetails(swimlane.getName());
 
         if (comments != null){
-            commentListview.setAdapter(new ArrayAdapter<> (getApplicationContext(),android.R.layout.simple_list_item_1, comments));
+            commentListview.setAdapter(new ArrayAdapter<> (getBaseContext(), android.R.layout.simple_list_item_1, comments));
             findViewById(R.id.card_comments).setVisibility(View.VISIBLE);
         } else {
             findViewById(R.id.card_comments).setVisibility(View.GONE);
         }
 
         if (subtasks != null) {
-            subtaskListview.setAdapter(new SubtaskAdapter(getApplicationContext(), subtasks));
+            subtaskListview.setAdapter(new SubtaskAdapter(getBaseContext(), subtasks));
             findViewById(R.id.card_subtasks).setVisibility(View.VISIBLE);
         } else {
             findViewById(R.id.card_subtasks).setVisibility(View.GONE);
@@ -682,7 +683,7 @@ public class TaskDetailActivity extends AppCompatActivity {
     private void showCommentDialog(@Nullable final KanboardComment comment) {
         AlertDialog.Builder builder = new AlertDialog.Builder(self);
         builder.setTitle(getString(comment == null ? R.string.taskview_fab_new_comment : R.string.taskview_dlg_update_comment));
-        final EditText input = new EditText(getApplicationContext());
+        final EditText input = new EditText(getBaseContext());
         input.setText(comment == null ? "" : comment.getContent());
         input.setSingleLine(false);
         input.setMinLines(5);

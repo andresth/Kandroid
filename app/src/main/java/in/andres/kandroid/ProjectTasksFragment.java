@@ -45,7 +45,7 @@ public class ProjectTasksFragment extends Fragment {
             getView().findViewById(R.id.fragment_dash_errortext).setVisibility(View.GONE);
             getView().findViewById(R.id.expandable_list).setVisibility(View.VISIBLE);
             mColumn = (KanboardColumn) getArguments().getSerializable("column");
-            ProjectTaskAdapter listAdapter = new ProjectTaskAdapter(getActivity(), ((MainActivity)getActivity()).getProject(), ((MainActivity)getActivity()).getProject().getGroupedActiveTasks().get(mColumn.getId()));
+            ProjectTaskAdapter listAdapter = new ProjectTaskAdapter(getContext(), ((MainActivity)getActivity()).getProject(), ((MainActivity)getActivity()).getProject().getGroupedActiveTasks().get(mColumn.getId()));
             ((ExpandableListView) getView().findViewById(R.id.expandable_list)).setAdapter(listAdapter);
             for (int i = 0; i < listAdapter.getGroupCount(); i++)
                 ((ExpandableListView) getView().findViewById(R.id.expandable_list)).expandGroup(i);

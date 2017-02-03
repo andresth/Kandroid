@@ -38,7 +38,7 @@ public class DashOverdueFragment extends ListFragment {
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         if (((MainActivity)getActivity()).getDashboard() != null) {
-            DashOverdueAdapter listAdapter = new DashOverdueAdapter(getActivity(), ((MainActivity)getActivity()).getDashboard().getOverdueTasks());
+            DashOverdueAdapter listAdapter = new DashOverdueAdapter(getContext(), ((MainActivity)getActivity()).getDashboard().getOverdueTasks());
             setListAdapter(listAdapter);
         }
     }

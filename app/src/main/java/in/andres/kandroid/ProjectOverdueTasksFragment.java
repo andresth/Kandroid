@@ -39,7 +39,7 @@ public class ProjectOverdueTasksFragment extends Fragment {
             assert getView() != null : "ProjectOverdueTasksFragment: getView() returned null";
             getView().findViewById(R.id.fragment_dash_errortext).setVisibility(View.GONE);
             getView().findViewById(R.id.expandable_list).setVisibility(View.VISIBLE);
-            ProjectTaskAdapter listAdapter = new ProjectTaskAdapter(getActivity(), ((MainActivity)getActivity()).getProject(), ((MainActivity)getActivity()).getProject().getGroupedOverdueTasks());
+            ProjectTaskAdapter listAdapter = new ProjectTaskAdapter(getContext(), ((MainActivity)getActivity()).getProject(), ((MainActivity)getActivity()).getProject().getGroupedOverdueTasks());
             ((ExpandableListView) getView().findViewById(R.id.expandable_list)).setAdapter(listAdapter);
             for (int i = 0; i < listAdapter.getGroupCount(); i++)
                 ((ExpandableListView) getView().findViewById(R.id.expandable_list)).expandGroup(i);
