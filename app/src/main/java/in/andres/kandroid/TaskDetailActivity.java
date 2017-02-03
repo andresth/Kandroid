@@ -683,7 +683,7 @@ public class TaskDetailActivity extends AppCompatActivity {
     private void showCommentDialog(@Nullable final KanboardComment comment) {
         AlertDialog.Builder builder = new AlertDialog.Builder(self);
         builder.setTitle(getString(comment == null ? R.string.taskview_fab_new_comment : R.string.taskview_dlg_update_comment));
-        final EditText input = new EditText(getBaseContext());
+        final EditText input = new EditText(this);
         input.setText(comment == null ? "" : comment.getContent());
         input.setSingleLine(false);
         input.setMinLines(5);
