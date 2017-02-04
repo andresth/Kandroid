@@ -14,6 +14,7 @@ import android.widget.TextView;
 import java.util.Collections;
 
 import in.andres.kandroid.kanboard.KanboardProject;
+import us.feras.mdv.MarkdownView;
 
 /**
  * Fragment to show general information aboout a project
@@ -35,7 +36,7 @@ public class ProjectOverviewFragment extends Fragment {
         KanboardProject project = ((MainActivity) getActivity()).getProject();
         if (project != null) {
             assert getView() != null : "ProjectOverviewFragment: getView() returned null";
-            TextView projectDescription = (TextView) getView().findViewById(R.id.project_description);
+            MarkdownView projectDescription = (MarkdownView) getView().findViewById(R.id.project_description);
             TextView projectNBActiveTasks = (TextView) getView().findViewById(R.id.project_active_tasks);
             TextView projectNBInactiveTasks = (TextView) getView().findViewById(R.id.project_inactive_tasks);
             TextView projectNBOverdueTasks = (TextView) getView().findViewById(R.id.project_overdue_tasks);
@@ -46,7 +47,7 @@ public class ProjectOverviewFragment extends Fragment {
             TextView projectSwimlanes = (TextView) getView().findViewById(R.id.project_swimlanes);
 
             if (project.getDescription() != null)
-                projectDescription.setText(project.getDescription());
+                projectDescription.loadMarkdown(project.getDescription());
             else
                 getView().findViewById(R.id.card_description).setVisibility(View.GONE);
             projectMembers.setText(Html.fromHtml(TextUtils.join(" <big><b>|</b></big> ", Collections.list(project.getProjectUsers().elements()))));
