@@ -69,6 +69,7 @@ import in.andres.kandroid.kanboard.events.OnRemoveSubtaskListener;
 import in.andres.kandroid.kanboard.events.OnRemoveTaskListener;
 import in.andres.kandroid.kanboard.events.OnUpdateCommentListener;
 import in.andres.kandroid.kanboard.events.OnUpdateSubtaskListener;
+import us.feras.mdv.MarkdownView;
 
 public class TaskDetailActivity extends AppCompatActivity {
     private KanboardTask task;
@@ -293,7 +294,7 @@ public class TaskDetailActivity extends AppCompatActivity {
     private TextView textDateStart;
     private TextView textDateDue;
 
-    private TextView textDescription;
+    private MarkdownView textDescription;
 
     private ListView commentListview;
 
@@ -339,7 +340,7 @@ public class TaskDetailActivity extends AppCompatActivity {
         textDateStart = (TextView) findViewById(R.id.text_DateStart);
         textDateDue = (TextView) findViewById(R.id.text_DateDue);
 
-        textDescription = (TextView) findViewById(R.id.text_Description);
+        textDescription = (MarkdownView) findViewById(R.id.text_Description);
 
         commentListview = (ListView) findViewById(R.id.comment_listview);
         registerForContextMenu(commentListview);
@@ -800,7 +801,7 @@ public class TaskDetailActivity extends AppCompatActivity {
         }
 
         if (task.getDescription() != null && !task.getDescription().contentEquals("")) {
-            textDescription.setText(task.getDescription());
+            textDescription.loadMarkdown(task.getDescription());
             findViewById(R.id.card_description).setVisibility(View.VISIBLE);
         }
     }
