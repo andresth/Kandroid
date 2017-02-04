@@ -96,13 +96,8 @@ public class ProjectTaskAdapter extends BaseExpandableListAdapter {
         projectNbTasks.setText(mContext.getResources().getQuantityString(R.plurals.format_nb_tasks, taskCount, taskCount));
         RelativeLayout.LayoutParams lp = (RelativeLayout.LayoutParams) sidebar.getLayoutParams();
         lp.removeRule(RelativeLayout.ALIGN_BOTTOM);
-//        if (!swimlane.Description.contentEquals("") && swimlane.Description != null) {
-            projectDescription.setText(swimlane.getDescription());
-            lp.addRule(RelativeLayout.ALIGN_BOTTOM, projectDescription.getId());
-//        } else {
-//            projectDescription.setVisibility(View.GONE);
-//            lp.addRule(RelativeLayout.ALIGN_BOTTOM, projectName.getId());
-//        }
+        projectDescription.setText(swimlane.getDescription());
+        lp.addRule(RelativeLayout.ALIGN_BOTTOM, projectDescription.getId());
         sidebar.setLayoutParams(lp);
         projectColumns.setVisibility(View.GONE);
 
@@ -122,6 +117,11 @@ public class ProjectTaskAdapter extends BaseExpandableListAdapter {
             ((TextView) convertView.findViewById(R.id.task_owner)).setText(Html.fromHtml(String.format(Locale.getDefault(), "<small>%s</small>", mProject.getProjectUsers().get(child.getOwnerId()))));
         else
             convertView.findViewById(R.id.task_owner).setVisibility(View.INVISIBLE);
+
+        if (child.getCategoryId() > 0)
+            ((TextView) convertView.findViewById(R.id.task_category)).setText(mProject.getCategoryHashtable().get(child.getCategoryId()).getName());
+        else
+            convertView.findViewById(R.id.task_category).setVisibility(View.INVISIBLE);
 
         if (child.getColorBackground() != null)
             convertView.findViewById(R.id.list_card).setBackgroundColor(child.getColorBackground());
