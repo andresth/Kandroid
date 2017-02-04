@@ -472,7 +472,8 @@ public class TaskDetailActivity extends AppCompatActivity {
                 category = (KanboardCategory) getIntent().getSerializableExtra("category");
                 setCategoryDetails();
             } else {
-                textCategory.setVisibility(View.INVISIBLE);
+                textCategory.setText(Html.fromHtml(getString(R.string.taskview_category, getString(R.string.task_not_assigned))));
+//                textCategory.setVisibility(View.INVISIBLE);
             }
 
             setTaskDetails();
@@ -776,7 +777,10 @@ public class TaskDetailActivity extends AppCompatActivity {
 
         textPosition.setText(Html.fromHtml(getString(R.string.taskview_position, task.getPosition())));
         textPriority.setText(Html.fromHtml(getString(R.string.taskview_priority, task.getPriority())));
-        textOwner.setText(Html.fromHtml(getString(R.string.taskview_owner, users == null ? Integer.toString(task.getOwnerId()) : users.get(task.getOwnerId()))));
+        if (task.getOwnerId() > 0)
+            textOwner.setText(Html.fromHtml(getString(R.string.taskview_owner, users == null ? Integer.toString(task.getOwnerId()) : users.get(task.getOwnerId()))));
+        else
+            textOwner.setText(Html.fromHtml(getString(R.string.taskview_owner, getString(R.string.task_not_assigned))));
         textCreator.setText(Html.fromHtml(getString(R.string.taskview_creator, users == null ? Integer.toString(task.getCreatorId()) : users.get(task.getCreatorId()))));
         textDateCreated.setText(Html.fromHtml(getString(R.string.taskview_date_created, task.getDateCreation())));
         textDateModified.setText(Html.fromHtml(getString(R.string.taskview_date_modified, task.getDateModification())));
@@ -814,9 +818,10 @@ public class TaskDetailActivity extends AppCompatActivity {
     private void setCategoryDetails() {
         if (category != null) {
             textCategory.setText(Html.fromHtml(getString(R.string.taskview_category, category.getName())));
-            textCategory.setVisibility(View.VISIBLE);
+//            textCategory.setVisibility(View.VISIBLE);
         } else {
-            textCategory.setVisibility(View.INVISIBLE);
+            textCategory.setText(Html.fromHtml(getString(R.string.taskview_category, getString(R.string.task_not_assigned))));
+//            textCategory.setVisibility(View.INVISIBLE);
         }
     }
 
