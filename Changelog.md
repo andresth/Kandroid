@@ -6,6 +6,8 @@
 * Markdown support for task description
 
 #### fixes
+* Show string when task is not assigned to a user
+* Show string when category is not assigned
 
 ## v0.3.1
 #### fixes

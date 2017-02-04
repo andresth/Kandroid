@@ -104,6 +104,7 @@
     <string name="taskview_fab_remove_task">Aufgabe löschen</string>
     <string name="taskview_fab_edit_task">Aufgabe bearbeiten</string>
     <string name="taskview_fab_open_task">Aufgabe öffnen</string>
+    <string name="task_not_assigned">nicht zugeordnet</string>
     <string name="subtask_dlg_owner">Zuständig:</string>
     <string name="subtask_dlg_title">Titel:</string>
     <string name="error_msg_remove_task">Fehler beim entfernen der Aufgabe!</string>
