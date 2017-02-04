@@ -3,6 +3,7 @@
 
 #### improvements
 * Show category in task lists (only for projects not for dashboard)
+* Markdown support for task description
 
 #### fixes
 
