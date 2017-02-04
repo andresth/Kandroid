@@ -2,6 +2,7 @@
 #### new features
 
 #### improvements
+* Show category in task lists (only for projects not for dashboard)
 
 #### fixes
 

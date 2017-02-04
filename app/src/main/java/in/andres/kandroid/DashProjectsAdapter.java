@@ -105,6 +105,7 @@ public class DashProjectsAdapter extends BaseExpandableListAdapter {
         ((TextView) convertView.findViewById(R.id.task_name)).setText(Html.fromHtml(String.format(Locale.getDefault(), "<big><b>#%d</b></big><br />%s", child.getId(), child.getTitle())));
 
         convertView.findViewById(R.id.task_owner).setVisibility(View.INVISIBLE);
+        convertView.findViewById(R.id.task_category).setVisibility(View.INVISIBLE);
 
         if (child.getColorBackground() != null)
             convertView.findViewById(R.id.list_card).setBackgroundColor(child.getColorBackground());
