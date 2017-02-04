@@ -31,7 +31,7 @@
                     android:layout_height="wrap_content"
                     android:textAlignment="center"
                     android:text="@string/caption_description"/>
-                <TextView
+                <us.feras.mdv.MarkdownView
                     android:id="@+id/project_description"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
