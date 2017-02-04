@@ -473,7 +473,6 @@ public class TaskDetailActivity extends AppCompatActivity {
                 setCategoryDetails();
             } else {
                 textCategory.setText(Html.fromHtml(getString(R.string.taskview_category, getString(R.string.task_not_assigned))));
-//                textCategory.setVisibility(View.INVISIBLE);
             }
 
             setTaskDetails();
@@ -818,10 +817,8 @@ public class TaskDetailActivity extends AppCompatActivity {
     private void setCategoryDetails() {
         if (category != null) {
             textCategory.setText(Html.fromHtml(getString(R.string.taskview_category, category.getName())));
-//            textCategory.setVisibility(View.VISIBLE);
         } else {
             textCategory.setText(Html.fromHtml(getString(R.string.taskview_category, getString(R.string.task_not_assigned))));
-//            textCategory.setVisibility(View.INVISIBLE);
         }
     }
 
