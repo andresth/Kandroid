@@ -4,6 +4,9 @@
 #### improvements
 
 #### fixes
+
+## v0.3.1
+#### fixes
 * White text in Android versions below 7
 
 ## v0.3
