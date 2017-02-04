@@ -92,7 +92,6 @@ public class TaskDetailActivity extends AppCompatActivity {
         @Override
         public void onGetAllComments(boolean success, List<KanboardComment> result) {
             hideProgress();
-            Log.d("Hide Progress", "OnGetAllCommentsListener");
             if (success && result.size() > 0) {
                 comments = result;
                 commentListview.setAdapter(new ArrayAdapter<> (getBaseContext(),android.R.layout.simple_list_item_1, comments));
@@ -109,16 +108,13 @@ public class TaskDetailActivity extends AppCompatActivity {
                 task = result;
                 if (task.getCategoryId() > 0) {
                     showProgress();
-                    Log.d("Show Progress", "getCategory");
                     kanboardAPI.getCategory(task.getCategoryId());
                 }
                 if (task.getSwimlaneId() == 0) {
                     showProgress();
-                    Log.d("Show Progress", "getDefaultSwimlane");
                     kanboardAPI.getDefaultSwimlane(task.getProjectId());
                 } else {
                     showProgress();
-                    Log.d("Show Progress", "getSwimlane");
                     kanboardAPI.getSwimlane(task.getSwimlaneId());
                 }
                 hideProgress();
@@ -140,7 +136,6 @@ public class TaskDetailActivity extends AppCompatActivity {
         @Override
         public void onGetProjectUsers(boolean success, Dictionary<Integer, String> result) {
             hideProgress();
-            Log.d("Hide Progress", "OnGetProjectUsersListener");
             if (success) {
                 users = result;
                 textOwner.setText(Html.fromHtml(getString(R.string.taskview_owner, result.get(task.getOwnerId()))));
@@ -152,7 +147,6 @@ public class TaskDetailActivity extends AppCompatActivity {
         @Override
         public void onGetCategory(boolean success, KanboardCategory result) {
             hideProgress();
-            Log.d("Hide Progress", "OnGetCategoryListener");
             if (success) {
                 category = result;
                 setCategoryDetails();
@@ -163,7 +157,6 @@ public class TaskDetailActivity extends AppCompatActivity {
         @Override
         public void onGetSwimlane(boolean success, KanboardSwimlane result) {
             hideProgress();
-            Log.d("Hide Progress", "OnGetSwimlaneListener");
             if (success) {
                 swimlane = result;
                 setSwimlaneDetails(swimlane.getName());
@@ -174,7 +167,6 @@ public class TaskDetailActivity extends AppCompatActivity {
         @Override
         public void onGetAllSubtasks(boolean success, List<KanboardSubtask> result) {
             hideProgress();
-            Log.d("Hide Progress", "OnGetAllSubtasksListener");
             if (success && result.size() > 0) {
                 subtasks = result;
                 subtaskListview.setAdapter(new SubtaskAdapter(getBaseContext(), subtasks));
@@ -189,7 +181,6 @@ public class TaskDetailActivity extends AppCompatActivity {
         public void onCreateComment(boolean success, Integer commentid) {
             if (success) {
                 showProgress();
-                Log.d("Show Progress", "getAllComments");
                 kanboardAPI.getAllComments(task.getId());
             } else
                 Snackbar.make(findViewById(R.id.root_layout), getString(R.string.error_msg_create_comment), Snackbar.LENGTH_LONG).show();
@@ -200,7 +191,6 @@ public class TaskDetailActivity extends AppCompatActivity {
         public void onUpdateComment(boolean success) {
             if (success) {
                 showProgress();
-                Log.d("Show Progress", "getAllComments");
                 kanboardAPI.getAllComments(task.getId());
             } else
                 Snackbar.make(findViewById(R.id.root_layout), getString(R.string.error_msg_update_comment), Snackbar.LENGTH_LONG).show();
@@ -211,7 +201,6 @@ public class TaskDetailActivity extends AppCompatActivity {
         public void onRemoveComment(boolean success) {
             if (success) {
                 showProgress();
-                Log.d("Show Progress", "getAllComments");
                 kanboardAPI.getAllComments(task.getId());
             } else
                 Snackbar.make(findViewById(R.id.root_layout), getString(R.string.error_msg_remove_comment), Snackbar.LENGTH_LONG).show();
@@ -222,7 +211,6 @@ public class TaskDetailActivity extends AppCompatActivity {
         public void onCreateSubtask(boolean success, Integer result) {
             if (success) {
                 showProgress();
-                Log.d("Show Progress", "getAllSubtasks");
                 kanboardAPI.getAllSubtasks(task.getId());
             } else
                 Snackbar.make(findViewById(R.id.root_layout), getString(R.string.error_msg_create_subtask), Snackbar.LENGTH_LONG).show();
@@ -233,7 +221,6 @@ public class TaskDetailActivity extends AppCompatActivity {
         public void onUpdateSubtask(boolean success) {
             if (success) {
                 showProgress();
-                Log.d("Show Progress", "getAllSubtasks");
                 kanboardAPI.getAllSubtasks(task.getId());
             } else
                 Snackbar.make(findViewById(R.id.root_layout), getString(R.string.error_msg_update_subtask), Snackbar.LENGTH_LONG).show();
@@ -244,7 +231,6 @@ public class TaskDetailActivity extends AppCompatActivity {
         public void onRemoveSubtask(boolean success) {
             if (success) {
                 showProgress();
-                Log.d("Show Progress", "getAllSubtasks");
                 kanboardAPI.getAllSubtasks(task.getId());
             } else
                 Snackbar.make(findViewById(R.id.root_layout), getString(R.string.error_msg_remove_subtask), Snackbar.LENGTH_LONG).show();
@@ -500,6 +486,8 @@ public class TaskDetailActivity extends AppCompatActivity {
         outState.putSerializable("users", (Hashtable<Integer, String>) users);
         outState.putSerializable("comments", (ArrayList<KanboardComment>) comments);
         outState.putSerializable("subtasks", (ArrayList<KanboardSubtask>) subtasks);
+
+        if (BuildConfig.DEBUG) Log.d(Constants.TAG, "TaskDetailActivity: saved savedInstanceState");
     }
 
     @Override
@@ -586,6 +574,7 @@ public class TaskDetailActivity extends AppCompatActivity {
     }
 
     private void restoreSavedState(Bundle savedInstanceState) {
+        if (BuildConfig.DEBUG) Log.v(Constants.TAG, "TaskDetailActivity: restore savedInstanceState.");
         task = (KanboardTask) savedInstanceState.getSerializable("task");
         category = (KanboardCategory) savedInstanceState.getSerializable("category");
         swimlane = (KanboardSwimlane) savedInstanceState.getSerializable("swimlane");
@@ -615,6 +604,7 @@ public class TaskDetailActivity extends AppCompatActivity {
     }
 
     private void expandFABMenu() {
+        Log.i(Constants.TAG, "Expand FAB.");
         ViewCompat.animate(fabMenu).rotation(90.0F).withLayer().setDuration(300).setInterpolator(new OvershootInterpolator(5.0F)).start();
         findViewById(R.id.fab_menu_item0).startAnimation(fabOpenAnimation);
         findViewById(R.id.fab_menu_item1).startAnimation(fabOpenAnimation);
@@ -630,6 +620,7 @@ public class TaskDetailActivity extends AppCompatActivity {
     }
 
     private void collapseFABMenu() {
+        Log.i(Constants.TAG, "Collapse FAB.");
         ViewCompat.animate(fabMenu).rotation(0.0F).withLayer().setDuration(300).setInterpolator(new OvershootInterpolator(5.0F)).start();
         findViewById(R.id.fab_menu_item0).startAnimation(fabCloseAnimation);
         findViewById(R.id.fab_menu_item1).startAnimation(fabCloseAnimation);
@@ -646,7 +637,6 @@ public class TaskDetailActivity extends AppCompatActivity {
 
     private void showProgress() {
         activeRequests++;
-        Log.d("Show Progress", Integer.toString(activeRequests));
         if (activeRequests > 0 && refreshAction != null && !progressVisible) {
             ProgressBar prog = new ProgressBar(self);
             prog.getIndeterminateDrawable().setColorFilter(Color.WHITE, android.graphics.PorterDuff.Mode.MULTIPLY);
@@ -658,7 +648,6 @@ public class TaskDetailActivity extends AppCompatActivity {
 
     private void hideProgress() {
         activeRequests = activeRequests > 0 ? --activeRequests : 0;
-        Log.d("Hide Progress", Integer.toString(activeRequests));
         if (activeRequests == 0 && refreshAction != null && progressVisible) {
             refreshAction.collapseActionView();
             refreshAction.setActionView(null);
@@ -667,17 +656,14 @@ public class TaskDetailActivity extends AppCompatActivity {
     }
 
     private void refresh() {
+        Log.i(Constants.TAG, "Loading task data.");
         showProgress();
-        Log.d("Show Progress", "getTask");
         kanboardAPI.getTask(task.getId());
         showProgress();
-        Log.d("Show Progress", "getProjectUsers");
         kanboardAPI.getProjectUsers(task.getProjectId());
         showProgress();
-        Log.d("Show Progress", "getAllComments");
         kanboardAPI.getAllComments(task.getId());
         showProgress();
-        Log.d("Show Progress", "getAllSubtasks");
         kanboardAPI.getAllSubtasks(task.getId());
     }
 
@@ -695,10 +681,13 @@ public class TaskDetailActivity extends AppCompatActivity {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 if (!input.getText().toString().contentEquals("")) {
-                    if (comment == null)
+                    if (comment == null) {
+                        Log.i(Constants.TAG, "Creating new comment.");
                         kanboardAPI.createComment(task.getId(), me.getId(), input.getText().toString());
-                    else
+                    } else {
+                        Log.i(Constants.TAG, "Updating comment.");
                         kanboardAPI.updateComment(comment.getId(), input.getText().toString());
+                    }
                     dialog.dismiss();
                 }
             }
@@ -742,10 +731,13 @@ public class TaskDetailActivity extends AppCompatActivity {
                     }
                 }
                 if (!editTitle.getText().toString().equalsIgnoreCase("")) {
-                    if (subtask == null)
+                    if (subtask == null) {
+                        Log.i(Constants.TAG, "Creating new subtask.");
                         kanboardAPI.createSubtask(task.getId(), editTitle.getText().toString(), userid, null, null, null);
-                    else
-                        kanboardAPI.updateSubtask(subtask.getId(),subtask.getTaskId(), editTitle.getText().toString(), userid, null, null, null);
+                    } else {
+                        Log.i(Constants.TAG, "Updating subtask.");
+                        kanboardAPI.updateSubtask(subtask.getId(), subtask.getTaskId(), editTitle.getText().toString(), userid, null, null, null);
+                    }
                     dialog.dismiss();
                 }
             }

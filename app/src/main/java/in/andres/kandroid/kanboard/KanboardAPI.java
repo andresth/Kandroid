@@ -31,6 +31,8 @@ import java.util.regex.Pattern;
 
 import javax.net.ssl.HttpsURLConnection;
 
+import in.andres.kandroid.BuildConfig;
+import in.andres.kandroid.Constants;
 import in.andres.kandroid.kanboard.events.OnCloseTaskListener;
 import in.andres.kandroid.kanboard.events.OnCreateCommentListener;
 import in.andres.kandroid.kanboard.events.OnCreateSubtaskListener;
@@ -67,7 +69,8 @@ public class KanboardAPI {
             List<JSONObject> responseList = new ArrayList<>();
             for (String s: params[0].JSON) {
                 try {
-                    Log.v("KanboardAPI", String.format("Send Request:\n%s", s));
+                    Log.i(Constants.TAG, String.format("API: Send Request \"%s\"", params[0].Command));
+                    if (BuildConfig.DEBUG) Log.v(Constants.TAG, String.format("API: Data:\n%s", s));
                     con = (HttpsURLConnection) kanboardURL.openConnection();
                     if (con == null)
                         return new KanboardResult(params[0], new JSONObject[]{new JSONObject("{\"jsonrpc\":\"2.0\",\"error\":{\"code\":0,\"message\":\"Unable to open connection\"},\"id\":null}")}, 0);
@@ -84,7 +87,7 @@ public class KanboardAPI {
                     out.flush();
                     out.close();
 
-                    Log.v("KanboardAPI", String.format("HTTP Return Code: %d", con.getResponseCode()));
+                    Log.i(Constants.TAG, String.format("API: HTTP Return Code for \"%s\": %d", params[0].Command, con.getResponseCode()));
 
                     BufferedReader in;
                     if (con.getResponseCode() < 400)
@@ -98,7 +101,8 @@ public class KanboardAPI {
                     }
                     in.close();
 
-                    Log.v("KanboardAPI", String.format("Received Response:\n%s", responseStr.toString()));
+                    Log.i(Constants.TAG, String.format("API: Received Response \"%s\"", params[0].Command));
+                    if (BuildConfig.DEBUG) Log.v(Constants.TAG, String.format("API: Data:\n%s", responseStr.toString()));
                     JSONObject response;
                     try {
                         response = new JSONObject(responseStr.toString());
@@ -117,7 +121,7 @@ public class KanboardAPI {
                     }
                     responseList.add(response);
                 } catch (SocketTimeoutException e) {
-                    Log.e("KanboardAPI", "Connection timed out");
+                    Log.e(Constants.TAG, String.format("API: Connection timed out.\tRequest: %s", params[0].Command));
                     e.printStackTrace();
                     try {
                         responseList.add(new JSONObject("{\"jsonrpc\":\"2.0\",\"error\":{\"code\":0,\"message\":\"Network Timeout\"},\"id\":null}"));
@@ -125,7 +129,7 @@ public class KanboardAPI {
                         e1.printStackTrace();
                     }
                 } catch (Exception e) {
-                    Log.e("KanboardAPI", "CatchAll");
+                    Log.e(Constants.TAG, String.format("API: CatchAll.\tRequest: %s", params[0].Command));
                     e.printStackTrace();
                     try {
                         responseList.add(new JSONObject("{\"jsonrpc\":\"2.0\",\"error\":{\"code\":-1,\"message\":\"" + e.getMessage() + "\"},\"id\":null}\""));
@@ -153,6 +157,7 @@ public class KanboardAPI {
                 return;
             }
             if (s.Result[0].has("error") || s.ReturnCode >= 400) {
+                Log.e(Constants.TAG, s.Result[0].toString());
                 JSONObject err = s.Result[0].optJSONObject("error");
                 KanboardError res = new KanboardError(s.Request, err, s.ReturnCode);
                 for (KanbordEvents l: listeners)

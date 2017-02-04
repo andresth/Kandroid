@@ -306,6 +306,8 @@ public class MainActivity extends AppCompatActivity
         navigationView.setNavigationItemSelectedListener(this);
 
         if (savedInstanceState != null) {
+            if (BuildConfig.DEBUG) Log.v(Constants.TAG, "MainActivity: restore savedInstanceState");
+
             if (savedInstanceState.containsKey("dashboard")) {
                 // App was restarted by System, load saved instance
                 mDashboard = (KanboardDashboard) savedInstanceState.getSerializable("dashboard");
@@ -326,12 +328,16 @@ public class MainActivity extends AppCompatActivity
         savedInstanceState.putInt("ViewPagerItem", mViewPager.getCurrentItem());
 
         savedInstanceState.putInt("mode", mode);
+
+        if (BuildConfig.DEBUG) Log.v(Constants.TAG, "MainActivity: saved savedInstanceState");
     }
 
     @Override
     public void onRestoreInstanceState(Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
         // User rotated the screen or something
+        if (BuildConfig.DEBUG) Log.v(Constants.TAG, "MainActivity: restore savedInstanceState");
+
         if (savedInstanceState.containsKey("dashboard")) {
             mDashboard = (KanboardDashboard) savedInstanceState.getSerializable("dashboard");
             populateProjectsMenu();
@@ -351,9 +357,10 @@ public class MainActivity extends AppCompatActivity
     @Override
     protected void onStart() {
         super.onStart();
-        createKandoardAPI();
         if ((mDashboard == null && mode == 0) || (mProject == null && mode > 0))
             refresh();
+        else
+            createKandoardAPI();
     }
 
     @Override
@@ -363,7 +370,6 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     protected void onResume() {
-        Log.d("Lifecycle", "onResume");
         super.onResume();
         if (mDashboard != null && (progressBarCount <= 0) && (mode == 0))
             showDashboard();
@@ -419,6 +425,7 @@ public class MainActivity extends AppCompatActivity
         int id = item.getItemId();
 
         if (id == R.id.nav_dashboard) {
+            Log.i(Constants.TAG, "Select dashboard");
             if (mode != 0)
                 mViewPager.setCurrentItem(0);
             mode = 0;
@@ -432,7 +439,7 @@ public class MainActivity extends AppCompatActivity
             Intent iAboutScreen = new Intent(this, AboutActivity.class);
             startActivity(iAboutScreen);
         } else {
-            Log.d("Drawer Menu", String.format("Project %d selected", id));
+            Log.i(Constants.TAG, "Select project");
             if (mode != id)
                 mViewPager.setCurrentItem(0);
             mode = id;
@@ -452,6 +459,8 @@ public class MainActivity extends AppCompatActivity
             mDashboard.setExtra(mMyOverduetasks, mMyActivities);
             populateProjectsMenu();
             showDashboard();
+        } else {
+            Log.w(Constants.TAG, "Something happened while assembling mDashboard.");
         }
     }
 
@@ -460,11 +469,14 @@ public class MainActivity extends AppCompatActivity
                 mActiveTasks != null && mInactiveTasks != null && mOverdueTasks != null && mProjectUsers != null) {
             mProject.setExtra(mColumns, mSwimlanes, mCategories, mActiveTasks, mInactiveTasks, mOverdueTasks, mProjectUsers);
             showProject();
+        } else {
+            Log.w(Constants.TAG, "Something happened while assembling mProject.");
         }
     }
 
     private void populateProjectsMenu() {
         if (mDashboard == null) {
+            if (BuildConfig.DEBUG) Log.d("Kandroid", "Tried to populate drawer, but mDashboard was null");
             return;
         }
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this.getBaseContext());
@@ -480,8 +492,10 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void showDashboard() {
-        if (mDashboard == null)
+        if (mDashboard == null) {
+            if (BuildConfig.DEBUG) Log.d("Kandroid", "Tried to show dashboard, but mDashboard was null");
             return;
+        }
 
         if (getSupportActionBar() != null)
             getSupportActionBar().setTitle(getString(R.string.action_dashboard));
@@ -494,8 +508,10 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void showProject() {
-        if (mProject == null)
+        if (mProject == null) {
+            if (BuildConfig.DEBUG) Log.d(Constants.TAG, "Tried to show project, but mProject was null");
             return;
+        }
 
         if (getSupportActionBar() != null)
             getSupportActionBar().setTitle(mProject.getName());
@@ -559,7 +575,6 @@ public class MainActivity extends AppCompatActivity
             progressVisible = false;
         }
 
-        Log.d("Progress", Integer.toString(progressBarCount));
         return progressBarCount != 0;
     }
 
@@ -567,6 +582,8 @@ public class MainActivity extends AppCompatActivity
         // Check if API object already exists
         if (kanboardAPI != null)
             return true;
+
+        Log.d(Constants.TAG, "Creating API object");
 
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this.getBaseContext());
         boolean showLoginScreen = false;
@@ -583,6 +600,7 @@ public class MainActivity extends AppCompatActivity
         password = preferences.getString("password", "");
 
         if (showLoginScreen) {
+            Log.i("Kandroid", "No credential found. Launching login activity.");
             Intent iLoginScreen = new Intent(this, LoginActivity.class);
             startActivity(iLoginScreen);
             return false;
@@ -603,6 +621,7 @@ public class MainActivity extends AppCompatActivity
                 kanboardAPI.addOnGetProjectUsersListener(getProjectUsersListener);
                 return true;
             } catch (IOException e) {
+                Log.e(Constants.TAG, "Failed to create API object.");
                 e.printStackTrace();
             }
         }
@@ -618,8 +637,7 @@ public class MainActivity extends AppCompatActivity
         kanboardAPI.getMe();
 
         if (mode == 0) {
-//            showProgress(true);
-//            kanboardAPI.KB_getDashboard();
+            Log.i(Constants.TAG, "Loading dashboard data.");
             showProgress(true);
             kanboardAPI.getMyDashboard();
             showProgress(true);
@@ -627,8 +645,7 @@ public class MainActivity extends AppCompatActivity
             showProgress(true);
             kanboardAPI.getMyOverdueTasks();
         } else {
-//            showProgress(true);
-//            kanboardAPI.KB_getProjectById(mode);
+            Log.i(Constants.TAG, "Loading project date.");
             showProgress(true);
             kanboardAPI.getProjectById(mode);
             showProgress(true);
