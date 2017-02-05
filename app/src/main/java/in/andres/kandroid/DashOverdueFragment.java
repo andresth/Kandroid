@@ -72,15 +72,12 @@ public class DashOverdueFragment extends ListFragment {
         public View getView(int position, View convertView, @NonNull ViewGroup parent) {
             if (convertView == null)
                 convertView = mInflater.inflate(R.layout.listitem_project_task, parent, false);
-//                convertView = mInflater.inflate(R.layout.listitem_dash_overdue, parent, false);
 
             TextView textName = (TextView) convertView.findViewById(R.id.task_name);
             TextView textOverdue = (TextView) convertView.findViewById(R.id.task_owner);
-//            TextView textOverdue = (TextView) convertView.findViewById(R.id.task_overdue);
-//            TextView textProject = (TextView) convertView.findViewById(R.id.task_project);
+            convertView.findViewById(R.id.task_category).setVisibility(View.INVISIBLE);
 
             textName.setText(Html.fromHtml(String.format(Locale.getDefault(), "<big><b>%s</b></big><br />%s", mValues.get(position).getTitle(), mValues.get(position).getProjectName())));
-//            textProject.setText(mValues.get(position).getProjectName());
             long overdue = new Date().getTime() - mValues.get(position).getDateDue().getTime();
             long hours = TimeUnit.MILLISECONDS.toHours(overdue);
             long days = TimeUnit.MILLISECONDS.toDays(overdue);
