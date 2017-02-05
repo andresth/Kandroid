@@ -12,6 +12,7 @@
 * Show string when category is not assigned
 * Login activity is started twice on first run
 * First subtask is always checked
+* Closed tasks are mixed with open tasks
 
 ## v0.3.1
 #### fixes

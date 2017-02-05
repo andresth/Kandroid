@@ -203,7 +203,7 @@ public class KanboardProject implements Comparable<KanboardProject>, Serializabl
         }
         InactiveTasks = inactivetasks;
         for (KanboardTask task: InactiveTasks) {
-            GroupedActiveTasks.get(task.getColumnId()).get(task.getSwimlaneId()).add(task);
+            GroupedInactiveTasks.get(task.getSwimlaneId()).add(task);
             TaskHashtable.put(task.getId(), task);
         }
         for (KanboardTask task: overduetasks) {
