@@ -12,9 +12,11 @@ import java.util.Date;
  * Created by Thomas Andres on 20.01.17.
  */
 
+@SuppressWarnings("unused")
 public class KanboardComment implements Serializable {
     private int id;
     private Date date_creation;
+    private Date date_modification;
     private int task_id;
     private int user_id;
     private String content;
@@ -32,6 +34,11 @@ public class KanboardComment implements Serializable {
             date_creation = new Date(tmpTime * 1000);
         else
             date_creation = null;
+        tmpTime = comment.optLong("date_modification");
+        if (tmpTime > 0)
+            date_modification = new Date(tmpTime * 1000);
+        else
+            date_modification = null;
         task_id = comment.optInt("task_id");
         user_id = comment.optInt("user_id");
         content = comment.optString("comment");
@@ -48,6 +55,11 @@ public class KanboardComment implements Serializable {
     @Nullable
     public Date getDateCreation() {
         return this.date_creation;
+    }
+
+    @Nullable
+    public Date getDateModification() {
+        return date_modification;
     }
 
     public int getTaskId() {
@@ -75,6 +87,7 @@ public class KanboardComment implements Serializable {
         this.content = content;
     }
 
+    @Nullable
     public String getUsername() {
         return this.username;
     }
