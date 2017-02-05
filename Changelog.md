@@ -1,5 +1,6 @@
 ## development
 #### new features
+* Confirmation dialog for delete actions
 
 #### improvements
 * Show category in task lists (only for projects not for dashboard)

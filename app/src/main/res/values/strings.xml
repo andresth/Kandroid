@@ -112,6 +112,10 @@
     <string name="task_not_assigned">not assigned</string>
     <string name="subtask_dlg_owner">Owner:</string>
     <string name="subtask_dlg_title">Title:</string>
+    <string name="delete_dlg_message">Are you sure?</string>
+    <string name="delete_dlg_task">Delete Task</string>
+    <string name="delete_dlg_subtask">Delete Subtask</string>
+    <string name="delete_dlg_comment">Delete Comment</string>
     <string name="error_msg_remove_task">Error while removing task!</string>
     <string name="error_msg_open_task">Error while opening task!</string>
     <string name="error_msg_close_task">Error while closing task!</string>
