@@ -430,7 +430,7 @@ public class TaskDetailActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 collapseFABMenu();
-                kanboardAPI.removeTask(task.getId());
+                showDeleteTaskDialog(task);
             }
         });
 
@@ -537,18 +537,19 @@ public class TaskDetailActivity extends AppCompatActivity {
     @Override
     public boolean onContextItemSelected(MenuItem item) {
         AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
+        AlertDialog.Builder dlgBuilder;
         switch (item.getItemId()) {
             case R.id.action_edit_comment:
                 showCommentDialog((KanboardComment)commentListview.getAdapter().getItem(info.position));
                 return true;
             case R.id.action_delete_comment:
-                kanboardAPI.removeComment(((KanboardComment)commentListview.getAdapter().getItem(info.position)).getId());
+                showDeleteCommentDialog((KanboardComment)commentListview.getAdapter().getItem(info.position));
                 return true;
             case R.id.action_edit_subtask:
                 showSubtaskDialog((KanboardSubtask)subtaskListview.getAdapter().getItem(info.position));
                 return super.onContextItemSelected(item);
             case R.id.action_delete_subtask:
-                kanboardAPI.removeSubtask(((KanboardSubtask)subtaskListview.getAdapter().getItem(info.position)).getId());
+                showDeleteSubtaskDialog((KanboardSubtask)subtaskListview.getAdapter().getItem(info.position));
                 return true;
             default:
                 return super.onContextItemSelected(item);
@@ -608,7 +609,6 @@ public class TaskDetailActivity extends AppCompatActivity {
 
         if (comments != null){
             commentListview.setAdapter(new CommentAdapter (getBaseContext(), comments));
-//            commentListview.setAdapter(new ArrayAdapter<> (getBaseContext(), android.R.layout.simple_list_item_1, comments));
             findViewById(R.id.card_comments).setVisibility(View.VISIBLE);
         } else {
             findViewById(R.id.card_comments).setVisibility(View.GONE);
@@ -771,6 +771,59 @@ public class TaskDetailActivity extends AppCompatActivity {
         builder.show();
     }
 
+    private void showDeleteCommentDialog(final KanboardComment comment) {
+        AlertDialog.Builder dlgBuilder = new AlertDialog.Builder(TaskDetailActivity.this);
+        dlgBuilder.setTitle(getString(R.string.delete_dlg_comment));
+        dlgBuilder.setMessage(getString(R.string.delete_dlg_message));
+        dlgBuilder.setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                kanboardAPI.removeComment(comment.getId());
+            }
+        });
+        dlgBuilder.setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {}
+        });
+        dlgBuilder.show();
+    }
+
+    private void showDeleteSubtaskDialog(final KanboardSubtask subtask) {
+        AlertDialog.Builder dlgBuilder = new AlertDialog.Builder(TaskDetailActivity.this);
+        dlgBuilder.setTitle(getString(R.string.delete_dlg_subtask));
+        dlgBuilder.setMessage(getString(R.string.delete_dlg_message));
+        dlgBuilder.setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                kanboardAPI.removeSubtask(subtask.getId());
+            }
+        });
+        dlgBuilder.setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {}
+        });
+        dlgBuilder.show();
+    }
+
+    private void showDeleteTaskDialog(final KanboardTask task) {
+        AlertDialog.Builder dlgBuilder = new AlertDialog.Builder(TaskDetailActivity.this);
+        dlgBuilder.setTitle(getString(R.string.delete_dlg_task));
+        dlgBuilder.setMessage(getString(R.string.delete_dlg_message));
+        dlgBuilder.setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                kanboardAPI.removeTask(task.getId());
+            }
+        });
+        dlgBuilder.setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+
+            }
+        });
+        dlgBuilder.show();
+    }
+
     private void setupActionBar() {
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
@@ -834,6 +887,7 @@ public class TaskDetailActivity extends AppCompatActivity {
         }
     }
 
+    //region internal classes
     private class SubtaskAdapter extends ArrayAdapter<KanboardSubtask> {
         private Context mContext;
         private LayoutInflater mInflater;
@@ -894,4 +948,5 @@ public class TaskDetailActivity extends AppCompatActivity {
             return convertView;
         }
     }
+    //endregion
 }

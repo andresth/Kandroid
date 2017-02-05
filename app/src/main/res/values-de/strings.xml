@@ -107,6 +107,10 @@
     <string name="task_not_assigned">nicht zugeordnet</string>
     <string name="subtask_dlg_owner">Zuständig:</string>
     <string name="subtask_dlg_title">Titel:</string>
+    <string name="delete_dlg_message">Sind Sie sicher?</string>
+    <string name="delete_dlg_task">Aufgabe löschen</string>
+    <string name="delete_dlg_subtask">Teilaufgabe löschen</string>
+    <string name="delete_dlg_comment">Kommentar löschen</string>
     <string name="error_msg_remove_task">Fehler beim entfernen der Aufgabe!</string>
     <string name="error_msg_open_task">Fehler beim öffnen der Aufgabe!</string>
     <string name="error_msg_close_task">Fehler beim schließen der Aufgabe!</string>
