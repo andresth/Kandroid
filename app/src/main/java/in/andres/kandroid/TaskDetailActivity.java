@@ -854,6 +854,7 @@ public class TaskDetailActivity extends AppCompatActivity {
                 convertView = mInflater.inflate(android.R.layout.simple_list_item_checked, parent, false);
 
             CheckedTextView text = (CheckedTextView) convertView.findViewById(android.R.id.text1);
+            text.setChecked(false);
             if (mObjects.get(position).getStatus() == 2) {
                 text.setText(Html.fromHtml(String.format(Locale.getDefault(), "<del>%s</del>", mObjects.get(position).getTitle())));
                 text.setChecked(true);
