@@ -13,6 +13,7 @@
 * Login activity is started twice on first run
 * First subtask is always checked
 * Closed tasks are mixed with open tasks
+* Start and due dates of tasks are invisible
 
 ## v0.3.1
 #### fixes
