@@ -853,15 +853,19 @@ public class TaskDetailActivity extends AppCompatActivity {
         textHoursEstimated.setText(Html.fromHtml(getString(R.string.taskview_hours_estimated, task.getTimeEstimated())));
         textHoursUsed.setText(Html.fromHtml(getString(R.string.taskview_hours_spent, task.getTimeSpent())));
 
-        if (task.getDateStarted() != null)
+        if (task.getDateStarted() != null) {
             textDateStart.setText(Html.fromHtml(getString(R.string.taskview_date_start, task.getDateStarted())));
-        else
+            textDateStart.setVisibility(View.VISIBLE);
+        } else {
             textDateStart.setVisibility(View.INVISIBLE);
+        }
 
-        if (task.getDateDue() != null)
+        if (task.getDateDue() != null) {
             textDateDue.setText(Html.fromHtml(getString(R.string.taskview_date_due, task.getDateDue())));
-        else
+            textDateDue.setVisibility(View.VISIBLE);
+        } else {
             textDateDue.setVisibility(View.INVISIBLE);
+        }
 
         if (task.getDateStarted() == null && task.getDateDue() == null) {
             textDateStart.setVisibility(View.GONE);
