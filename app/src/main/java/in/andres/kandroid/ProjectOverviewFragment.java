@@ -11,10 +11,15 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import org.commonmark.parser.Parser;
+import org.commonmark.renderer.NodeRenderer;
+import org.commonmark.renderer.html.HtmlNodeRendererContext;
+import org.commonmark.renderer.html.HtmlNodeRendererFactory;
+import org.commonmark.renderer.html.HtmlRenderer;
+
 import java.util.Collections;
 
 import in.andres.kandroid.kanboard.KanboardProject;
-import us.feras.mdv.MarkdownView;
 
 /**
  * Fragment to show general information aboout a project
@@ -23,6 +28,13 @@ import us.feras.mdv.MarkdownView;
  */
 
 public class ProjectOverviewFragment extends Fragment {
+    private Parser mParser = Parser.builder().build();
+    private HtmlRenderer mRenderer = HtmlRenderer.builder().nodeRendererFactory(new HtmlNodeRendererFactory() {
+        @Override
+        public NodeRenderer create(HtmlNodeRendererContext context) {
+            return new CompactHtmlRenderer(context);
+        }
+    }).build();
 
     public ProjectOverviewFragment() {}
 
@@ -36,7 +48,7 @@ public class ProjectOverviewFragment extends Fragment {
         KanboardProject project = ((MainActivity) getActivity()).getProject();
         if (project != null) {
             assert getView() != null : "ProjectOverviewFragment: getView() returned null";
-            MarkdownView projectDescription = (MarkdownView) getView().findViewById(R.id.project_description);
+            TextView projectDescription = (TextView) getView().findViewById(R.id.project_description);
             TextView projectNBActiveTasks = (TextView) getView().findViewById(R.id.project_active_tasks);
             TextView projectNBInactiveTasks = (TextView) getView().findViewById(R.id.project_inactive_tasks);
             TextView projectNBOverdueTasks = (TextView) getView().findViewById(R.id.project_overdue_tasks);
@@ -46,10 +58,11 @@ public class ProjectOverviewFragment extends Fragment {
             TextView projectColumns = (TextView) getView().findViewById(R.id.project_columns);
             TextView projectSwimlanes = (TextView) getView().findViewById(R.id.project_swimlanes);
 
-            if (project.getDescription() != null)
-                projectDescription.loadMarkdown(project.getDescription());
-            else
+            if (project.getDescription() != null) {
+                projectDescription.setText(Html.fromHtml(mRenderer.render(mParser.parse(project.getDescription()))));
+            } else {
                 getView().findViewById(R.id.card_description).setVisibility(View.GONE);
+            }
             projectMembers.setText(Html.fromHtml(TextUtils.join(" <big><b>|</b></big> ", Collections.list(project.getProjectUsers().elements()))));
             projectColumns.setText(Html.fromHtml(TextUtils.join(" <big><b>|</b></big> ", project.getColumns())));
             projectSwimlanes.setText(Html.fromHtml(TextUtils.join(" <big><b>|</b></big> ", project.getSwimlanes())));

@@ -3,6 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:paddingBottom="@dimen/activity_vertical_margin"
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
@@ -31,11 +32,11 @@
                     android:layout_height="wrap_content"
                     android:textAlignment="center"
                     android:text="@string/caption_description"/>
-                <us.feras.mdv.MarkdownView
+                <TextView
                     android:id="@+id/project_description"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Description"/>
+                    tools:text="Description"/>
             </LinearLayout>
         </android.support.v7.widget.CardView>
 
@@ -59,7 +60,7 @@
                     android:id="@+id/project_members"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Members"/>
+                    tools:text="Members"/>
             </LinearLayout>
         </android.support.v7.widget.CardView>
 
@@ -83,7 +84,7 @@
                     android:id="@+id/project_modify_date"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Modified"/>
+                    tools:text="Modified"/>
             </LinearLayout>
         </android.support.v7.widget.CardView>
 
@@ -106,22 +107,22 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Aktive Aufgaben"
+                    tools:text="Aktive Aufgaben"
                     android:id="@+id/project_active_tasks"/>
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Nicht aktive Aufgaben"
+                    tools:text="Nicht aktive Aufgaben"
                     android:id="@+id/project_inactive_tasks"/>
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="überfällige Aufgaben"
+                    tools:text="überfällige Aufgaben"
                     android:id="@+id/project_overdue_tasks"/>
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Aufgaben gesamt"
+                    tools:text="Aufgaben gesamt"
                     android:id="@+id/project_total_tasks"/>
             </LinearLayout>
         </android.support.v7.widget.CardView>
@@ -146,7 +147,7 @@
                     android:id="@+id/project_columns"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Columns"/>
+                    tools:text="Columns"/>
             </LinearLayout>
         </android.support.v7.widget.CardView>
 
@@ -170,7 +171,7 @@
                     android:id="@+id/project_swimlanes"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Columns"/>
+                    tools:text="Columns"/>
             </LinearLayout>
         </android.support.v7.widget.CardView>
 

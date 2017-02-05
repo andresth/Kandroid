@@ -37,6 +37,12 @@ import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import org.commonmark.parser.Parser;
+import org.commonmark.renderer.NodeRenderer;
+import org.commonmark.renderer.html.HtmlNodeRendererContext;
+import org.commonmark.renderer.html.HtmlNodeRendererFactory;
+import org.commonmark.renderer.html.HtmlRenderer;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -84,6 +90,13 @@ public class TaskDetailActivity extends AppCompatActivity {
     private int activeRequests = 0;
     private boolean progressVisible = false;
     private Context self;
+    private Parser mParser = Parser.builder().build();
+    private HtmlRenderer mRenderer = HtmlRenderer.builder().nodeRendererFactory(new HtmlNodeRendererFactory() {
+        @Override
+        public NodeRenderer create(HtmlNodeRendererContext context) {
+            return new CompactHtmlRenderer(context);
+        }
+    }).build();
 
     private KanboardAPI kanboardAPI;
 
@@ -280,7 +293,7 @@ public class TaskDetailActivity extends AppCompatActivity {
     private TextView textDateStart;
     private TextView textDateDue;
 
-    private MarkdownView textDescription;
+    private TextView textDescription;
 
     private ListView commentListview;
 
@@ -326,7 +339,7 @@ public class TaskDetailActivity extends AppCompatActivity {
         textDateStart = (TextView) findViewById(R.id.text_DateStart);
         textDateDue = (TextView) findViewById(R.id.text_DateDue);
 
-        textDescription = (MarkdownView) findViewById(R.id.text_Description);
+        textDescription = (TextView) findViewById(R.id.text_Description);
 
         commentListview = (ListView) findViewById(R.id.comment_listview);
         registerForContextMenu(commentListview);
@@ -796,7 +809,7 @@ public class TaskDetailActivity extends AppCompatActivity {
         }
 
         if (task.getDescription() != null && !task.getDescription().contentEquals("")) {
-            textDescription.loadMarkdown(task.getDescription());
+            textDescription.setText(Html.fromHtml(mRenderer.render(mParser.parse(task.getDescription()))));
             findViewById(R.id.card_description).setVisibility(View.VISIBLE);
         }
     }

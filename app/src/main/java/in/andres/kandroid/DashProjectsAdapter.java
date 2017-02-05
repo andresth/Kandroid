@@ -9,6 +9,15 @@ import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
 import android.widget.TextView;
 
+import org.commonmark.node.Paragraph;
+import org.commonmark.parser.Parser;
+import org.commonmark.renderer.NodeRenderer;
+import org.commonmark.renderer.html.CoreHtmlNodeRenderer;
+import org.commonmark.renderer.html.HtmlNodeRendererContext;
+import org.commonmark.renderer.html.HtmlNodeRendererFactory;
+import org.commonmark.renderer.html.HtmlRenderer;
+import org.commonmark.renderer.html.HtmlWriter;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -28,6 +37,14 @@ public class DashProjectsAdapter extends BaseExpandableListAdapter {
     private Context mContext;
     private LayoutInflater mInflater;
     private KanboardDashboard mDashboard;
+    private Parser mParser = Parser.builder().build();
+    private HtmlRenderer mRenderer = HtmlRenderer.builder().nodeRendererFactory(new HtmlNodeRendererFactory() {
+        @Override
+        public NodeRenderer create(HtmlNodeRendererContext context) {
+            // Compact paragraphs
+            return new DashCompactHtmlRenderer(context);
+        }
+    }).build();
 
     public DashProjectsAdapter(Context context, KanboardDashboard values) {
         mContext = context;
@@ -81,11 +98,10 @@ public class DashProjectsAdapter extends BaseExpandableListAdapter {
         TextView projectDescription = (TextView) convertView.findViewById(R.id.project_description);
         TextView projectColumns = (TextView) convertView.findViewById(R.id.project_columns);
         TextView projectNbTasks = (TextView) convertView.findViewById(R.id.project_nb_own_tasks);
-
         projectName.setText(proj.getName());
         if ((proj.getDescription() == null) || proj.getDescription().contentEquals(""))
             projectDescription.setVisibility(View.GONE);
-        projectDescription.setText(proj.getDescription());
+        projectDescription.setText(Html.fromHtml(mRenderer.render(mParser.parse(proj.getDescription()))));
         List<String> columns = new ArrayList<>();
         for (KanboardColumn c: proj.getColumns())
             columns.add(String.format("<big><b>%1s</b></big> %2s", c.getNumberTasks(), c.getTitle()));
@@ -116,5 +132,26 @@ public class DashProjectsAdapter extends BaseExpandableListAdapter {
     @Override
     public boolean isChildSelectable(int groupPosition, int childPosition) {
         return true;
+    }
+
+    class DashCompactHtmlRenderer extends CoreHtmlNodeRenderer {
+
+        private final HtmlWriter html;
+
+        DashCompactHtmlRenderer(HtmlNodeRendererContext context) {
+            super(context);
+            this.html = context.getWriter();
+        }
+
+        @Override
+        public void visit(Paragraph node) {
+            // Replace paragraphs with line breaks to get a compact view.
+            html.line();
+            visitChildren(node);
+            if (node.getNext() != null) {
+                html.tag("br /");
+                html.line();
+            }
+        }
     }
 }
