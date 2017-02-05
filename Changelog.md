@@ -3,7 +3,8 @@
 
 #### improvements
 * Show category in task lists (only for projects not for dashboard)
-* Markdown support for task and project description
+* Markdown support
+* New design for comments
 
 #### fixes
 * Show string when task is not assigned to a user
