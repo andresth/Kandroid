@@ -88,7 +88,7 @@
     <string name="taskview_date_modified"><![CDATA[<b>Geändert:</b> %tF]]></string>
     <string name="taskview_date_moved"><![CDATA[<b>Verschoben:</b> %tF]]></string>
     <string name="taskview_hours_estimated"><![CDATA[<b>Stunden geplant:</b> %.2fh]]></string>
-    <string name="taskview_hours_spent"><![CDATA[<b>Stunden gebarucht:</b> %.2fh]]></string>
+    <string name="taskview_hours_spent"><![CDATA[<b>Stunden gebraucht:</b> %.2fh]]></string>
     <string name="taskview_date_start"><![CDATA[<b>Start:</b> %tF]]></string>
     <string name="taskview_date_due"><![CDATA[<b>Fällig:</b> %tF]]></string>
     <string name="taskview_caption_information"><big><b><u>Informationen</u></b></big></string>
