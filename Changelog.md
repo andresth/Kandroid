@@ -10,6 +10,7 @@
 * Show string when task is not assigned to a user
 * Show string when category is not assigned
 * Login activity is started twice on first run
+* First subtask is always checked
 
 ## v0.3.1
 #### fixes
