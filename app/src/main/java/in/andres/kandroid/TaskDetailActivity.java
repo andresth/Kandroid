@@ -32,6 +32,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.CheckedTextView;
 import android.widget.EditText;
+import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.Spinner;
@@ -107,7 +108,8 @@ public class TaskDetailActivity extends AppCompatActivity {
             hideProgress();
             if (success && result.size() > 0) {
                 comments = result;
-                commentListview.setAdapter(new ArrayAdapter<> (getBaseContext(),android.R.layout.simple_list_item_1, comments));
+//                commentListview.setAdapter(new ArrayAdapter<> (getBaseContext(),android.R.layout.simple_list_item_1, comments));
+                commentListview.setAdapter(new CommentAdapter (getBaseContext(), comments));
                 findViewById(R.id.card_comments).setVisibility(View.VISIBLE);
             } else {
                 findViewById(R.id.card_comments).setVisibility(View.GONE);
@@ -153,6 +155,10 @@ public class TaskDetailActivity extends AppCompatActivity {
                 users = result;
                 textOwner.setText(Html.fromHtml(getString(R.string.taskview_owner, result.get(task.getOwnerId()))));
                 textCreator.setText(Html.fromHtml(getString(R.string.taskview_creator, result.get(task.getCreatorId()))));
+
+                //Send change notification to update usernames in comments
+                if (commentListview.getAdapter() != null)
+                    ((CommentAdapter) commentListview.getAdapter()).notifyDataSetChanged();
             }
         }
     };
@@ -601,7 +607,8 @@ public class TaskDetailActivity extends AppCompatActivity {
         setSwimlaneDetails(swimlane.getName());
 
         if (comments != null){
-            commentListview.setAdapter(new ArrayAdapter<> (getBaseContext(), android.R.layout.simple_list_item_1, comments));
+            commentListview.setAdapter(new CommentAdapter (getBaseContext(), comments));
+//            commentListview.setAdapter(new ArrayAdapter<> (getBaseContext(), android.R.layout.simple_list_item_1, comments));
             findViewById(R.id.card_comments).setVisibility(View.VISIBLE);
         } else {
             findViewById(R.id.card_comments).setVisibility(View.GONE);
@@ -855,6 +862,33 @@ public class TaskDetailActivity extends AppCompatActivity {
             } else {
                 text.setText(mObjects.get(position).getTitle());
             }
+
+            return convertView;
+        }
+    }
+
+    private class CommentAdapter extends ArrayAdapter<KanboardComment> {
+        private Context mContext;
+        private LayoutInflater mInflater;
+        List<KanboardComment> mObjects;
+
+        public CommentAdapter(Context context, List<KanboardComment> objects) {
+            super(context, R.layout.listitem_comment, objects);
+            mContext = context;
+            mInflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            mObjects = objects;
+
+        }
+
+        @NonNull
+        @Override
+        public View getView(int position, View convertView, @NonNull ViewGroup parent) {
+            if (convertView == null)
+                convertView = mInflater.inflate(R.layout.listitem_comment, parent, false);
+
+            ((TextView) convertView.findViewById(R.id.username)).setText(Html.fromHtml(String.format("<small>%s</small>", users == null ? mObjects.get(position).getUsername() : users.get(mObjects.get(position).getUserId()))));
+            ((TextView) convertView.findViewById(R.id.date)).setText(Html.fromHtml(String.format("<small>%tF</small>", mObjects.get(position).getDateModification())));
+            ((TextView) convertView.findViewById(R.id.comment)).setText(Html.fromHtml(mRenderer.render(mParser.parse(mObjects.get(position).getContent()))));
 
             return convertView;
         }
