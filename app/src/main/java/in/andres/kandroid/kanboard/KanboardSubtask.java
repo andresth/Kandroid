@@ -1,10 +1,13 @@
 package in.andres.kandroid.kanboard;
 
 import android.support.annotation.NonNull;
+import android.util.Log;
 
 import org.json.JSONObject;
 
 import java.io.Serializable;
+
+import in.andres.kandroid.Constants;
 
 /**
  * Created by Thomas Andres on 01.01.17.
@@ -36,8 +39,9 @@ public class KanboardSubtask implements Comparable<KanboardSubtask>, Serializabl
         UserId = json.optInt("user_id", -1);
         Status = json.optInt("status");
         Title = json.optString("title");
-        TimeEstimated = json.optDouble("time_estimated");
-        TimeSpent = json.optDouble("time_spent");
+        TimeEstimated = Double.parseDouble(json.optString("time_estimated"));
+        Log.v(Constants.TAG, json.optString("time_spent"));
+        TimeSpent = Double.parseDouble(json.optString("time_spent"));
         // Dashboard properties
         ProjectId = json.optInt("project_id", -1);
         TaskName = json.optString("task_name");
