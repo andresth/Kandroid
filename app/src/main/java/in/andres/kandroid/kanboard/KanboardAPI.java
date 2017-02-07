@@ -25,7 +25,9 @@ import java.util.HashSet;
 import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.List;
+import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -56,6 +58,7 @@ import in.andres.kandroid.kanboard.events.OnOpenTaskListener;
 import in.andres.kandroid.kanboard.events.OnRemoveCommentListener;
 import in.andres.kandroid.kanboard.events.OnRemoveSubtaskListener;
 import in.andres.kandroid.kanboard.events.OnRemoveTaskListener;
+import in.andres.kandroid.kanboard.events.OnSubtaskTimetrackingListener;
 import in.andres.kandroid.kanboard.events.OnUpdateCommentListener;
 import in.andres.kandroid.kanboard.events.OnUpdateSubtaskListener;
 
@@ -66,6 +69,8 @@ public class KanboardAPI {
         @Override
         protected KanboardResult doInBackground(KanboardRequest... params) {
             HttpsURLConnection con = null;
+//            int httpResponseCode = 0;
+//            String httpResonseMessage = null;
             List<JSONObject> responseList = new ArrayList<>();
             for (String s: params[0].JSON) {
                 try {
@@ -100,6 +105,9 @@ public class KanboardAPI {
                         responseStr.append(line);
                     }
                     in.close();
+//                    httpResponseCode = con.getResponseCode();
+//                    httpResonseMessage = con.getResponseMessage();
+                    con.disconnect();
 
                     Log.i(Constants.TAG, String.format("API: Received Response \"%s\"", params[0].Command));
                     if (BuildConfig.DEBUG) Log.v(Constants.TAG, String.format("API: Data:\n%s", responseStr.toString()));
@@ -572,6 +580,43 @@ public class KanboardAPI {
                 return;
             }
 
+            if (s.Request.Command.equalsIgnoreCase("hasSubtaskTimer")) {
+                try {
+                    hasSubtaskTimerSet.remove(new JSONObject(s.Request.JSON[0]).getJSONArray("params").getInt(0));
+                    success = s.Result[0].optBoolean("result", false);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                ((OnSubtaskTimetrackingListener) s.Request.Listener).onSubtaskTimetracking(success, 0);
+                return;
+            }
+
+            if (s.Request.Command.equalsIgnoreCase("setSubtaskStartTime")) {
+                success = s.Result[0].optBoolean("result", false);
+                ((OnSubtaskTimetrackingListener) s.Request.Listener).onSubtaskTimetracking(success, 0);
+                return;
+            }
+
+            if (s.Request.Command.equalsIgnoreCase("setSubtaskEndTime")) {
+                success = s.Result[0].optBoolean("result", false);
+                ((OnSubtaskTimetrackingListener) s.Request.Listener).onSubtaskTimetracking(success, 0);
+                return;
+            }
+
+            if (s.Request.Command.equalsIgnoreCase("getSubtaskTimeSpent")) {
+                double time;
+                try {
+                    getSubtaskTimeSpentSet.remove(new JSONObject(s.Request.JSON[0]).getJSONArray("params").getInt(0));
+                    time = s.Result[0].getDouble("result");
+                    success = true;
+                } catch (JSONException e) {
+                    time = 0;
+                    success = false;
+                }
+                ((OnSubtaskTimetrackingListener) s.Request.Listener).onSubtaskTimetracking(success, time);
+                return;
+            }
+
             if (s.Request.Command.equalsIgnoreCase("KD_getDashboard")) {
                 KanboardDashboard res = null;
                 try {
@@ -641,6 +686,10 @@ public class KanboardAPI {
     private HashSet<OnCloseTaskListener> onCloseTaskListeners = new HashSet<>();
     private HashSet<OnRemoveTaskListener> onRemoveTaskListeners = new HashSet<>();
 
+    //HashSets for AsyncTask limiting
+    private HashSet<Integer> hasSubtaskTimerSet = new HashSet<>();
+    private HashSet<Integer> getSubtaskTimeSpentSet = new HashSet<>();
+
     public KanboardAPI(String serverURL, final String username, final String password) throws IOException {
         Authenticator.setDefault(new Authenticator() {
             @Override
@@ -656,7 +705,7 @@ public class KanboardAPI {
             tmpURL += "jsonrpc.php";
         }
         kanboardURL = new URL(tmpURL);
-//        threadPoolExecutor = new ThreadPoolExecutor(12, 12,20, TimeUnit.SECONDS, new ArrayBlockingQueue<Runnable>(120));
+//        threadPoolExecutor = new ThreadPoolExecutor(12, 12, 20, TimeUnit.SECONDS, new ArrayBlockingQueue<Runnable>(256));
         threadPoolExecutor = (ThreadPoolExecutor) AsyncTask.THREAD_POOL_EXECUTOR;
         threadPoolExecutor.setCorePoolSize(12);
         threadPoolExecutor.setMaximumPoolSize(12);
@@ -990,6 +1039,28 @@ public class KanboardAPI {
 
     public void removeSubtask(int subtaskid) {
         new KanboardAsync().executeOnExecutor(threadPoolExecutor, KanboardRequest.removeSubtask(subtaskid));
+    }
+
+    public void hasSubtaskTimer(int subtaskid, int userid, @NonNull OnSubtaskTimetrackingListener listener) {
+        if (!hasSubtaskTimerSet.contains(subtaskid)) {
+            hasSubtaskTimerSet.add(subtaskid);
+            new KanboardAsync().executeOnExecutor(threadPoolExecutor, KanboardRequest.hasSubtaskTimer(subtaskid, userid, listener));
+        }
+    }
+
+    public void setSubtaskStartTime(int subtaskid, int userid, @NonNull OnSubtaskTimetrackingListener listener) {
+        new KanboardAsync().executeOnExecutor(threadPoolExecutor, KanboardRequest.setSubtaskStartTime(subtaskid, userid, listener));
+    }
+
+    public void setSubtaskEndTime(int subtaskid, int userid, @NonNull OnSubtaskTimetrackingListener listener) {
+        new KanboardAsync().executeOnExecutor(threadPoolExecutor, KanboardRequest.setSubtaskEndTime(subtaskid, userid, listener));
+    }
+
+    public void getSubtaskTimeSpent(int subtaskid, int userid, @NonNull OnSubtaskTimetrackingListener listener) {
+        if (!getSubtaskTimeSpentSet.contains(subtaskid)) {
+            getSubtaskTimeSpentSet.add(subtaskid);
+            new KanboardAsync().executeOnExecutor(threadPoolExecutor, KanboardRequest.getSubtaskTimeSpent(subtaskid, userid, listener));
+        }
     }
 
     public void KB_getDashboard() {

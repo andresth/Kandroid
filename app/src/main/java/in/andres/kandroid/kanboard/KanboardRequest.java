@@ -5,13 +5,22 @@ import android.support.annotation.Nullable;
 
 import org.apache.commons.lang3.StringEscapeUtils;
 
+import in.andres.kandroid.kanboard.events.OnSubtaskTimetrackingListener;
+
+@SuppressWarnings("unused")
 public class KanboardRequest {
     public final String Command;
     public final String[] JSON;
+    public final Object Listener;
 
     private KanboardRequest(@NonNull String command, @NonNull String[] json) {
+        this(command, json, null);
+    }
+
+    private KanboardRequest(@NonNull String command, @NonNull String[] json, @Nullable Object listener) {
         this.Command = command;
         this.JSON = json;
+        this.Listener = listener;
     }
 
     //region Kanboard API
@@ -363,6 +372,50 @@ public class KanboardRequest {
                 "        \"subtask_id\": %d\n" +
                 "    }\n" +
                 "}", subtaskid)});
+    }
+
+    @NonNull
+    public static KanboardRequest hasSubtaskTimer(int subtaskid, int userid, @NonNull OnSubtaskTimetrackingListener listener) {
+        return new KanboardRequest("hasSubtaskTimer", new String[] {String.format(
+                "{\n" +
+                "    \"jsonrpc\": \"2.0\",\n" +
+                "    \"method\": \"hasSubtaskTimer\"," +
+                "    \"id\": 1786995697,\n" +
+                "    \"params\": [%d, %d]\n" +
+                "}", subtaskid, userid)}, listener);
+    }
+
+    @NonNull
+    public static KanboardRequest setSubtaskStartTime(int subtaskid, int userid, @NonNull OnSubtaskTimetrackingListener listener) {
+        return new KanboardRequest("setSubtaskStartTime", new String[] {String.format(
+                "{\n" +
+                "    \"jsonrpc\": \"2.0\",\n" +
+                "    \"method\": \"setSubtaskStartTime\"," +
+                "    \"id\": 1168991769,\n" +
+                "    \"params\": [%d, %d]\n" +
+                "}", subtaskid, userid)}, listener);
+    }
+
+    @NonNull
+    public static KanboardRequest setSubtaskEndTime(int subtaskid, int userid, @NonNull OnSubtaskTimetrackingListener listener) {
+        return new KanboardRequest("setSubtaskEndTime", new String[] {String.format(
+                "{\n" +
+                "    \"jsonrpc\": \"2.0\",\n" +
+                "    \"method\": \"setSubtaskEndTime\"," +
+                "    \"id\": 1026607603,\n" +
+                "    \"params\": [%d, %d]\n" +
+                "}", subtaskid, userid)}, listener);
+    }
+
+    @NonNull
+    public static KanboardRequest getSubtaskTimeSpent(int subtaskid, int userid, @NonNull OnSubtaskTimetrackingListener listener) {
+        return new KanboardRequest("getSubtaskTimeSpent", new String[] {String.format(
+                "{\n" +
+                "    \"jsonrpc\": \"2.0\",\n" +
+                "    \"method\": \"getSubtaskTimeSpent\"," +
+                "    \"id\": 738527378,\n" +
+                "    \"params\": [%d, %d]\n" +
+                "}", subtaskid, userid)}, listener);
     }
     //endregion
 
