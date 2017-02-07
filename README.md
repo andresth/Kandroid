@@ -1,4 +1,6 @@
 # Kandroid
+![Min Knaboard Version](https://img.shields.io/badge/min.%20Kanboard%20version-1.0.38-lightgray.svg) ![license](https://img.shields.io/github/license/andresth/kandroid.svg) ![Github All Releases](https://img.shields.io/github/downloads/andresth/kandroid/total.svg)
+
 Android App for [Kanboard](https://kanboard.net/).
 
 ![Login](screenshots/login.png)
