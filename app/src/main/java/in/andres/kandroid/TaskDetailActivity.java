@@ -15,7 +15,6 @@ import android.support.v4.widget.NestedScrollView;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.SearchView;
 import android.text.Html;
 import android.util.Log;
 import android.view.ContextMenu;
@@ -30,13 +29,13 @@ import android.view.animation.AnimationUtils;
 import android.view.animation.OvershootInterpolator;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.CheckedTextView;
+import android.widget.CheckBox;
 import android.widget.EditText;
-import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.ToggleButton;
 
 import org.commonmark.parser.Parser;
 import org.commonmark.renderer.NodeRenderer;
@@ -49,6 +48,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Dictionary;
 import java.util.Enumeration;
+import java.util.HashSet;
 import java.util.Hashtable;
 import java.util.List;
 import java.util.Locale;
@@ -74,9 +74,9 @@ import in.andres.kandroid.kanboard.events.OnOpenTaskListener;
 import in.andres.kandroid.kanboard.events.OnRemoveCommentListener;
 import in.andres.kandroid.kanboard.events.OnRemoveSubtaskListener;
 import in.andres.kandroid.kanboard.events.OnRemoveTaskListener;
+import in.andres.kandroid.kanboard.events.OnSubtaskTimetrackingListener;
 import in.andres.kandroid.kanboard.events.OnUpdateCommentListener;
 import in.andres.kandroid.kanboard.events.OnUpdateSubtaskListener;
-import us.feras.mdv.MarkdownView;
 
 public class TaskDetailActivity extends AppCompatActivity {
     private KanboardTask task;
@@ -87,6 +87,8 @@ public class TaskDetailActivity extends AppCompatActivity {
     private List<KanboardComment> comments;
     private List<KanboardSubtask> subtasks;
     private Dictionary<Integer, String> users;
+    private Hashtable<Integer, Double> hasTimer = new Hashtable<>();
+//    private HashSet<Integer> hasTimer = new HashSet<>();
     private MenuItem refreshAction;
     private int activeRequests = 0;
     private boolean progressVisible = false;
@@ -190,6 +192,27 @@ public class TaskDetailActivity extends AppCompatActivity {
                 subtasks = result;
                 subtaskListview.setAdapter(new SubtaskAdapter(getBaseContext(), subtasks));
                 findViewById(R.id.card_subtasks).setVisibility(View.VISIBLE);
+                for (final KanboardSubtask sub: subtasks) {
+                    kanboardAPI.hasSubtaskTimer(sub.getId(), me.getId(), new OnSubtaskTimetrackingListener() {
+                        @Override
+                        public void onSubtaskTimetracking(boolean result, double time) {
+                            if (result && !hasTimer.containsKey(sub.getId())) {
+                                hasTimer.put(sub.getId(), 0d);
+                                ((SubtaskAdapter) subtaskListview.getAdapter()).notifyDataSetChanged();
+                                kanboardAPI.getSubtaskTimeSpent(sub.getId(), me.getId(), new OnSubtaskTimetrackingListener() {
+                                    @Override
+                                    public void onSubtaskTimetracking(boolean result, double time) {
+                                        hasTimer.put(sub.getId(), time);
+                                        ((SubtaskAdapter) subtaskListview.getAdapter()).notifyDataSetChanged();
+                                    }
+                                });
+                            } else if (!result && hasTimer.containsKey(sub.getId())){
+                                hasTimer.remove(sub.getId());
+                                ((SubtaskAdapter) subtaskListview.getAdapter()).notifyDataSetChanged();
+                            }
+                        }
+                    });
+                }
             } else {
                 findViewById(R.id.card_subtasks).setVisibility(View.GONE);
             }
@@ -898,7 +921,7 @@ public class TaskDetailActivity extends AppCompatActivity {
         List<KanboardSubtask> mObjects;
 
         public SubtaskAdapter(Context context, List<KanboardSubtask> objects) {
-            super(context, android.R.layout.simple_list_item_checked, objects);
+            super(context, R.layout.listitem_subtask, objects);
             mContext = context;
             mInflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             mObjects = objects;
@@ -907,20 +930,70 @@ public class TaskDetailActivity extends AppCompatActivity {
 
         @NonNull
         @Override
-        public View getView(int position, View convertView, @NonNull ViewGroup parent) {
-            if (convertView == null)
-                convertView = mInflater.inflate(android.R.layout.simple_list_item_checked, parent, false);
+        public View getView(final int position, View convertView, @NonNull ViewGroup parent) {
+            if (convertView == null) {
+                convertView = mInflater.inflate(R.layout.listitem_subtask, parent, false);
+                convertView.setLongClickable(true);
+            }
 
-            CheckedTextView text = (CheckedTextView) convertView.findViewById(android.R.id.text1);
-            text.setChecked(false);
+            TextView text = (TextView) convertView.findViewById(android.R.id.text1);
+            CheckBox check = (CheckBox) convertView.findViewById(android.R.id.checkbox);
+            ToggleButton toggle = (ToggleButton) convertView.findViewById(R.id.buttonToggle);
+
+            final OnSubtaskTimetrackingListener startTimer = new OnSubtaskTimetrackingListener() {
+                @Override
+                public void onSubtaskTimetracking(boolean result, double time) {
+//                    kanboardAPI.hasSubtaskTimer(mObjects.get(position).getId(), me.getId(), hasTimer);
+                }
+            };
+            final OnSubtaskTimetrackingListener stopTimer = new OnSubtaskTimetrackingListener() {
+                @Override
+                public void onSubtaskTimetracking(boolean result, double time) {
+//                    kanboardAPI.hasSubtaskTimer(mObjects.get(position).getId(), me.getId(), hasTimer);
+                }
+            };
+            View.OnClickListener toggleClick = new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (((ToggleButton) v).isChecked()) {
+                        kanboardAPI.setSubtaskStartTime(mObjects.get(position).getId(), me.getId(), startTimer);
+                    } else {
+                        kanboardAPI.setSubtaskEndTime(mObjects.get(position).getId(), me.getId(), stopTimer);
+                    }
+                }
+            };
+
+            toggle.setOnClickListener(toggleClick);
+            check.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (((CheckBox) v).isChecked())
+                        kanboardAPI.updateSubtask(mObjects.get(position).getId(), mObjects.get(position).getTaskId(), null, null, null, null, 2);
+                    else
+                        kanboardAPI.updateSubtask(mObjects.get(position).getId(), mObjects.get(position).getTaskId(), null, null, null, null, 0);
+                }
+            });
+
+            double timer = 0;
+            if (hasTimer.containsKey(mObjects.get(position).getId())) {
+                toggle.setChecked(true);
+                timer = hasTimer.get(mObjects.get(position).getId());
+            } else
+                toggle.setChecked(false);
+
             if (mObjects.get(position).getStatus() == 2) {
                 text.setText(Html.fromHtml(String.format(Locale.getDefault(), "<del>%s</del>", mObjects.get(position).getTitle())));
-                text.setChecked(true);
+                check.setChecked(true);
             } else if (mObjects.get(position).getStatus() == 1) {
                 text.setText(Html.fromHtml(String.format(Locale.getDefault(), "<b>%s</b>", mObjects.get(position).getTitle())));
+                check.setChecked(false);
             } else {
                 text.setText(mObjects.get(position).getTitle());
+                check.setChecked(false);
             }
+            toggle.setTextOff(String.format(Locale.getDefault(), "%.2fh", mObjects.get(position).getTimeSpent() + timer));
+            toggle.setTextOn(String.format(Locale.getDefault(), "%.2fh", mObjects.get(position).getTimeSpent() + timer));
+            toggle.setText(String.format(Locale.getDefault(), "%.2fh", mObjects.get(position).getTimeSpent() + timer));
 
             return convertView;
         }
@@ -942,8 +1015,10 @@ public class TaskDetailActivity extends AppCompatActivity {
         @NonNull
         @Override
         public View getView(int position, View convertView, @NonNull ViewGroup parent) {
-            if (convertView == null)
+            if (convertView == null) {
                 convertView = mInflater.inflate(R.layout.listitem_comment, parent, false);
+                convertView.setLongClickable(true);
+            }
 
             ((TextView) convertView.findViewById(R.id.username)).setText(Html.fromHtml(String.format("<small>%s</small>", users == null ? mObjects.get(position).getUsername() : users.get(mObjects.get(position).getUserId()))));
             ((TextView) convertView.findViewById(R.id.date)).setText(Html.fromHtml(String.format("<small>%tF</small>", mObjects.get(position).getDateModification())));
