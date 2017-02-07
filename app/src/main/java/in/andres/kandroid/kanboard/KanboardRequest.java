@@ -298,13 +298,13 @@ public class KanboardRequest {
                     "        \"user_id\": %d", userid);
         if (timeestimated != null)
             content += String.format("" + ",\n" +
-                    "        \"user_id\": %d", timeestimated);
+                    "        \"time_estimated\": %d", timeestimated);
         if (timespent != null)
             content += String.format("" + ",\n" +
-                    "        \"user_id\": %d", timespent);
+                    "        \"time_spent\": %d", timespent);
         if (status != null)
             content += String.format("" + ",\n" +
-                    "        \"user_id\": %d", status);
+                    "        \"status\": %d", status);
         return new KanboardRequest("createSubtask", new String[] {String.format(
                 "{\n" +
                         "    \"jsonrpc\": \"2.0\",\n" +
@@ -330,13 +330,13 @@ public class KanboardRequest {
                     "        \"user_id\": %d", userid);
         if (timeestimated != null)
             content += String.format("" + ",\n" +
-                    "        \"user_id\": %d", timeestimated);
+                    "        \"time_estimated\": %d", timeestimated);
         if (timespent != null)
             content += String.format("" + ",\n" +
-                    "        \"user_id\": %d", timespent);
+                    "        \"time_spent\": %d", timespent);
         if (status != null)
             content += String.format("" + ",\n" +
-                    "        \"user_id\": %d", status);
+                    "        \"status\": %d", status);
         return new KanboardRequest("updateSubtask", new String[] {String.format(
                 "{\n" +
                         "    \"jsonrpc\": \"2.0\",\n" +
