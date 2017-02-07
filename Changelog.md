@@ -1,5 +1,12 @@
 ## development
 #### new features
+
+#### improvements
+
+#### fixes
+
+## v0.4
+#### new features
 * Confirmation dialog for delete actions
 * New design for comments entries with markdown support
 * New design for subtask entries with time tracking
