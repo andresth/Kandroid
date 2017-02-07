@@ -1,11 +1,12 @@
 ## development
 #### new features
 * Confirmation dialog for delete actions
+* New design for comments entries with markdown support
+* New design for subtask entries with time tracking
 
 #### improvements
 * Show category in task lists (only for projects not for dashboard)
 * Markdown support
-* New design for comments
 
 #### fixes
 * Show string when task is not assigned to a user
