@@ -1,4 +1,4 @@
-package in.andres.kandroid;
+package in.andres.kandroid.ui;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -10,20 +10,32 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ExpandableListView;
 
-import in.andres.kandroid.kanboard.KanboardProject;
+import in.andres.kandroid.Constants;
+import in.andres.kandroid.DashProjectsAdapter;
+import in.andres.kandroid.R;
+import in.andres.kandroid.kanboard.KanboardDashboard;
 import in.andres.kandroid.kanboard.KanboardTask;
 
 /**
- * Fragment to show overdue tasks of a project
+ * Fragment to display  the list of users projects and tasks
  *
  * Created by Thomas Andres on 2017-01-04.
  */
 
-public class ProjectOverdueTasksFragment extends Fragment {
-    public ProjectOverdueTasksFragment() {}
+public class DashProjectsFragment extends Fragment {
 
-    public static ProjectOverdueTasksFragment newInstance() {
-        return new ProjectOverdueTasksFragment();
+    public DashProjectsFragment() {}
+
+    public static DashProjectsFragment newInstance() {
+//    public static DashProjectsFragment newInstance(List<KanboardProject> values) {
+        return new DashProjectsFragment();
+        // FIXME: Fragment does not accept arguments
+//        DashProjectsFragment fragment = new DashProjectsFragment();
+//        fragment.setProjects(values);
+//        Bundle args = new Bundle();
+//        args.putSerializable(DashProjectsFragment.ARG_VALUES, (Serializable) values);
+//        fragment.setArguments(args);
+//        return fragment;
     }
 
     @Nullable
@@ -36,20 +48,18 @@ public class ProjectOverdueTasksFragment extends Fragment {
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        if (((MainActivity)getActivity()).getProject() != null) {
-            assert getView() != null : "ProjectOverdueTasksFragment: getView() returned null";
+        if (((MainActivity)getActivity()).getDashboard() != null) {
+            assert getView() != null : "DashProjectsFragment: getView() returned null";
             getView().findViewById(R.id.fragment_dash_errortext).setVisibility(View.GONE);
             getView().findViewById(R.id.expandable_list).setVisibility(View.VISIBLE);
-            ProjectTaskAdapter listAdapter = new ProjectTaskAdapter(getContext(), ((MainActivity)getActivity()).getProject(), ((MainActivity)getActivity()).getProject().getGroupedOverdueTasks());
+            DashProjectsAdapter listAdapter = new DashProjectsAdapter(getContext(), ((MainActivity)getActivity()).getDashboard());
             ((ExpandableListView) getView().findViewById(R.id.expandable_list)).setAdapter(listAdapter);
-            for (int i = 0; i < listAdapter.getGroupCount(); i++)
-                ((ExpandableListView) getView().findViewById(R.id.expandable_list)).expandGroup(i);
             ((ExpandableListView) getView().findViewById(R.id.expandable_list)).setOnChildClickListener(new ExpandableListView.OnChildClickListener() {
                 @Override
                 public boolean onChildClick(ExpandableListView parent, View v, int groupPosition, int childPosition, long id) {
-                    Log.i(Constants.TAG, "Launching TaskDetailActivity from ProjectOverdueTasksFragment.");
-                    KanboardProject project = ((MainActivity) getActivity()).getProject();
-                    KanboardTask clickedTask = project.getGroupedOverdueTasks().get(project.getSwimlanes().get(groupPosition).getId()).get(childPosition);
+                    Log.i(Constants.TAG, "Launching TaskDetailActivity from DashProjectsFragment.");
+                    KanboardDashboard dashboard = ((MainActivity)getActivity()).getDashboard();
+                    KanboardTask clickedTask = dashboard.getGroupedTasks().get(dashboard.getProjects().get(groupPosition).getId()).get(childPosition);
                     Intent taskIntent = new Intent(getContext(), TaskDetailActivity.class);
                     taskIntent.putExtra("task", clickedTask);
                     taskIntent.putExtra("me", ((MainActivity)getActivity()).getMe());
@@ -58,28 +68,9 @@ public class ProjectOverdueTasksFragment extends Fragment {
                 }
             });
         } else {
-            assert getView() != null : "ProjectOverdueTasksFragment: getView() returned null";
+            assert getView() != null : "DashProjectsFragment: getView() returned null";
             getView().findViewById(R.id.fragment_dash_errortext).setVisibility(View.VISIBLE);
             getView().findViewById(R.id.expandable_list).setVisibility(View.GONE);
         }
-    }
-
-    @Override
-    public void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-    }
-
-    @Override
-    public void onViewStateRestored(@Nullable Bundle savedInstanceState) {
-        super.onViewStateRestored(savedInstanceState);
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        assert getView() != null : "ProjectOverdueTasksFragment: getView() returned null";
-        ExpandableListView lv = (ExpandableListView) getView().findViewById(R.id.expandable_list);
-        for (int i = 0; i < lv.getExpandableListAdapter().getGroupCount(); i++)
-            lv.expandGroup(i);
     }
 }

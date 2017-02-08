@@ -1,4 +1,4 @@
-package in.andres.kandroid;
+package in.andres.kandroid.ui;
 
 import android.content.Context;
 import android.content.Intent;
@@ -19,6 +19,8 @@ import java.util.List;
 import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 
+import in.andres.kandroid.Constants;
+import in.andres.kandroid.R;
 import in.andres.kandroid.kanboard.KanboardTask;
 
 /**

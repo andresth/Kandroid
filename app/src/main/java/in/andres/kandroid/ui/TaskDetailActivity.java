@@ -1,4 +1,4 @@
-package in.andres.kandroid;
+package in.andres.kandroid.ui;
 
 import android.content.Context;
 import android.content.DialogInterface;
@@ -15,9 +15,7 @@ import android.support.v4.widget.NestedScrollView;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.SwitchCompat;
 import android.text.Html;
-import android.text.TextUtils;
 import android.util.Log;
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
@@ -33,13 +31,11 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
 import android.widget.EditText;
-import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.Switch;
 import android.widget.TextView;
-import android.widget.ToggleButton;
 
 import org.commonmark.parser.Parser;
 import org.commonmark.renderer.NodeRenderer;
@@ -52,11 +48,14 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Dictionary;
 import java.util.Enumeration;
-import java.util.HashSet;
 import java.util.Hashtable;
 import java.util.List;
 import java.util.Locale;
 
+import in.andres.kandroid.BuildConfig;
+import in.andres.kandroid.CompactHtmlRenderer;
+import in.andres.kandroid.Constants;
+import in.andres.kandroid.R;
 import in.andres.kandroid.kanboard.KanboardAPI;
 import in.andres.kandroid.kanboard.KanboardCategory;
 import in.andres.kandroid.kanboard.KanboardColumn;

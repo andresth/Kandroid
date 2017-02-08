@@ -1,4 +1,4 @@
-package in.andres.kandroid;
+package in.andres.kandroid.ui;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
@@ -36,6 +36,10 @@ import java.util.Collections;
 import java.util.Dictionary;
 import java.util.List;
 
+import in.andres.kandroid.ArrayPagerAdapter;
+import in.andres.kandroid.BuildConfig;
+import in.andres.kandroid.Constants;
+import in.andres.kandroid.R;
 import in.andres.kandroid.kanboard.KanboardAPI;
 import in.andres.kandroid.kanboard.KanboardActivity;
 import in.andres.kandroid.kanboard.KanboardCategory;

@@ -1,4 +1,4 @@
-package in.andres.kandroid;
+package in.andres.kandroid.ui;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -7,6 +7,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+
+import in.andres.kandroid.R;
 
 /**
  * Created by Thomas Andres on 04.01.17.
