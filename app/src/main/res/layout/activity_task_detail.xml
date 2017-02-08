@@ -222,7 +222,7 @@
                         android:textAlignment="center"/>
                     <in.andres.kandroid.widget.StaticListView
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
+                        android:layout_height="match_parent"
                         android:isScrollContainer="false"
                         android:id="@+id/subtask_listview"/>
                 </LinearLayout>

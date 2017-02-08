@@ -2,8 +2,10 @@
 #### new features
 
 #### improvements
+* Redesigned subtask list to solve layout problems
 
 #### fixes
+* Last elements of long subtask lists could be hidden
 
 ## v0.4
 #### new features

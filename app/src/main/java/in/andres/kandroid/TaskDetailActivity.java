@@ -15,7 +15,9 @@ import android.support.v4.widget.NestedScrollView;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.SwitchCompat;
 import android.text.Html;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
@@ -31,9 +33,11 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.Spinner;
+import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.ToggleButton;
 
@@ -112,6 +116,7 @@ public class TaskDetailActivity extends AppCompatActivity {
                 comments = result;
 //                commentListview.setAdapter(new ArrayAdapter<> (getBaseContext(),android.R.layout.simple_list_item_1, comments));
                 commentListview.setAdapter(new CommentAdapter (getBaseContext(), comments));
+                justifyListViewHeightBasedOnChildren(commentListview);
                 findViewById(R.id.card_comments).setVisibility(View.VISIBLE);
             } else {
                 findViewById(R.id.card_comments).setVisibility(View.GONE);
@@ -191,6 +196,7 @@ public class TaskDetailActivity extends AppCompatActivity {
             if (success && result.size() > 0) {
                 subtasks = result;
                 subtaskListview.setAdapter(new SubtaskAdapter(getBaseContext(), subtasks));
+                justifyListViewHeightBasedOnChildren(subtaskListview);
                 findViewById(R.id.card_subtasks).setVisibility(View.VISIBLE);
                 for (final KanboardSubtask sub: subtasks) {
                     kanboardAPI.hasSubtaskTimer(sub.getId(), me.getId(), new OnSubtaskTimetrackingListener() {
@@ -632,6 +638,7 @@ public class TaskDetailActivity extends AppCompatActivity {
 
         if (comments != null){
             commentListview.setAdapter(new CommentAdapter (getBaseContext(), comments));
+            justifyListViewHeightBasedOnChildren(commentListview);
             findViewById(R.id.card_comments).setVisibility(View.VISIBLE);
         } else {
             findViewById(R.id.card_comments).setVisibility(View.GONE);
@@ -639,6 +646,7 @@ public class TaskDetailActivity extends AppCompatActivity {
 
         if (subtasks != null) {
             subtaskListview.setAdapter(new SubtaskAdapter(getBaseContext(), subtasks));
+            justifyListViewHeightBasedOnChildren(subtaskListview);
             findViewById(R.id.card_subtasks).setVisibility(View.VISIBLE);
         } else {
             findViewById(R.id.card_subtasks).setVisibility(View.GONE);
@@ -914,6 +922,28 @@ public class TaskDetailActivity extends AppCompatActivity {
         }
     }
 
+    public void justifyListViewHeightBasedOnChildren (ListView listView) {
+
+//        ListAdapter adapter = listView.getAdapter();
+//
+//        if (adapter == null) {
+//            return;
+//        }
+//        ViewGroup vg = listView;
+//        int totalHeight = 0;
+//        for (int i = 0; i < adapter.getCount(); i++) {
+//            View listItem = adapter.getView(i, null, vg);
+//            listItem.measure(View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED),
+//                    View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED));
+//            totalHeight += listItem.getMeasuredHeight();
+//        }
+//
+//        ViewGroup.LayoutParams par = listView.getLayoutParams();
+//        par.height = totalHeight + (listView.getDividerHeight() * (adapter.getCount() - 1));
+//        listView.setLayoutParams(par);
+//        listView.requestLayout();
+    }
+
     //region internal classes
     private class SubtaskAdapter extends ArrayAdapter<KanboardSubtask> {
         private Context mContext;
@@ -930,7 +960,7 @@ public class TaskDetailActivity extends AppCompatActivity {
 
         @NonNull
         @Override
-        public View getView(final int position, View convertView, @NonNull ViewGroup parent) {
+        public View getView(int position, View convertView, @NonNull ViewGroup parent) {
             if (convertView == null) {
                 convertView = mInflater.inflate(R.layout.listitem_subtask, parent, false);
                 convertView.setLongClickable(true);
@@ -938,7 +968,11 @@ public class TaskDetailActivity extends AppCompatActivity {
 
             TextView text = (TextView) convertView.findViewById(android.R.id.text1);
             CheckBox check = (CheckBox) convertView.findViewById(android.R.id.checkbox);
-            ToggleButton toggle = (ToggleButton) convertView.findViewById(R.id.buttonToggle);
+            Switch toggle = (Switch) convertView.findViewById(R.id.buttonToggle);
+
+            // Use tag to save list position
+            toggle.setTag(position);
+            check.setTag(position);
 
             final OnSubtaskTimetrackingListener startTimer = new OnSubtaskTimetrackingListener() {
                 @Override
@@ -955,10 +989,10 @@ public class TaskDetailActivity extends AppCompatActivity {
             View.OnClickListener toggleClick = new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if (((ToggleButton) v).isChecked()) {
-                        kanboardAPI.setSubtaskStartTime(mObjects.get(position).getId(), me.getId(), startTimer);
+                    if (((Switch) v).isChecked()) {
+                        kanboardAPI.setSubtaskStartTime(mObjects.get((int) v.getTag()).getId(), me.getId(), startTimer);
                     } else {
-                        kanboardAPI.setSubtaskEndTime(mObjects.get(position).getId(), me.getId(), stopTimer);
+                        kanboardAPI.setSubtaskEndTime(mObjects.get((int) v.getTag()).getId(), me.getId(), stopTimer);
                     }
                 }
             };
@@ -968,11 +1002,16 @@ public class TaskDetailActivity extends AppCompatActivity {
                 @Override
                 public void onClick(View v) {
                     if (((CheckBox) v).isChecked())
-                        kanboardAPI.updateSubtask(mObjects.get(position).getId(), mObjects.get(position).getTaskId(), null, null, null, null, 2);
+                        kanboardAPI.updateSubtask(mObjects.get((int) v.getTag()).getId(), mObjects.get((int) v.getTag()).getTaskId(), null, null, null, null, 2);
                     else
-                        kanboardAPI.updateSubtask(mObjects.get(position).getId(), mObjects.get(position).getTaskId(), null, null, null, null, 0);
+                        kanboardAPI.updateSubtask(mObjects.get((int) v.getTag()).getId(), mObjects.get((int) v.getTag()).getTaskId(), null, null, null, null, 0);
                 }
             });
+
+            if (mObjects.get(position).getUserId() == me.getId())
+                toggle.setEnabled(true);
+            else
+                toggle.setEnabled(false);
 
             double timer = 0;
             if (hasTimer.containsKey(mObjects.get(position).getId())) {
@@ -991,9 +1030,13 @@ public class TaskDetailActivity extends AppCompatActivity {
                 text.setText(mObjects.get(position).getTitle());
                 check.setChecked(false);
             }
-            toggle.setTextOff(String.format(Locale.getDefault(), "%.2fh", mObjects.get(position).getTimeSpent() + timer));
-            toggle.setTextOn(String.format(Locale.getDefault(), "%.2fh", mObjects.get(position).getTimeSpent() + timer));
-            toggle.setText(String.format(Locale.getDefault(), "%.2fh", mObjects.get(position).getTimeSpent() + timer));
+
+            text.setSelected(true);
+
+            ((TextView) convertView.findViewById(android.R.id.text2)).setText(String.format(Locale.getDefault(), "%.2fh", mObjects.get(position).getTimeSpent() + timer));
+//            toggle.setTextOff(String.format(Locale.getDefault(), "%.2fh", mObjects.get(position).getTimeSpent() + timer));
+//            toggle.setTextOn(String.format(Locale.getDefault(), "%.2fh", mObjects.get(position).getTimeSpent() + timer));
+//            toggle.setText(String.format(Locale.getDefault(), "%.2fh", mObjects.get(position).getTimeSpent() + timer));
 
             return convertView;
         }
