@@ -2,6 +2,11 @@
 #### new features
 
 #### improvements
+
+#### fixes
+
+## v0.4.1
+#### improvements
 * Redesigned subtask list to solve layout problems
 * Better looking launcher icon in Android 6 and lower
 
