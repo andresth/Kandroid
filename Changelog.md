@@ -3,6 +3,7 @@
 
 #### improvements
 * Redesigned subtask list to solve layout problems
+* Better looking launcher icon in Android 6 and lower
 
 #### fixes
 * Last elements of long subtask lists could be hidden
