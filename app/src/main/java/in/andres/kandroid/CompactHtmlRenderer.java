@@ -12,7 +12,7 @@ import org.commonmark.renderer.html.HtmlWriter;
 public class CompactHtmlRenderer extends CoreHtmlNodeRenderer {
     private final HtmlWriter html;
 
-    CompactHtmlRenderer(HtmlNodeRendererContext context) {
+    public CompactHtmlRenderer(HtmlNodeRendererContext context) {
         super(context);
         this.html = context.getWriter();
     }

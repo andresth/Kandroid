@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:gravity="center_horizontal"
     android:fitsSystemWindows="true"
-    tools:context="in.andres.kandroid.MainActivity"
+    tools:context="in.andres.kandroid.ui.MainActivity"
     android:id="@+id/main_view" >
 
     <android.support.design.widget.AppBarLayout

@@ -1,4 +1,4 @@
-package in.andres.kandroid;
+package in.andres.kandroid.ui;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -19,6 +19,8 @@ import org.commonmark.renderer.html.HtmlRenderer;
 
 import java.util.Collections;
 
+import in.andres.kandroid.CompactHtmlRenderer;
+import in.andres.kandroid.R;
 import in.andres.kandroid.kanboard.KanboardProject;
 
 /**
