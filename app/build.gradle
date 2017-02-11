@@ -34,4 +34,5 @@ dependencies {
     compile 'us.feras.mdv:markdownview:1.1.0'
     compile group: 'com.atlassian.commonmark', name:'commonmark', version:'0.8.0'
     compile 'org.apache.commons:commons-lang3:3.5'
+    compile 'ch.acra:acra:4.9.2'
 }
