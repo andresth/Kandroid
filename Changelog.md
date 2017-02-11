@@ -5,6 +5,11 @@
 
 #### fixes
 
+## v0.4.2
+#### improvements
+* Send crash reports via email
+
+
 ## v0.4.1
 #### improvements
 * Redesigned subtask list to solve layout problems
