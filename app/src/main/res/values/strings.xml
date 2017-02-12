@@ -30,8 +30,17 @@
 
     <!-- Strings related to Settings -->
     <string name="settings_cat_projects">Projects</string>
+    <string name="settings_cat_crash">Crash reports</string>
     <string name="setting_sort_projects">Sort projects alphabeticaly</string>
     <string name="title_activity_settings">Settings</string>
+    <string name="pref_enable_acra">Send crash reports</string>
+    <string name="pref_acra_enabled">Crash reports are sent</string>
+    <string name="pref_acra_disabled">Crash reports are not sent</string>
+    <string name="pref_acra_user_email">Email address</string>
+    <string name="pref_acra_user_email_summary">Email address to be included in the reports</string>
+    <string name="pref_acra_alwaysaccept">Send reports automatically</string>
+    <string name="pref_acra_alwaysaccept_enabled">Berichte werden automatisch gesendet</string>
+    <string name="pref_acra_alwaysaccept_disabled">Send reports must be confirmed</string>
 
     <!-- Strings related to Tabs -->
     <string name="tab_projects">My Projects &amp; Tasks</string>
