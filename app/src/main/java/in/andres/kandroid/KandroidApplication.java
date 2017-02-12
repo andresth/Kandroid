@@ -16,6 +16,7 @@ import org.acra.sender.HttpSender;
                 formUri = "https://uber.andres.in/crashreport/report.php",
                 //customReportContent = { ReportField.APP_VERSION_CODE, ReportField.APP_VERSION_NAME, ReportField.ANDROID_VERSION, ReportField.PHONE_MODEL, ReportField.CUSTOM_DATA, ReportField.USER_COMMENT, ReportField.STACK_TRACE, ReportField.LOGCAT },
                 mode = ReportingInteractionMode.DIALOG,
+                excludeMatchingSharedPreferencesKeys={"username", "password", "serverurl"},
                 httpMethod = HttpSender.Method.PUT,
                 reportType = HttpSender.Type.JSON,
                 logcatArguments = { "-t", "200", "-v", "time", "Kandroid:d", "InstantRun:s", "*:e" },
