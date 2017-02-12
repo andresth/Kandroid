@@ -6,12 +6,36 @@
         <intent android:action="in.andres.kandroid.LoginActivity" />
     </Preference>
 
+    <!--<PreferenceCategory-->
+        <!--android:title="@string/settings_cat_projects"-->
+        <!--android:key="projects">-->
+        <!--<SwitchPreference-->
+            <!--android:defaultValue="false"-->
+            <!--android:title="@string/setting_sort_projects"-->
+            <!--android:key="projects_sort_alphabetic" />-->
+    <!--</PreferenceCategory>-->
+
     <PreferenceCategory
-        android:title="@string/settings_cat_projects"
+        android:title="@string/settings_cat_crash"
         android:key="projects">
         <SwitchPreference
-            android:defaultValue="false"
-            android:title="@string/setting_sort_projects"
-            android:key="projects_sort_alphabetic" />
+            android:key="acra.enable"
+            android:title="@string/pref_enable_acra"
+            android:summaryOn="@string/pref_acra_enabled"
+            android:summaryOff="@string/pref_acra_disabled"
+            android:defaultValue="true"/>
+        <SwitchPreference
+            android:key="acra.alwaysaccept"
+            android:dependency="acra.enable"
+            android:title="@string/pref_acra_alwaysaccept"
+            android:summaryOn="@string/pref_acra_alwaysaccept_enabled"
+            android:summaryOff="@string/pref_acra_alwaysaccept_disabled"
+            android:defaultValue="false"/>
+        <EditTextPreference
+            android:key="acra.user.email"
+            android:dependency="acra.enable"
+            android:inputType="textEmailAddress"
+            android:title="@string/pref_acra_user_email"
+            android:summary="@string/pref_acra_user_email_summary"/>
     </PreferenceCategory>
 </PreferenceScreen>
