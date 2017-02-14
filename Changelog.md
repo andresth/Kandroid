@@ -4,6 +4,7 @@
 #### improvements
 
 #### fixes
+* Crash if project description is empty (issue #2)
 
 ## v0.4.2
 #### improvements

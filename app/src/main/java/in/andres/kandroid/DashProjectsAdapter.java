@@ -101,7 +101,10 @@ public class DashProjectsAdapter extends BaseExpandableListAdapter {
         projectName.setText(proj.getName());
         if ((proj.getDescription() == null) || proj.getDescription().contentEquals(""))
             projectDescription.setVisibility(View.GONE);
-        projectDescription.setText(Html.fromHtml(mRenderer.render(mParser.parse(proj.getDescription()))));
+        else {
+            projectDescription.setVisibility(View.VISIBLE);
+            projectDescription.setText(Html.fromHtml(mRenderer.render(mParser.parse(proj.getDescription()))));
+        }
         List<String> columns = new ArrayList<>();
         for (KanboardColumn c: proj.getColumns())
             columns.add(String.format("<big><b>%1s</b></big> %2s", c.getNumberTasks(), c.getTitle()));
