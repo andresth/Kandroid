@@ -1,5 +1,6 @@
 apply plugin: 'com.android.application'
 
+//noinspection GroovyMissingReturnStatement
 android {
     compileSdkVersion 25
     buildToolsVersion "25.0.2"
@@ -7,8 +8,8 @@ android {
         applicationId "in.andres.kandroid"
         minSdkVersion 21
         targetSdkVersion 25
-        versionCode 7
-        versionName "0.4.2"
+        versionCode 8
+        versionName "0.4.3"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
