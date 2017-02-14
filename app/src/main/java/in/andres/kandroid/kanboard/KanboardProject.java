@@ -20,7 +20,7 @@ import java.util.List;
  * Created by Thomas Andres on 01.01.17.
  */
 
-
+@SuppressWarnings("unused")
 public class KanboardProject implements Comparable<KanboardProject>, Serializable {
     private int Id;
     private String Name;
@@ -66,7 +66,7 @@ public class KanboardProject implements Comparable<KanboardProject>, Serializabl
         Name = project.optString("name");
         OwnerId = project.optInt("owner_id");
         Object desc = project.opt("description");
-        Description = desc.equals(null) ? null : desc.toString();
+        Description = desc == null ? null : desc.toString();
         Identifier = project.optString("identifier");
         Token = project.optString("token");
         IsActive = KanboardAPI.StringToBoolean(project.optString("is_active"));
@@ -100,7 +100,7 @@ public class KanboardProject implements Comparable<KanboardProject>, Serializabl
             CalendarURL = null;
         }
 
-        GroupedActiveTasks = new Hashtable<Integer, Dictionary<Integer, List<KanboardTask>>>();
+        GroupedActiveTasks = new Hashtable<>();
         GroupedInactiveTasks = new Hashtable<>();
         GroupedOverdueTasks = new Hashtable<>();
         TaskHashtable = new Hashtable<>();
@@ -217,6 +217,7 @@ public class KanboardProject implements Comparable<KanboardProject>, Serializabl
         return Id;
     }
 
+    @Nullable
     public String getName() {
         return Name;
     }
@@ -225,14 +226,17 @@ public class KanboardProject implements Comparable<KanboardProject>, Serializabl
         return OwnerId;
     }
 
+    @Nullable
     public String getDescription() {
         return Description;
     }
 
+    @Nullable
     public String getIdentifier() {
         return Identifier;
     }
 
+    @Nullable
     public String getToken() {
         return Token;
     }
@@ -253,14 +257,17 @@ public class KanboardProject implements Comparable<KanboardProject>, Serializabl
         return IsEverybodyAllowed;
     }
 
+    @Nullable
     public Date getStartDate() {
         return StartDate;
     }
 
+    @Nullable
     public Date getEndDate() {
         return EndDate;
     }
 
+    @Nullable
     public Date getLastModified() {
         return LastModified;
     }
@@ -269,62 +276,77 @@ public class KanboardProject implements Comparable<KanboardProject>, Serializabl
         return NumberActiveTasks;
     }
 
+    @Nullable
     public URL getListURL() {
         return ListURL;
     }
 
+    @Nullable
     public URL getBoardURL() {
         return BoardURL;
     }
 
+    @Nullable
     public URL getCalendarURL() {
         return CalendarURL;
     }
 
+    @NonNull
     public List<KanboardColumn> getColumns() {
         return Columns;
     }
 
+    @NonNull
     public List<KanboardCategory> getCategories() {
         return Categories;
     }
 
+    @NonNull
     public List<KanboardSwimlane> getSwimlanes() {
         return Swimlanes;
     }
 
+    @NonNull
     public List<KanboardTask> getActiveTasks() {
         return ActiveTasks;
     }
 
+    @NonNull
     public Dictionary<Integer, Dictionary<Integer, List<KanboardTask>>> getGroupedActiveTasks() {
         return GroupedActiveTasks;
     }
 
+    @NonNull
     public List<KanboardTask> getInactiveTasks() {
         return InactiveTasks;
     }
 
+    @NonNull
     public Dictionary<Integer, List<KanboardTask>> getGroupedInactiveTasks() {
         return GroupedInactiveTasks;
     }
 
+    @NonNull
     public List<KanboardTask> getOverdueTasks() {
         return OverdueTasks;
     }
 
+    @NonNull
     public Dictionary<Integer, List<KanboardTask>> getGroupedOverdueTasks() {
         return GroupedOverdueTasks;
     }
 
+    @NonNull
     public Dictionary<Integer, KanboardTask> getTaskHashtable() {
         return TaskHashtable;
     }
 
+    @NonNull
     public Dictionary<Integer, KanboardCategory> getCategoryHashtable() {
         return CategoryHashtable;
     }
 
+    @NonNull
     public Dictionary<Integer, String> getProjectUsers() {
         return ProjectUsers;
     }
