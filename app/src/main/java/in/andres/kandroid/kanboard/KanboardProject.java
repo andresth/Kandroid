@@ -80,7 +80,7 @@ public class KanboardProject implements Comparable<KanboardProject>, Serializabl
         Name = project.optString("name");
         OwnerId = project.optInt("owner_id");
         Object desc = project.opt("description");
-        Description = desc == null ? null : desc.toString();
+        Description = desc.equals(null) ? "" : desc.toString();
         Identifier = project.optString("identifier");
         Token = project.optString("token");
         IsActive = KanboardAPI.StringToBoolean(project.optString("is_active"));
@@ -240,7 +240,7 @@ public class KanboardProject implements Comparable<KanboardProject>, Serializabl
         return OwnerId;
     }
 
-    @Nullable
+    @NonNull
     public String getDescription() {
         return Description;
     }
