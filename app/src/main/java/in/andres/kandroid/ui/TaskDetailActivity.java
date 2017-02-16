@@ -2,6 +2,7 @@ package in.andres.kandroid.ui;
 
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -113,9 +114,7 @@ public class TaskDetailActivity extends AppCompatActivity {
             hideProgress();
             if (success && result.size() > 0) {
                 comments = result;
-//                commentListview.setAdapter(new ArrayAdapter<> (getBaseContext(),android.R.layout.simple_list_item_1, comments));
                 commentListview.setAdapter(new CommentAdapter (getBaseContext(), comments));
-                justifyListViewHeightBasedOnChildren(commentListview);
                 findViewById(R.id.card_comments).setVisibility(View.VISIBLE);
             } else {
                 findViewById(R.id.card_comments).setVisibility(View.GONE);
@@ -195,7 +194,6 @@ public class TaskDetailActivity extends AppCompatActivity {
             if (success && result.size() > 0) {
                 subtasks = result;
                 subtaskListview.setAdapter(new SubtaskAdapter(getBaseContext(), subtasks));
-                justifyListViewHeightBasedOnChildren(subtaskListview);
                 findViewById(R.id.card_subtasks).setVisibility(View.VISIBLE);
                 for (final KanboardSubtask sub: subtasks) {
                     kanboardAPI.hasSubtaskTimer(sub.getId(), me.getId(), new OnSubtaskTimetrackingListener() {
@@ -450,7 +448,8 @@ public class TaskDetailActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 collapseFABMenu();
-                Snackbar.make(findViewById(R.id.root_layout), getString(R.string.error_msg_not_implemented), Snackbar.LENGTH_LONG).show();
+                startActivity(new Intent(getBaseContext(), TaskEditActivity.class));
+//                Snackbar.make(findViewById(R.id.root_layout), getString(R.string.error_msg_not_implemented), Snackbar.LENGTH_LONG).show();
             }
         });
 
@@ -637,7 +636,6 @@ public class TaskDetailActivity extends AppCompatActivity {
 
         if (comments != null){
             commentListview.setAdapter(new CommentAdapter (getBaseContext(), comments));
-            justifyListViewHeightBasedOnChildren(commentListview);
             findViewById(R.id.card_comments).setVisibility(View.VISIBLE);
         } else {
             findViewById(R.id.card_comments).setVisibility(View.GONE);
@@ -645,7 +643,6 @@ public class TaskDetailActivity extends AppCompatActivity {
 
         if (subtasks != null) {
             subtaskListview.setAdapter(new SubtaskAdapter(getBaseContext(), subtasks));
-            justifyListViewHeightBasedOnChildren(subtaskListview);
             findViewById(R.id.card_subtasks).setVisibility(View.VISIBLE);
         } else {
             findViewById(R.id.card_subtasks).setVisibility(View.GONE);
@@ -921,28 +918,6 @@ public class TaskDetailActivity extends AppCompatActivity {
         }
     }
 
-    public void justifyListViewHeightBasedOnChildren (ListView listView) {
-
-//        ListAdapter adapter = listView.getAdapter();
-//
-//        if (adapter == null) {
-//            return;
-//        }
-//        ViewGroup vg = listView;
-//        int totalHeight = 0;
-//        for (int i = 0; i < adapter.getCount(); i++) {
-//            View listItem = adapter.getView(i, null, vg);
-//            listItem.measure(View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED),
-//                    View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED));
-//            totalHeight += listItem.getMeasuredHeight();
-//        }
-//
-//        ViewGroup.LayoutParams par = listView.getLayoutParams();
-//        par.height = totalHeight + (listView.getDividerHeight() * (adapter.getCount() - 1));
-//        listView.setLayoutParams(par);
-//        listView.requestLayout();
-    }
-
     //region internal classes
     private class SubtaskAdapter extends ArrayAdapter<KanboardSubtask> {
         private Context mContext;
@@ -976,13 +951,11 @@ public class TaskDetailActivity extends AppCompatActivity {
             final OnSubtaskTimetrackingListener startTimer = new OnSubtaskTimetrackingListener() {
                 @Override
                 public void onSubtaskTimetracking(boolean result, double time) {
-//                    kanboardAPI.hasSubtaskTimer(mObjects.get(position).getId(), me.getId(), hasTimer);
                 }
             };
             final OnSubtaskTimetrackingListener stopTimer = new OnSubtaskTimetrackingListener() {
                 @Override
                 public void onSubtaskTimetracking(boolean result, double time) {
-//                    kanboardAPI.hasSubtaskTimer(mObjects.get(position).getId(), me.getId(), hasTimer);
                 }
             };
             View.OnClickListener toggleClick = new View.OnClickListener() {
@@ -1033,9 +1006,6 @@ public class TaskDetailActivity extends AppCompatActivity {
             text.setSelected(true);
 
             ((TextView) convertView.findViewById(android.R.id.text2)).setText(String.format(Locale.getDefault(), "%.2fh", mObjects.get(position).getTimeSpent() + timer));
-//            toggle.setTextOff(String.format(Locale.getDefault(), "%.2fh", mObjects.get(position).getTimeSpent() + timer));
-//            toggle.setTextOn(String.format(Locale.getDefault(), "%.2fh", mObjects.get(position).getTimeSpent() + timer));
-//            toggle.setText(String.format(Locale.getDefault(), "%.2fh", mObjects.get(position).getTimeSpent() + timer));
 
             return convertView;
         }
