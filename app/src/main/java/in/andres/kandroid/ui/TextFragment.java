@@ -46,10 +46,7 @@ public class TextFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.fragment_text, container, false);
-//        TextView textView = (TextView) rootView.findViewById(R.id.fragmentTextView);
-//        textView.setText(getArguments().getString(TextFragment.ARG_SECTION_NAME));
-        return rootView;
+        return inflater.inflate(R.layout.fragment_text, container, false);
     }
 
     @Override

@@ -19,6 +19,8 @@
 
 package in.andres.kandroid.kanboard;
 
+import android.support.annotation.NonNull;
+
 import org.json.JSONObject;
 
 import java.io.Serializable;
@@ -210,7 +212,7 @@ public class KanboardTask implements Comparable<KanboardTask>, Serializable {
     }
 
     @Override
-    public int compareTo(KanboardTask o) {
+    public int compareTo(@NonNull KanboardTask o) {
         return this.Title.compareTo(o.Title);
     }
 

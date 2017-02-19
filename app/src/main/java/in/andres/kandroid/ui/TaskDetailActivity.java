@@ -591,7 +591,6 @@ public class TaskDetailActivity extends AppCompatActivity {
     @Override
     public boolean onContextItemSelected(MenuItem item) {
         AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
-        AlertDialog.Builder dlgBuilder;
         switch (item.getItemId()) {
             case R.id.action_edit_comment:
                 showCommentDialog((KanboardComment)commentListview.getAdapter().getItem(info.position));
