@@ -610,19 +610,22 @@ public class KanboardAPI {
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
-                ((OnSubtaskTimetrackingListener) s.Request.Listener).onSubtaskTimetracking(success, 0);
+                if (s.Request.Listener != null)
+                    ((OnSubtaskTimetrackingListener) s.Request.Listener).onSubtaskTimetracking(success, 0);
                 return;
             }
 
             if (s.Request.Command.equalsIgnoreCase("setSubtaskStartTime")) {
                 success = s.Result[0].optBoolean("result", false);
-                ((OnSubtaskTimetrackingListener) s.Request.Listener).onSubtaskTimetracking(success, 0);
+                if (s.Request.Listener != null)
+                    ((OnSubtaskTimetrackingListener) s.Request.Listener).onSubtaskTimetracking(success, 0);
                 return;
             }
 
             if (s.Request.Command.equalsIgnoreCase("setSubtaskEndTime")) {
                 success = s.Result[0].optBoolean("result", false);
-                ((OnSubtaskTimetrackingListener) s.Request.Listener).onSubtaskTimetracking(success, 0);
+                if (s.Request.Listener != null)
+                    ((OnSubtaskTimetrackingListener) s.Request.Listener).onSubtaskTimetracking(success, 0);
                 return;
             }
 
@@ -636,7 +639,8 @@ public class KanboardAPI {
                     time = 0;
                     success = false;
                 }
-                ((OnSubtaskTimetrackingListener) s.Request.Listener).onSubtaskTimetracking(success, time);
+                if (s.Request.Listener != null)
+                    ((OnSubtaskTimetrackingListener) s.Request.Listener).onSubtaskTimetracking(success, time);
                 return;
             }
 
