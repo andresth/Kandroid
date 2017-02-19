@@ -21,6 +21,7 @@ import java.util.concurrent.TimeUnit;
 
 import in.andres.kandroid.Constants;
 import in.andres.kandroid.R;
+import in.andres.kandroid.Utils;
 import in.andres.kandroid.kanboard.KanboardTask;
 
 /**
@@ -79,15 +80,15 @@ public class DashOverdueFragment extends ListFragment {
             TextView textOverdue = (TextView) convertView.findViewById(R.id.task_owner);
             convertView.findViewById(R.id.task_category).setVisibility(View.INVISIBLE);
 
-            textName.setText(Html.fromHtml(String.format(Locale.getDefault(), "<big><b>%s</b></big><br />%s", mValues.get(position).getTitle(), mValues.get(position).getProjectName())));
+            textName.setText(Utils.fromHtml(String.format(Locale.getDefault(), "<big><b>%s</b></big><br />%s", mValues.get(position).getTitle(), mValues.get(position).getProjectName())));
             long overdue = new Date().getTime() - mValues.get(position).getDateDue().getTime();
             long hours = TimeUnit.MILLISECONDS.toHours(overdue);
             long days = TimeUnit.MILLISECONDS.toDays(overdue);
 
             if (days == 0)
-                textOverdue.setText(Html.fromHtml(mContext.getResources().getQuantityString(R.plurals.format_overdue_hours, (int) hours, hours)));
+                textOverdue.setText(Utils.fromHtml(mContext.getResources().getQuantityString(R.plurals.format_overdue_hours, (int) hours, hours)));
             else
-                textOverdue.setText(Html.fromHtml(mContext.getResources().getQuantityString(R.plurals.format_overdue_days, (int) days, days)));
+                textOverdue.setText(Utils.fromHtml(mContext.getResources().getQuantityString(R.plurals.format_overdue_days, (int) days, days)));
 
             if (mValues.get(position).getColorBackground() != null)
                 convertView.findViewById(R.id.list_card).setBackgroundColor(mValues.get(position).getColorBackground());

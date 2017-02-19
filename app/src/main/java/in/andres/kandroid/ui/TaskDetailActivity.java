@@ -57,6 +57,7 @@ import in.andres.kandroid.BuildConfig;
 import in.andres.kandroid.CompactHtmlRenderer;
 import in.andres.kandroid.Constants;
 import in.andres.kandroid.R;
+import in.andres.kandroid.Utils;
 import in.andres.kandroid.kanboard.KanboardAPI;
 import in.andres.kandroid.kanboard.KanboardCategory;
 import in.andres.kandroid.kanboard.KanboardColumn;
@@ -177,8 +178,8 @@ public class TaskDetailActivity extends AppCompatActivity {
             hideProgress();
             if (success) {
                 users = result;
-                textOwner.setText(Html.fromHtml(getString(R.string.taskview_owner, result.get(task.getOwnerId()))));
-                textCreator.setText(Html.fromHtml(getString(R.string.taskview_creator, result.get(task.getCreatorId()))));
+                textOwner.setText(Utils.fromHtml(getString(R.string.taskview_owner, result.get(task.getOwnerId()))));
+                textCreator.setText(Utils.fromHtml(getString(R.string.taskview_creator, result.get(task.getCreatorId()))));
 
                 //Send change notification to update usernames in comments
                 if (commentListview.getAdapter() != null)
@@ -304,7 +305,7 @@ public class TaskDetailActivity extends AppCompatActivity {
         @Override
         public void onOpenTask(boolean success) {
             if (success) {
-                textStatus.setText(Html.fromHtml(getString(R.string.taskview_status, getString(R.string.taskview_status_open))));
+                textStatus.setText(Utils.fromHtml(getString(R.string.taskview_status, getString(R.string.taskview_status_open))));
                 fabMenuButtonOpenCloseTask.setImageDrawable(getDrawable(R.drawable.task_close));
                 fabMenuLabelOpenCloseTask.setText(getString(R.string.taskview_fab_close_task));
                 showProgress();
@@ -317,7 +318,7 @@ public class TaskDetailActivity extends AppCompatActivity {
         @Override
         public void onCloseTask(boolean success) {
             if (success) {
-                textStatus.setText(Html.fromHtml(getString(R.string.taskview_status, getString(R.string.taskview_status_closed))));
+                textStatus.setText(Utils.fromHtml(getString(R.string.taskview_status, getString(R.string.taskview_status_closed))));
                 fabMenuButtonOpenCloseTask.setImageDrawable(getDrawable(R.drawable.task_open));
                 fabMenuLabelOpenCloseTask.setText(getString(R.string.taskview_fab_open_task));
                 showProgress();
@@ -525,7 +526,7 @@ public class TaskDetailActivity extends AppCompatActivity {
                 category = (KanboardCategory) getIntent().getSerializableExtra("category");
                 setCategoryDetails();
             } else {
-                textCategory.setText(Html.fromHtml(getString(R.string.taskview_category, getString(R.string.task_not_assigned))));
+                textCategory.setText(Utils.fromHtml(getString(R.string.taskview_category, getString(R.string.task_not_assigned))));
             }
 
             setTaskDetails();
@@ -891,33 +892,33 @@ public class TaskDetailActivity extends AppCompatActivity {
             getSupportActionBar().setTitle(task.getTitle());
 
         if (task.getIsActive())
-            textStatus.setText(Html.fromHtml(getString(R.string.taskview_status, getString(R.string.taskview_status_open))));
+            textStatus.setText(Utils.fromHtml(getString(R.string.taskview_status, getString(R.string.taskview_status_open))));
         else
-            textStatus.setText(Html.fromHtml(getString(R.string.taskview_status, getString(R.string.taskview_status_closed))));
+            textStatus.setText(Utils.fromHtml(getString(R.string.taskview_status, getString(R.string.taskview_status_closed))));
 
-        textPosition.setText(Html.fromHtml(getString(R.string.taskview_position, task.getPosition())));
-        textPriority.setText(Html.fromHtml(getString(R.string.taskview_priority, task.getPriority())));
+        textPosition.setText(Utils.fromHtml(getString(R.string.taskview_position, task.getPosition())));
+        textPriority.setText(Utils.fromHtml(getString(R.string.taskview_priority, task.getPriority())));
         if (task.getOwnerId() > 0)
-            textOwner.setText(Html.fromHtml(getString(R.string.taskview_owner, users == null ? Integer.toString(task.getOwnerId()) : users.get(task.getOwnerId()))));
+            textOwner.setText(Utils.fromHtml(getString(R.string.taskview_owner, users == null ? Integer.toString(task.getOwnerId()) : users.get(task.getOwnerId()))));
         else
-            textOwner.setText(Html.fromHtml(getString(R.string.taskview_owner, getString(R.string.task_not_assigned))));
-        textCreator.setText(Html.fromHtml(getString(R.string.taskview_creator, users == null ? Integer.toString(task.getCreatorId()) : users.get(task.getCreatorId()))));
-        textDateCreated.setText(Html.fromHtml(getString(R.string.taskview_date_created, task.getDateCreation())));
-        textDateModified.setText(Html.fromHtml(getString(R.string.taskview_date_modified, task.getDateModification())));
-        textDateMoved.setText(Html.fromHtml(getString(R.string.taskview_date_moved, task.getDateMoved())));
+            textOwner.setText(Utils.fromHtml(getString(R.string.taskview_owner, getString(R.string.task_not_assigned))));
+        textCreator.setText(Utils.fromHtml(getString(R.string.taskview_creator, users == null ? Integer.toString(task.getCreatorId()) : users.get(task.getCreatorId()))));
+        textDateCreated.setText(Utils.fromHtml(getString(R.string.taskview_date_created, task.getDateCreation())));
+        textDateModified.setText(Utils.fromHtml(getString(R.string.taskview_date_modified, task.getDateModification())));
+        textDateMoved.setText(Utils.fromHtml(getString(R.string.taskview_date_moved, task.getDateMoved())));
 
-        textHoursEstimated.setText(Html.fromHtml(getString(R.string.taskview_hours_estimated, task.getTimeEstimated())));
-        textHoursUsed.setText(Html.fromHtml(getString(R.string.taskview_hours_spent, task.getTimeSpent())));
+        textHoursEstimated.setText(Utils.fromHtml(getString(R.string.taskview_hours_estimated, task.getTimeEstimated())));
+        textHoursUsed.setText(Utils.fromHtml(getString(R.string.taskview_hours_spent, task.getTimeSpent())));
 
         if (task.getDateStarted() != null) {
-            textDateStart.setText(Html.fromHtml(getString(R.string.taskview_date_start, task.getDateStarted())));
+            textDateStart.setText(Utils.fromHtml(getString(R.string.taskview_date_start, task.getDateStarted())));
             textDateStart.setVisibility(View.VISIBLE);
         } else {
             textDateStart.setVisibility(View.INVISIBLE);
         }
 
         if (task.getDateDue() != null) {
-            textDateDue.setText(Html.fromHtml(getString(R.string.taskview_date_due, task.getDateDue())));
+            textDateDue.setText(Utils.fromHtml(getString(R.string.taskview_date_due, task.getDateDue())));
             textDateDue.setVisibility(View.VISIBLE);
         } else {
             textDateDue.setVisibility(View.INVISIBLE);
@@ -929,21 +930,21 @@ public class TaskDetailActivity extends AppCompatActivity {
         }
 
         if (task.getDescription() != null && !task.getDescription().contentEquals("")) {
-            textDescription.setText(Html.fromHtml(mRenderer.render(mParser.parse(task.getDescription()))));
+            textDescription.setText(Utils.fromHtml(mRenderer.render(mParser.parse(task.getDescription()))));
             findViewById(R.id.card_description).setVisibility(View.VISIBLE);
         }
     }
 
     private void setSwimlaneDetails(String swimlanename) {
-        textSwimlane.setText(Html.fromHtml(getString(R.string.taskview_swimlane, swimlanename)));
+        textSwimlane.setText(Utils.fromHtml(getString(R.string.taskview_swimlane, swimlanename)));
         textSwimlane.setVisibility(View.VISIBLE);
     }
 
     private void setCategoryDetails() {
         if (category != null) {
-            textCategory.setText(Html.fromHtml(getString(R.string.taskview_category, category.getName())));
+            textCategory.setText(Utils.fromHtml(getString(R.string.taskview_category, category.getName())));
         } else {
-            textCategory.setText(Html.fromHtml(getString(R.string.taskview_category, getString(R.string.task_not_assigned))));
+            textCategory.setText(Utils.fromHtml(getString(R.string.taskview_category, getString(R.string.task_not_assigned))));
         }
     }
 
@@ -1022,10 +1023,10 @@ public class TaskDetailActivity extends AppCompatActivity {
                 toggle.setChecked(false);
 
             if (mObjects.get(position).getStatus() == 2) {
-                text.setText(Html.fromHtml(String.format(Locale.getDefault(), "<del>%s</del>", mObjects.get(position).getTitle())));
+                text.setText(Utils.fromHtml(String.format(Locale.getDefault(), "<del>%s</del>", mObjects.get(position).getTitle())));
                 check.setChecked(true);
             } else if (mObjects.get(position).getStatus() == 1) {
-                text.setText(Html.fromHtml(String.format(Locale.getDefault(), "<b>%s</b>", mObjects.get(position).getTitle())));
+                text.setText(Utils.fromHtml(String.format(Locale.getDefault(), "<b>%s</b>", mObjects.get(position).getTitle())));
                 check.setChecked(false);
             } else {
                 text.setText(mObjects.get(position).getTitle());
@@ -1061,9 +1062,9 @@ public class TaskDetailActivity extends AppCompatActivity {
                 convertView.setLongClickable(true);
             }
 
-            ((TextView) convertView.findViewById(R.id.username)).setText(Html.fromHtml(String.format("<small>%s</small>", users == null ? mObjects.get(position).getUsername() : users.get(mObjects.get(position).getUserId()))));
-            ((TextView) convertView.findViewById(R.id.date)).setText(Html.fromHtml(String.format("<small>%tF</small>", mObjects.get(position).getDateModification())));
-            ((TextView) convertView.findViewById(R.id.comment)).setText(Html.fromHtml(mRenderer.render(mParser.parse(mObjects.get(position).getContent()))));
+            ((TextView) convertView.findViewById(R.id.username)).setText(Utils.fromHtml(String.format("<small>%s</small>", users == null ? mObjects.get(position).getUsername() : users.get(mObjects.get(position).getUserId()))));
+            ((TextView) convertView.findViewById(R.id.date)).setText(Utils.fromHtml(String.format("<small>%tF</small>", mObjects.get(position).getDateModification())));
+            ((TextView) convertView.findViewById(R.id.comment)).setText(Utils.fromHtml(mRenderer.render(mParser.parse(mObjects.get(position).getContent()))));
 
             return convertView;
         }

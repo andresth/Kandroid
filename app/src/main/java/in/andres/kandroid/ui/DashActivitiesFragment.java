@@ -13,6 +13,7 @@ import android.widget.TextView;
 
 import java.util.List;
 
+import in.andres.kandroid.Utils;
 import in.andres.kandroid.kanboard.KanboardActivity;
 
 /**
@@ -57,7 +58,7 @@ public class DashActivitiesFragment extends ListFragment {
                 convertView = mInflater.inflate(android.R.layout.simple_list_item_1, parent, false);
 
             TextView textView = (TextView) convertView.findViewById(android.R.id.text1);
-            textView.setText(Html.fromHtml(mValues.get(position).getContent()));
+            textView.setText(Utils.fromHtml(mValues.get(position).getContent()));
 
             return convertView;
         }

@@ -22,6 +22,7 @@ import java.util.Calendar;
 import java.util.Date;
 
 import in.andres.kandroid.R;
+import in.andres.kandroid.Utils;
 import in.andres.kandroid.kanboard.KanboardAPI;
 import in.andres.kandroid.kanboard.KanboardTask;
 import in.andres.kandroid.kanboard.events.OnUpdateTaskListener;
@@ -88,8 +89,8 @@ public class TaskEditActivity extends AppCompatActivity {
         editTextDescription.setText(taskDescription);
         editHoursEstimated.setText(Double.toString(hoursEstimated));
         editHoursSpent.setText(Double.toString(hoursSpent));
-        btnStartDate.setText(Html.fromHtml(getString(R.string.taskview_date_start, startDate)));
-        btnDueDate.setText(Html.fromHtml(getString(R.string.taskview_date_due, dueDate)));
+        btnStartDate.setText(Utils.fromHtml(getString(R.string.taskview_date_start, startDate)));
+        btnDueDate.setText(Utils.fromHtml(getString(R.string.taskview_date_due, dueDate)));
 
         btnStartDate.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -106,14 +107,14 @@ public class TaskEditActivity extends AppCompatActivity {
                         calendar.set(Calendar.MONTH, month);
                         calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
                         startDate = calendar.getTime();
-                        btnStartDate.setText(Html.fromHtml(getString(R.string.taskview_date_start, startDate)));
+                        btnStartDate.setText(Utils.fromHtml(getString(R.string.taskview_date_start, startDate)));
                     }
                 }, calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH));
                 dlgDate.setButton(DatePickerDialog.BUTTON_NEUTRAL, "Clear", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         startDate = null;
-                        btnStartDate.setText(Html.fromHtml(getString(R.string.taskview_date_start, startDate)));
+                        btnStartDate.setText(Utils.fromHtml(getString(R.string.taskview_date_start, startDate)));
                     }
                 });
                 dlgDate.show();
@@ -134,14 +135,14 @@ public class TaskEditActivity extends AppCompatActivity {
                         calendar.set(Calendar.MONTH, month);
                         calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
                         dueDate = calendar.getTime();
-                        btnDueDate.setText(Html.fromHtml(getString(R.string.taskview_date_due, dueDate)));
+                        btnDueDate.setText(Utils.fromHtml(getString(R.string.taskview_date_due, dueDate)));
                     }
                 }, calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH));
                 dlgDate.setButton(DatePickerDialog.BUTTON_NEUTRAL, "Clear", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         dueDate = null;
-                        btnDueDate.setText(Html.fromHtml(getString(R.string.taskview_date_due, dueDate)));
+                        btnDueDate.setText(Utils.fromHtml(getString(R.string.taskview_date_due, dueDate)));
                     }
                 });
                 dlgDate.show();

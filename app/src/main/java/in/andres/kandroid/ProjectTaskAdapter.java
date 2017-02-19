@@ -111,10 +111,10 @@ public class ProjectTaskAdapter extends BaseExpandableListAdapter {
         if (convertView == null)
             convertView = mInflater.inflate(R.layout.listitem_project_task, parent, false);
 
-        ((TextView) convertView.findViewById(R.id.task_name)).setText(Html.fromHtml(String.format(Locale.getDefault(), "<big><b>#%d</b></big><br />%s", child.getId(), child.getTitle())));
+        ((TextView) convertView.findViewById(R.id.task_name)).setText(Utils.fromHtml(String.format(Locale.getDefault(), "<big><b>#%d</b></big><br />%s", child.getId(), child.getTitle())));
 
         if (mProject.getProjectUsers().get(child.getOwnerId()) != null)
-            ((TextView) convertView.findViewById(R.id.task_owner)).setText(Html.fromHtml(String.format(Locale.getDefault(), "<small>%s</small>", mProject.getProjectUsers().get(child.getOwnerId()))));
+            ((TextView) convertView.findViewById(R.id.task_owner)).setText(Utils.fromHtml(String.format(Locale.getDefault(), "<small>%s</small>", mProject.getProjectUsers().get(child.getOwnerId()))));
         else
             convertView.findViewById(R.id.task_owner).setVisibility(View.INVISIBLE);
 

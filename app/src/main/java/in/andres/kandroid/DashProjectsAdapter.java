@@ -103,12 +103,12 @@ public class DashProjectsAdapter extends BaseExpandableListAdapter {
             projectDescription.setVisibility(View.GONE);
         else {
             projectDescription.setVisibility(View.VISIBLE);
-            projectDescription.setText(Html.fromHtml(mRenderer.render(mParser.parse(proj.getDescription()))));
+            projectDescription.setText(Utils.fromHtml(mRenderer.render(mParser.parse(proj.getDescription()))));
         }
         List<String> columns = new ArrayList<>();
         for (KanboardColumn c: proj.getColumns())
             columns.add(String.format("<big><b>%1s</b></big> %2s", c.getNumberTasks(), c.getTitle()));
-        projectColumns.setText(Html.fromHtml(TextUtils.join(" <big><b>|</b></big> ", columns)));
+        projectColumns.setText(Utils.fromHtml(TextUtils.join(" <big><b>|</b></big> ", columns)));
         projectNbTasks.setText(mContext.getResources().getQuantityString(R.plurals.format_nb_tasks, getChildrenCount(groupPosition), getChildrenCount(groupPosition)));
 
         return convertView;
@@ -121,7 +121,7 @@ public class DashProjectsAdapter extends BaseExpandableListAdapter {
         if (convertView == null)
             convertView = mInflater.inflate(R.layout.listitem_project_task, parent, false);
 
-        ((TextView) convertView.findViewById(R.id.task_name)).setText(Html.fromHtml(String.format(Locale.getDefault(), "<big><b>#%d</b></big><br />%s", child.getId(), child.getTitle())));
+        ((TextView) convertView.findViewById(R.id.task_name)).setText(Utils.fromHtml(String.format(Locale.getDefault(), "<big><b>#%d</b></big><br />%s", child.getId(), child.getTitle())));
 
         convertView.findViewById(R.id.task_owner).setVisibility(View.INVISIBLE);
         convertView.findViewById(R.id.task_category).setVisibility(View.INVISIBLE);
