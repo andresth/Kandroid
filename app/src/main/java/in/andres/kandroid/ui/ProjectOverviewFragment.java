@@ -61,7 +61,7 @@ public class ProjectOverviewFragment extends Fragment {
             TextView projectColumns = (TextView) getView().findViewById(R.id.project_columns);
             TextView projectSwimlanes = (TextView) getView().findViewById(R.id.project_swimlanes);
 
-            if (project.getDescription() != null) {
+            if (!project.getDescription().contentEquals("")) {
                 projectDescription.setText(Utils.fromHtml(mRenderer.render(mParser.parse(project.getDescription()))));
             } else {
                 getView().findViewById(R.id.card_description).setVisibility(View.GONE);

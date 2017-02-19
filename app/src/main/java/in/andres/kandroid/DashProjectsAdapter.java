@@ -99,7 +99,7 @@ public class DashProjectsAdapter extends BaseExpandableListAdapter {
         TextView projectColumns = (TextView) convertView.findViewById(R.id.project_columns);
         TextView projectNbTasks = (TextView) convertView.findViewById(R.id.project_nb_own_tasks);
         projectName.setText(proj.getName());
-        if ((proj.getDescription() == null) || proj.getDescription().contentEquals(""))
+        if (proj.getDescription().contentEquals("") || proj.getDescription().contentEquals(""))
             projectDescription.setVisibility(View.GONE);
         else {
             projectDescription.setVisibility(View.VISIBLE);
