@@ -20,6 +20,7 @@
 package in.andres.kandroid;
 
 import android.content.Context;
+import android.text.AndroidCharacter;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -62,7 +63,7 @@ public class ProjectTaskAdapter extends BaseExpandableListAdapter {
 
     @Override
     public int getChildrenCount(int groupPosition) {
-        return mData.get(mProject.getSwimlanes().get(groupPosition).getId()).size();
+        return mData.get(mProject.getSwimlanes().get(groupPosition).getId()).size() + 1;
     }
 
     @Override
@@ -118,25 +119,29 @@ public class ProjectTaskAdapter extends BaseExpandableListAdapter {
 
     @Override
     public View getChildView(int groupPosition, int childPosition, boolean isLastChild, View convertView, ViewGroup parent) {
-        final KanboardTask child = (KanboardTask) getChild(groupPosition, childPosition);
 
-        if (convertView == null)
+        if (childPosition < getChildrenCount(groupPosition) - 1) {
+            final KanboardTask child = (KanboardTask) getChild(groupPosition, childPosition);
             convertView = mInflater.inflate(R.layout.listitem_project_task, parent, false);
 
-        ((TextView) convertView.findViewById(R.id.task_name)).setText(Utils.fromHtml(String.format(Locale.getDefault(), "<big><b>#%d</b></big><br />%s", child.getId(), child.getTitle())));
+            ((TextView) convertView.findViewById(R.id.task_name)).setText(Utils.fromHtml(String.format(Locale.getDefault(), "<big><b>#%d</b></big><br />%s", child.getId(), child.getTitle())));
 
-        if (mProject.getProjectUsers().get(child.getOwnerId()) != null)
-            ((TextView) convertView.findViewById(R.id.task_owner)).setText(Utils.fromHtml(String.format(Locale.getDefault(), "<small>%s</small>", mProject.getProjectUsers().get(child.getOwnerId()))));
-        else
-            convertView.findViewById(R.id.task_owner).setVisibility(View.INVISIBLE);
+            if (mProject.getProjectUsers().get(child.getOwnerId()) != null)
+                ((TextView) convertView.findViewById(R.id.task_owner)).setText(Utils.fromHtml(String.format(Locale.getDefault(), "<small>%s</small>", mProject.getProjectUsers().get(child.getOwnerId()))));
+            else
+                convertView.findViewById(R.id.task_owner).setVisibility(View.INVISIBLE);
 
-        if (child.getCategoryId() > 0)
-            ((TextView) convertView.findViewById(R.id.task_category)).setText(mProject.getCategoryHashtable().get(child.getCategoryId()).getName());
-        else
-            convertView.findViewById(R.id.task_category).setVisibility(View.INVISIBLE);
+            if (child.getCategoryId() > 0)
+                ((TextView) convertView.findViewById(R.id.task_category)).setText(mProject.getCategoryHashtable().get(child.getCategoryId()).getName());
+            else
+                convertView.findViewById(R.id.task_category).setVisibility(View.INVISIBLE);
 
-        if (child.getColorBackground() != null)
-            convertView.findViewById(R.id.list_card).setBackgroundColor(child.getColorBackground());
+            if (child.getColorBackground() != null)
+                convertView.findViewById(R.id.list_card).setBackgroundColor(child.getColorBackground());
+        } else {
+            convertView = mInflater.inflate(android.R.layout.simple_list_item_1, parent, false);
+            ((TextView) convertView.findViewById(android.R.id.text1)).setText("+");
+        }
 
         return convertView;
     }
