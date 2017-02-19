@@ -404,7 +404,7 @@ public class KanboardRequest {
     }
 
     @NonNull
-    public static KanboardRequest updateSubtask(int subtaskid, int taskid, @NonNull String title, @Nullable Integer userid,
+    public static KanboardRequest updateSubtask(int subtaskid, int taskid, @Nullable String title, @Nullable Integer userid,
                                                 @Nullable Integer timeestimated, @Nullable Integer timespent, @Nullable Integer status) {
         String content = String.format("" +
                 "        \"id\": %d,\n" +
