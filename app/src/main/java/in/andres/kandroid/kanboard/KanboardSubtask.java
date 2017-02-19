@@ -25,6 +25,7 @@ import org.json.JSONObject;
 
 import java.io.Serializable;
 
+@SuppressWarnings("unused")
 public class KanboardSubtask implements Comparable<KanboardSubtask>, Serializable {
     private int Id;
     private int TaskId;

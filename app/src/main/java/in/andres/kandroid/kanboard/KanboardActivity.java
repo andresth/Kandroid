@@ -24,6 +24,7 @@ import org.json.JSONObject;
 import java.io.Serializable;
 import java.util.Date;
 
+@SuppressWarnings("unused")
 public class KanboardActivity implements Serializable {
     private String Title;
     private String Content;

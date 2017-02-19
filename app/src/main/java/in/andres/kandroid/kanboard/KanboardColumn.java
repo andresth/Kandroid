@@ -19,12 +19,14 @@
 
 package in.andres.kandroid.kanboard;
 
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 import org.json.JSONObject;
 
 import java.io.Serializable;
 
+@SuppressWarnings("unused")
 public class KanboardColumn implements Comparable<KanboardColumn>, Serializable {
     private int Id;
     private int Position;
@@ -79,7 +81,7 @@ public class KanboardColumn implements Comparable<KanboardColumn>, Serializable 
     }
 
     @Override
-    public int compareTo(@Nullable KanboardColumn o) {
+    public int compareTo(@NonNull KanboardColumn o) {
         return this.Title.compareTo(o.Title);
     }
 

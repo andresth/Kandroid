@@ -21,6 +21,7 @@ package in.andres.kandroid.kanboard;
 
 import java.util.List;
 
+@SuppressWarnings("unused")
 public interface KanbordEvents {
     void onGetMe(boolean success, KanboardUserInfo userInfo);
     void onGetMyProjectsList(boolean success, List<KanboardProjectInfo> projects);
