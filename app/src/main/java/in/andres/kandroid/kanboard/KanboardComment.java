@@ -90,7 +90,7 @@ public class KanboardComment implements Serializable {
     }
 
     public void setUserId(int userid) {
-        this.user_id = user_id;
+        this.user_id = userid;
     }
 
     @Nullable

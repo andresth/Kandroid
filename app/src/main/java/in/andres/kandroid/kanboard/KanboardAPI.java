@@ -446,14 +446,11 @@ public class KanboardAPI {
 
             if (s.Request.Command.equalsIgnoreCase("getDefaultSwimlane")) {
                 KanboardSwimlane res = null;
-                boolean active = false;
                 try {
                     if (s.Result[0].has("result")) {
                         success = true;
                         JSONObject jso = s.Result[0].getJSONObject("result");
                         res = new KanboardSwimlane(jso);
-//                        res = jso.getString("default_swimlane");
-//                        active = KanboardAPI.StringToBoolean(jso.optString("show_default_swimlane"));
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();
