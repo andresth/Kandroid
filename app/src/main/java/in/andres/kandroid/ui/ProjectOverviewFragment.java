@@ -21,6 +21,7 @@ import java.util.Collections;
 
 import in.andres.kandroid.CompactHtmlRenderer;
 import in.andres.kandroid.R;
+import in.andres.kandroid.Utils;
 import in.andres.kandroid.kanboard.KanboardProject;
 
 /**
@@ -61,13 +62,13 @@ public class ProjectOverviewFragment extends Fragment {
             TextView projectSwimlanes = (TextView) getView().findViewById(R.id.project_swimlanes);
 
             if (project.getDescription() != null) {
-                projectDescription.setText(Html.fromHtml(mRenderer.render(mParser.parse(project.getDescription()))));
+                projectDescription.setText(Utils.fromHtml(mRenderer.render(mParser.parse(project.getDescription()))));
             } else {
                 getView().findViewById(R.id.card_description).setVisibility(View.GONE);
             }
-            projectMembers.setText(Html.fromHtml(TextUtils.join(" <big><b>|</b></big> ", Collections.list(project.getProjectUsers().elements()))));
-            projectColumns.setText(Html.fromHtml(TextUtils.join(" <big><b>|</b></big> ", project.getColumns())));
-            projectSwimlanes.setText(Html.fromHtml(TextUtils.join(" <big><b>|</b></big> ", project.getSwimlanes())));
+            projectMembers.setText(Utils.fromHtml(TextUtils.join(" <big><b>|</b></big> ", Collections.list(project.getProjectUsers().elements()))));
+            projectColumns.setText(Utils.fromHtml(TextUtils.join(" <big><b>|</b></big> ", project.getColumns())));
+            projectSwimlanes.setText(Utils.fromHtml(TextUtils.join(" <big><b>|</b></big> ", project.getSwimlanes())));
             projectNBActiveTasks.setText(getContext().getResources().getQuantityString(R.plurals.format_nb_active_tasks, project.getActiveTasks().size(), project.getActiveTasks().size()));
             projectNBInactiveTasks.setText(getContext().getResources().getQuantityString(R.plurals.format_nb_inactive_tasks, project.getInactiveTasks().size(), project.getInactiveTasks().size()));
             projectNBOverdueTasks.setText(getContext().getResources().getQuantityString(R.plurals.format_nb_overdue_tasks, project.getOverdueTasks().size(), project.getOverdueTasks().size()));
