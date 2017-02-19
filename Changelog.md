@@ -1,5 +1,6 @@
 ## development
 #### new features
+* Basic UI to modify task details
 
 #### improvements
 

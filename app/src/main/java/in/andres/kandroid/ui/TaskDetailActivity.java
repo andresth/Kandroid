@@ -82,6 +82,25 @@ import in.andres.kandroid.kanboard.events.OnSubtaskTimetrackingListener;
 import in.andres.kandroid.kanboard.events.OnUpdateCommentListener;
 import in.andres.kandroid.kanboard.events.OnUpdateSubtaskListener;
 
+/*
+ * Copyright 2017 Thomas Andres
+ *
+ * This file is part of Kandroid.
+ *
+ * Kandroid is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * Kandroid is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
 public class TaskDetailActivity extends AppCompatActivity {
     private KanboardTask task;
     private KanboardCategory category;
@@ -448,8 +467,10 @@ public class TaskDetailActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 collapseFABMenu();
-                startActivity(new Intent(getBaseContext(), TaskEditActivity.class));
-//                Snackbar.make(findViewById(R.id.root_layout), getString(R.string.error_msg_not_implemented), Snackbar.LENGTH_LONG).show();
+                Intent intent = new Intent(getBaseContext(), TaskEditActivity.class);
+                intent.putExtra("task", task);
+                intent.putExtra("users", (Hashtable<Integer, String>)users);
+                startActivityForResult(intent, 0);
             }
         });
 
@@ -520,6 +541,12 @@ public class TaskDetailActivity extends AppCompatActivity {
             refresh();
         }
         setupActionBar();
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        refresh();
     }
 
     @Override
@@ -856,11 +883,13 @@ public class TaskDetailActivity extends AppCompatActivity {
         if (actionBar != null) {
             // Show the Up button in the action bar.
             actionBar.setDisplayHomeAsUpEnabled(true);
-            actionBar.setTitle(task.getTitle());
         }
     }
 
     private void setTaskDetails() {
+        if (getSupportActionBar() != null)
+            getSupportActionBar().setTitle(task.getTitle());
+
         if (task.getIsActive())
             textStatus.setText(Html.fromHtml(getString(R.string.taskview_status, getString(R.string.taskview_status_open))));
         else

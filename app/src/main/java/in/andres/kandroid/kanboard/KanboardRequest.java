@@ -5,7 +5,28 @@ import android.support.annotation.Nullable;
 
 import org.apache.commons.lang3.StringEscapeUtils;
 
+import java.util.Date;
+
 import in.andres.kandroid.kanboard.events.OnSubtaskTimetrackingListener;
+
+/*
+ * Copyright 2017 Thomas Andres
+ *
+ * This file is part of Kandroid.
+ *
+ * Kandroid is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * Kandroid is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
+ */
 
 @SuppressWarnings("unused")
 public class KanboardRequest {
@@ -246,6 +267,72 @@ public class KanboardRequest {
                 "        \"comment_id\": %d\n" +
                 "    }\n" +
                 "}", commentid)});
+    }
+
+    @NonNull
+    public static KanboardRequest createTask(@NonNull String title, int projectid, @Nullable String colorid,
+                                             @Nullable Integer columnid, @Nullable Integer ownerid,
+                                             @Nullable Integer creatorid, @Nullable String duedate,
+                                             @Nullable String description, @Nullable Integer categoryid,
+                                             @Nullable Integer score, @Nullable Integer swimlaneid,
+                                             @Nullable Integer priority, @Nullable Integer recurrencestatus,
+                                             @Nullable Integer recurrencetrigger, @Nullable Integer recurrencefactor,
+                                             @Nullable Integer recurrencetimeframe, @Nullable Integer recurrencebasedate,
+                                             @Nullable String[] tags) {
+        return null;
+    }
+
+    @NonNull
+    public static KanboardRequest updateTask(int taskid, @NonNull String title, @Nullable String colorid,
+                                             @Nullable Integer ownerid,
+                                             @Nullable Integer creatorid, @Nullable Date duedate,
+                                             @Nullable String description, @Nullable Integer categoryid,
+                                             @Nullable Integer score, @Nullable Integer swimlaneid,
+                                             @Nullable Integer priority, @Nullable Integer recurrencestatus,
+                                             @Nullable Integer recurrencetrigger, @Nullable Integer recurrencefactor,
+                                             @Nullable Integer recurrencetimeframe, @Nullable Integer recurrencebasedate,
+                                             @Nullable String[] tags) {
+        String content = String.format("" +
+                "   \"title\": \"%s\",\n" +
+                "   \"id\": %d", StringEscapeUtils.escapeJson(title), taskid);
+        if (colorid != null)
+            content += String.format(", \n \"color_id\": \"%s\"", colorid);
+        if (ownerid != null)
+            content += String.format(", \n \"owner_id\": %d", ownerid);
+        if (creatorid != null)
+            content += String.format(", \n \"creator_id\": %d", creatorid);
+        if (duedate != null)
+            content += String.format(", \n \"date_due\": \"%tF\"", duedate);
+        if (description != null)
+            content += String.format(", \n \"description\": \"%s\"", StringEscapeUtils.escapeJson(description));
+        if (categoryid != null)
+            content += String.format(", \n \"category_id\": %d", categoryid);
+        if (score != null)
+            content += String.format(", \n \"score\": %d", score);
+        if (swimlaneid != null)
+            content += String.format(", \n \"swimlane_id\": %d", swimlaneid);
+        if (priority != null)
+            content += String.format(", \n \"priority\": %d", priority);
+        if (recurrencestatus != null)
+            content += String.format(", \n \"recurrence_status\": %d", recurrencestatus);
+        if (recurrencetrigger != null)
+            content += String.format(", \n \"recurrence_trigger\": %d", recurrencetrigger);
+        if (recurrencefactor != null)
+            content += String.format(", \n \"recurrence_factor\": %d", recurrencefactor);
+        if (recurrencetimeframe != null)
+            content += String.format(", \n \"recurrence_timeframe\": %d", recurrencetimeframe);
+        if (recurrencebasedate != null)
+            content += String.format(", \n \"recurrence_basedate\": %d", recurrencebasedate);
+        //TODO: Add tags
+        return new KanboardRequest("updateTask", new String[] {String.format(
+                "{\n" +
+                        "    \"jsonrpc\": \"2.0\",\n" +
+                        "    \"method\": \"updateTask\",\n" +
+                        "    \"id\": 1406803059,\n" +
+                        "    \"params\": {\n" +
+                        "%s\n" +
+                        "    }\n" +
+                        "}", content)});
     }
 
     @NonNull
