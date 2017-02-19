@@ -23,6 +23,7 @@ import org.json.JSONObject;
 
 import java.io.Serializable;
 
+@SuppressWarnings("unused")
 public class KanboardCategory implements Serializable {
     private int Id;
     private String Name;

@@ -19,6 +19,7 @@
 
 package in.andres.kandroid.kanboard;
 
+@SuppressWarnings("unused")
 public class KanboardProjectInfo {
     public final int ID;
     public final String Name;

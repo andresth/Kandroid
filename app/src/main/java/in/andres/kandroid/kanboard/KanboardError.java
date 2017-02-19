@@ -21,6 +21,7 @@ package in.andres.kandroid.kanboard;
 
 import org.json.JSONObject;
 
+@SuppressWarnings("unused")
 public class KanboardError {
     public final int Code;
     public final String Message;

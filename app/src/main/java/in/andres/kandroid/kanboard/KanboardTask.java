@@ -28,6 +28,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Date;
 
+@SuppressWarnings("unused")
 public class KanboardTask implements Comparable<KanboardTask>, Serializable {
     private int ID;
     private int ProjectID;

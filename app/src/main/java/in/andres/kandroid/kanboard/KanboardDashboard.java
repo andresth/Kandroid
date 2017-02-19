@@ -32,6 +32,7 @@ import java.util.Dictionary;
 import java.util.Hashtable;
 import java.util.List;
 
+@SuppressWarnings("unused")
 public class KanboardDashboard implements Serializable {
     private List<KanboardProject> Projects;
     private List<KanboardTask> Tasks;

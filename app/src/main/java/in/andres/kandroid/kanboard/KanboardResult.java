@@ -21,6 +21,7 @@ package in.andres.kandroid.kanboard;
 
 import org.json.JSONObject;
 
+@SuppressWarnings("unused")
 public class KanboardResult {
     public final String Command;
     public final JSONObject[] Result;
