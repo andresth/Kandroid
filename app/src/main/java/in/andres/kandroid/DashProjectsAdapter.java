@@ -20,7 +20,6 @@
 package in.andres.kandroid;
 
 import android.content.Context;
-import android.text.Html;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
