@@ -1,21 +1,3 @@
-package in.andres.kandroid.kanboard;
-
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-
-import org.json.JSONArray;
-import org.json.JSONObject;
-
-import java.io.Serializable;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.Dictionary;
-import java.util.Hashtable;
-import java.util.Iterator;
-import java.util.List;
-
 /*
  * Copyright 2017 Thomas Andres
  *
@@ -34,6 +16,24 @@ import java.util.List;
  * You should have received a copy of the GNU General Public License
  * along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
  */
+
+package in.andres.kandroid.kanboard;
+
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
+
+import java.io.Serializable;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.Dictionary;
+import java.util.Hashtable;
+import java.util.Iterator;
+import java.util.List;
 
 @SuppressWarnings("unused")
 public class KanboardProject implements Comparable<KanboardProject>, Serializable {

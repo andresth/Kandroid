@@ -1,5 +1,3 @@
-package in.andres.kandroid.kanboard.events;
-
 /*
  * Copyright 2017 Thomas Andres
  *
@@ -18,6 +16,8 @@ package in.andres.kandroid.kanboard.events;
  * You should have received a copy of the GNU General Public License
  * along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
  */
+
+package in.andres.kandroid.kanboard.events;
 
 public interface OnUpdateTaskListener {
     void onUpdateTask(boolean success);

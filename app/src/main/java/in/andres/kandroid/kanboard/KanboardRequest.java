@@ -1,14 +1,3 @@
-package in.andres.kandroid.kanboard;
-
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-
-import org.apache.commons.lang3.StringEscapeUtils;
-
-import java.util.Date;
-
-import in.andres.kandroid.kanboard.events.OnSubtaskTimetrackingListener;
-
 /*
  * Copyright 2017 Thomas Andres
  *
@@ -27,6 +16,17 @@ import in.andres.kandroid.kanboard.events.OnSubtaskTimetrackingListener;
  * You should have received a copy of the GNU General Public License
  * along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
  */
+
+package in.andres.kandroid.kanboard;
+
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+
+import org.apache.commons.lang3.StringEscapeUtils;
+
+import java.util.Date;
+
+import in.andres.kandroid.kanboard.events.OnSubtaskTimetrackingListener;
 
 @SuppressWarnings("unused")
 public class KanboardRequest {
