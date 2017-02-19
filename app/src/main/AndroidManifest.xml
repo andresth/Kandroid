@@ -52,7 +52,7 @@
                 android:value="in.andres.kandroid.ui.MainActivity" />
         </activity>
         <activity android:name=".ui.TaskDetailActivity" />
-        <!--<activity android:name=".ui.TaskEditActivity"></activity>-->
+        <activity android:name=".ui.TaskEditActivity"></activity>
     </application>
 
 </manifest>

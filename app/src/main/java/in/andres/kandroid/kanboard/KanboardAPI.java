@@ -21,6 +21,7 @@ import java.net.PasswordAuthentication;
 import java.net.SocketTimeoutException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Hashtable;
 import java.util.Iterator;
@@ -61,6 +62,26 @@ import in.andres.kandroid.kanboard.events.OnRemoveTaskListener;
 import in.andres.kandroid.kanboard.events.OnSubtaskTimetrackingListener;
 import in.andres.kandroid.kanboard.events.OnUpdateCommentListener;
 import in.andres.kandroid.kanboard.events.OnUpdateSubtaskListener;
+import in.andres.kandroid.kanboard.events.OnUpdateTaskListener;
+
+/*
+ * Copyright 2017 Thomas Andres
+ *
+ * This file is part of Kandroid.
+ *
+ * Kandroid is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * Kandroid is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
+ */
 
 @SuppressWarnings("unused")
 public class KanboardAPI {
@@ -360,6 +381,13 @@ public class KanboardAPI {
                 }
                 for (OnGetOverdueTasksByProjectListener l: onGetOverdueTasksByProjectListeners)
                     l.onGetOverdueTasksByProject(success, res);
+                return;
+            }
+
+            if (s.Request.Command.equalsIgnoreCase("updateTask")) {
+                success = s.Result[0].optBoolean("result", false);
+                for (OnUpdateTaskListener l: onUpdateTaskListeners)
+                    l.onUpdateTask(success);
                 return;
             }
 
@@ -685,6 +713,7 @@ public class KanboardAPI {
     private HashSet<OnOpenTaskListener> onOpenTaskListeners = new HashSet<>();
     private HashSet<OnCloseTaskListener> onCloseTaskListeners = new HashSet<>();
     private HashSet<OnRemoveTaskListener> onRemoveTaskListeners = new HashSet<>();
+    private HashSet<OnUpdateTaskListener> onUpdateTaskListeners = new HashSet<>();
 
     //HashSets for AsyncTask limiting
     private HashSet<Integer> hasSubtaskTimerSet = new HashSet<>();
@@ -929,6 +958,14 @@ public class KanboardAPI {
         onRemoveSubtaskListeners.remove(listener);
     }
 
+    public void addOnUpdateTaskListener(@NonNull OnUpdateTaskListener listener) {
+        onUpdateTaskListeners.add(listener);
+    }
+
+    public void removeOnUpdateTaskListener(@NonNull OnUpdateTaskListener listener) {
+        onUpdateTaskListeners.remove(listener);
+    }
+
     // API Calls
 
     public void getMe() {
@@ -969,6 +1006,21 @@ public class KanboardAPI {
 
     public void getOverdueTasksByProject(int projectid) {
         new KanboardAsync().executeOnExecutor(threadPoolExecutor, KanboardRequest.getOverdueTasksByProject(projectid));
+    }
+
+    public void updateTask(int taskid, @NonNull String title, @Nullable String colorid,
+                           @Nullable Integer ownerid,
+                           @Nullable Integer creatorid, @Nullable Date duedate,
+                           @Nullable String description, @Nullable Integer categoryid,
+                           @Nullable Integer score, @Nullable Integer swimlaneid,
+                           @Nullable Integer priority, @Nullable Integer recurrencestatus,
+                           @Nullable Integer recurrencetrigger, @Nullable Integer recurrencefactor,
+                           @Nullable Integer recurrencetimeframe, @Nullable Integer recurrencebasedate,
+                           @Nullable String[] tags) {
+        new KanboardAsync().executeOnExecutor(threadPoolExecutor, KanboardRequest.updateTask(taskid,
+                title, colorid, ownerid, creatorid, duedate, description, categoryid, score,
+                swimlaneid, priority, recurrencestatus, recurrencetrigger, recurrencefactor,
+                recurrencetimeframe, recurrencebasedate, tags));
     }
 
     public void getTask(int taskid) {
