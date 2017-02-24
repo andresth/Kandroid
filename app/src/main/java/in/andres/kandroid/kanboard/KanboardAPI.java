@@ -56,6 +56,7 @@ import in.andres.kandroid.Constants;
 import in.andres.kandroid.kanboard.events.OnCloseTaskListener;
 import in.andres.kandroid.kanboard.events.OnCreateCommentListener;
 import in.andres.kandroid.kanboard.events.OnCreateSubtaskListener;
+import in.andres.kandroid.kanboard.events.OnCreateTaskListener;
 import in.andres.kandroid.kanboard.events.OnGetActiveSwimlanesListener;
 import in.andres.kandroid.kanboard.events.OnGetAllCategoriesListener;
 import in.andres.kandroid.kanboard.events.OnGetAllCommentsListener;
@@ -379,6 +380,21 @@ public class KanboardAPI {
                 }
                 for (OnGetOverdueTasksByProjectListener l: onGetOverdueTasksByProjectListeners)
                     l.onGetOverdueTasksByProject(success, res);
+                return;
+            }
+
+            if (s.Request.Command.equalsIgnoreCase("createTask")) {
+                Integer res = null;
+                try {
+                    if (!s.Result[0].getString("result").equalsIgnoreCase("false")) {
+                        success = true;
+                        res = s.Result[0].getInt("result");
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                for (OnCreateTaskListener l: onCreateTaskListeners)
+                    l.onCreateTask(success, res);
                 return;
             }
 
@@ -712,6 +728,7 @@ public class KanboardAPI {
     private HashSet<OnOpenTaskListener> onOpenTaskListeners = new HashSet<>();
     private HashSet<OnCloseTaskListener> onCloseTaskListeners = new HashSet<>();
     private HashSet<OnRemoveTaskListener> onRemoveTaskListeners = new HashSet<>();
+    private HashSet<OnCreateTaskListener> onCreateTaskListeners = new HashSet<>();
     private HashSet<OnUpdateTaskListener> onUpdateTaskListeners = new HashSet<>();
 
     //HashSets for AsyncTask limiting
@@ -957,6 +974,14 @@ public class KanboardAPI {
         onRemoveSubtaskListeners.remove(listener);
     }
 
+    public void addOnCreateTaskListener(@NonNull OnCreateTaskListener listener) {
+        onCreateTaskListeners.add(listener);
+    }
+
+    public void removeOnCreateTaskListener(@NonNull OnCreateTaskListener listener) {
+        onCreateTaskListeners.remove(listener);
+    }
+
     public void addOnUpdateTaskListener(@NonNull OnUpdateTaskListener listener) {
         onUpdateTaskListeners.add(listener);
     }
@@ -1007,18 +1032,33 @@ public class KanboardAPI {
         new KanboardAsync().executeOnExecutor(threadPoolExecutor, KanboardRequest.getOverdueTasksByProject(projectid));
     }
 
-    public void updateTask(int taskid, @NonNull String title, @Nullable String colorid,
-                           @Nullable Integer ownerid,
-                           @Nullable Integer creatorid, @Nullable Date duedate,
+    public void createTask(@NonNull String title, int projectid, @Nullable String colorid,
+                           @Nullable Integer columnid, @Nullable Integer ownerid,
+                           @Nullable Integer creatorid, @Nullable String duedate,
                            @Nullable String description, @Nullable Integer categoryid,
                            @Nullable Integer score, @Nullable Integer swimlaneid,
                            @Nullable Integer priority, @Nullable Integer recurrencestatus,
                            @Nullable Integer recurrencetrigger, @Nullable Integer recurrencefactor,
                            @Nullable Integer recurrencetimeframe, @Nullable Integer recurrencebasedate,
                            @Nullable String[] tags) {
+        new KanboardAsync().executeOnExecutor(threadPoolExecutor, KanboardRequest.createTask(title,
+                projectid, colorid, columnid, ownerid, creatorid, duedate, description, categoryid,
+                score, swimlaneid, priority, recurrencestatus, recurrencetrigger, recurrencefactor,
+                recurrencetimeframe, recurrencebasedate, tags));
+    }
+
+    public void updateTask(int taskid, @NonNull String title, @Nullable String colorid,
+                           @Nullable Integer ownerid,
+                           @Nullable Date duedate,
+                           @Nullable String description, @Nullable Integer categoryid,
+                           @Nullable Integer score,
+                           @Nullable Integer priority, @Nullable Integer recurrencestatus,
+                           @Nullable Integer recurrencetrigger, @Nullable Integer recurrencefactor,
+                           @Nullable Integer recurrencetimeframe, @Nullable Integer recurrencebasedate,
+                           @Nullable String[] tags) {
         new KanboardAsync().executeOnExecutor(threadPoolExecutor, KanboardRequest.updateTask(taskid,
-                title, colorid, ownerid, creatorid, duedate, description, categoryid, score,
-                swimlaneid, priority, recurrencestatus, recurrencetrigger, recurrencefactor,
+                title, colorid, ownerid, duedate, description, categoryid, score,
+                priority, recurrencestatus, recurrencetrigger, recurrencefactor,
                 recurrencetimeframe, recurrencebasedate, tags));
     }
 
