@@ -20,7 +20,6 @@
 package in.andres.kandroid;
 
 import android.content.Context;
-import android.text.AndroidCharacter;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -42,6 +41,7 @@ public class ProjectTaskAdapter extends BaseExpandableListAdapter {
     private LayoutInflater mInflater;
     private KanboardProject mProject;
     private Dictionary<Integer, List<KanboardTask>> mData;
+    private boolean mShowAdd = false;
 
     public ProjectTaskAdapter(Context context, KanboardDashboard values) {
         mContext = context;
@@ -49,11 +49,12 @@ public class ProjectTaskAdapter extends BaseExpandableListAdapter {
         mProject = null;
     }
 
-    public ProjectTaskAdapter(Context context, KanboardProject values, Dictionary<Integer, List<KanboardTask>> data) {
+    public ProjectTaskAdapter(Context context, KanboardProject values, Dictionary<Integer, List<KanboardTask>> data, boolean showAdd) {
         mContext = context;
         mInflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         mProject = values;
         mData = data;
+        mShowAdd = showAdd;
     }
 
     @Override
@@ -63,7 +64,7 @@ public class ProjectTaskAdapter extends BaseExpandableListAdapter {
 
     @Override
     public int getChildrenCount(int groupPosition) {
-        return mData.get(mProject.getSwimlanes().get(groupPosition).getId()).size() + 1;
+        return mData.get(mProject.getSwimlanes().get(groupPosition).getId()).size() + (mShowAdd ? 1 : 0);
     }
 
     @Override
@@ -120,7 +121,7 @@ public class ProjectTaskAdapter extends BaseExpandableListAdapter {
     @Override
     public View getChildView(int groupPosition, int childPosition, boolean isLastChild, View convertView, ViewGroup parent) {
 
-        if (childPosition < getChildrenCount(groupPosition) - 1) {
+        if (childPosition < getChildrenCount(groupPosition) - (mShowAdd ? 1 : 0)) {
             final KanboardTask child = (KanboardTask) getChild(groupPosition, childPosition);
             convertView = mInflater.inflate(R.layout.listitem_project_task, parent, false);
 
