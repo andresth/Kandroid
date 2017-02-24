@@ -279,24 +279,13 @@ public class KanboardRequest {
                                              @Nullable Integer recurrencetrigger, @Nullable Integer recurrencefactor,
                                              @Nullable Integer recurrencetimeframe, @Nullable Integer recurrencebasedate,
                                              @Nullable String[] tags) {
-        return null;
-    }
-
-    @NonNull
-    public static KanboardRequest updateTask(int taskid, @NonNull String title, @Nullable String colorid,
-                                             @Nullable Integer ownerid,
-                                             @Nullable Integer creatorid, @Nullable Date duedate,
-                                             @Nullable String description, @Nullable Integer categoryid,
-                                             @Nullable Integer score, @Nullable Integer swimlaneid,
-                                             @Nullable Integer priority, @Nullable Integer recurrencestatus,
-                                             @Nullable Integer recurrencetrigger, @Nullable Integer recurrencefactor,
-                                             @Nullable Integer recurrencetimeframe, @Nullable Integer recurrencebasedate,
-                                             @Nullable String[] tags) {
         String content = String.format("" +
                 "   \"title\": \"%s\",\n" +
-                "   \"id\": %d", StringEscapeUtils.escapeJson(title), taskid);
+                "   \"project_id\": %d", StringEscapeUtils.escapeJson(title), projectid);
         if (colorid != null)
             content += String.format(", \n \"color_id\": \"%s\"", colorid);
+        if (columnid != null)
+            content += String.format(", \n \"column_id\": %d", columnid);
         if (ownerid != null)
             content += String.format(", \n \"owner_id\": %d", ownerid);
         if (creatorid != null)
@@ -311,6 +300,55 @@ public class KanboardRequest {
             content += String.format(", \n \"score\": %d", score);
         if (swimlaneid != null)
             content += String.format(", \n \"swimlane_id\": %d", swimlaneid);
+        if (priority != null)
+            content += String.format(", \n \"priority\": %d", priority);
+        if (recurrencestatus != null)
+            content += String.format(", \n \"recurrence_status\": %d", recurrencestatus);
+        if (recurrencetrigger != null)
+            content += String.format(", \n \"recurrence_trigger\": %d", recurrencetrigger);
+        if (recurrencefactor != null)
+            content += String.format(", \n \"recurrence_factor\": %d", recurrencefactor);
+        if (recurrencetimeframe != null)
+            content += String.format(", \n \"recurrence_timeframe\": %d", recurrencetimeframe);
+        if (recurrencebasedate != null)
+            content += String.format(", \n \"recurrence_basedate\": %d", recurrencebasedate);
+        //TODO: Add tags
+        return new KanboardRequest("createTask", new String[] {String.format(
+                "{\n" +
+                        "    \"jsonrpc\": \"2.0\",\n" +
+                        "    \"method\": \"createTask\",\n" +
+                        "    \"id\": 1406803059,\n" +
+                        "    \"params\": {\n" +
+                        "%s\n" +
+                        "    }\n" +
+                        "}", content)});
+    }
+
+    @NonNull
+    public static KanboardRequest updateTask(int taskid, @NonNull String title, @Nullable String colorid,
+                                             @Nullable Integer ownerid,
+                                             @Nullable Date duedate,
+                                             @Nullable String description, @Nullable Integer categoryid,
+                                             @Nullable Integer score,
+                                             @Nullable Integer priority, @Nullable Integer recurrencestatus,
+                                             @Nullable Integer recurrencetrigger, @Nullable Integer recurrencefactor,
+                                             @Nullable Integer recurrencetimeframe, @Nullable Integer recurrencebasedate,
+                                             @Nullable String[] tags) {
+        String content = String.format("" +
+                "   \"title\": \"%s\",\n" +
+                "   \"id\": %d", StringEscapeUtils.escapeJson(title), taskid);
+        if (colorid != null)
+            content += String.format(", \n \"color_id\": \"%s\"", colorid);
+        if (ownerid != null)
+            content += String.format(", \n \"owner_id\": %d", ownerid);
+        if (duedate != null)
+            content += String.format(", \n \"date_due\": \"%tF\"", duedate);
+        if (description != null)
+            content += String.format(", \n \"description\": \"%s\"", StringEscapeUtils.escapeJson(description));
+        if (categoryid != null)
+            content += String.format(", \n \"category_id\": %d", categoryid);
+        if (score != null)
+            content += String.format(", \n \"score\": %d", score);
         if (priority != null)
             content += String.format(", \n \"priority\": %d", priority);
         if (recurrencestatus != null)
