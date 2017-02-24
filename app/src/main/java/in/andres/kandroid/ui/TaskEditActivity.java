@@ -24,6 +24,7 @@ import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.preference.PreferenceManager;
+import android.support.annotation.NonNull;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -43,6 +44,7 @@ import in.andres.kandroid.R;
 import in.andres.kandroid.Utils;
 import in.andres.kandroid.kanboard.KanboardAPI;
 import in.andres.kandroid.kanboard.KanboardTask;
+import in.andres.kandroid.kanboard.events.OnCreateTaskListener;
 import in.andres.kandroid.kanboard.events.OnUpdateTaskListener;
 
 
@@ -52,8 +54,15 @@ public class TaskEditActivity extends AppCompatActivity {
     private String taskDescription;
     private Date startDate;
     private Date dueDate;
-    private double hoursEstimated;
-    private double hoursSpent;
+    private double timeEstimated;
+    private double timeSpent;
+    private boolean isNewTask = false;
+    private int swimlaneId;
+    private int columnId;
+    private int ownerId;
+    private int creatorId;
+    private int colorId;
+    private int projectid;
 
     private EditText editTextTitle;
     private EditText editTextDescription;
@@ -76,19 +85,30 @@ public class TaskEditActivity extends AppCompatActivity {
         editHoursSpent = (EditText) findViewById(R.id.edit_hours_spent);
 
         if (getIntent().hasExtra("task")) {
+            isNewTask = false;
             task = (KanboardTask) getIntent().getSerializableExtra("task");
             taskTitle = task.getTitle();
             taskDescription = task.getDescription();
             startDate = task.getDateStarted();
             dueDate = task.getDateDue();
-            hoursEstimated = task.getTimeEstimated();
-            hoursSpent = task.getTimeSpent();
+            timeEstimated = task.getTimeEstimated();
+            timeSpent = task.getTimeSpent();
+            setActionBarTitle(getString(R.string.taskview_fab_edit_task));
+        } else {
+            isNewTask = true;
+            projectid = getIntent().getIntExtra("projectid", 0);
+            colorId = getIntent().getIntExtra("colorid", 0);
+            creatorId = getIntent().getIntExtra("creatorid", 0);
+            ownerId = getIntent().getIntExtra("ownerid", 0);
+            columnId = getIntent().getIntExtra("columnid",0);
+            swimlaneId = getIntent().getIntExtra("swimlaneid", 0);
+            setActionBarTitle(getString(R.string.taskedit_new_task));
         }
 
         editTextTitle.setText(taskTitle);
         editTextDescription.setText(taskDescription);
-        editHoursEstimated.setText(Double.toString(hoursEstimated));
-        editHoursSpent.setText(Double.toString(hoursSpent));
+        editHoursEstimated.setText(Double.toString(timeEstimated));
+        editHoursSpent.setText(Double.toString(timeSpent));
         btnStartDate.setText(Utils.fromHtml(getString(R.string.taskview_date_start, startDate)));
         btnDueDate.setText(Utils.fromHtml(getString(R.string.taskview_date_due, dueDate)));
 
@@ -161,13 +181,24 @@ public class TaskEditActivity extends AppCompatActivity {
                 SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this.getBaseContext());
                 try {
                     KanboardAPI kanboardAPI = new KanboardAPI(preferences.getString("serverurl", ""), preferences.getString("username", ""), preferences.getString("password", ""));
+                    kanboardAPI.addOnCreateTaskListener(new OnCreateTaskListener() {
+                        @Override
+                        public void onCreateTask(boolean success, Integer taskid) {
+                            finish();
+                        }
+                    });
                     kanboardAPI.addOnUpdateTaskListener(new OnUpdateTaskListener() {
                         @Override
                         public void onUpdateTask(boolean success) {
                             finish();
                         }
                     });
-                    kanboardAPI.updateTask(task.getId(), editTextTitle.getText().toString(), null, null, null, dueDate, editTextDescription.getText().toString(), null, null, null, null, null, null, null, null, null, null);
+                    if (isNewTask) {
+                        kanboardAPI.createTask(editTextTitle.getText().toString(), projectid, null, columnId, null, null, dueDate, editTextDescription.getText().toString(), null, null, swimlaneId, null, null, null, null, null, null, null);
+
+                    } else {
+                        kanboardAPI.updateTask(task.getId(), editTextTitle.getText().toString(), null, null, dueDate, editTextDescription.getText().toString(), null, null, null, null, null, null, null, null, null);
+                    }
                     ProgressBar prog = new ProgressBar(TaskEditActivity.this);
                     prog.getIndeterminateDrawable().setColorFilter(Color.WHITE, android.graphics.PorterDuff.Mode.MULTIPLY);
                     item.setActionView(prog);
@@ -194,5 +225,10 @@ public class TaskEditActivity extends AppCompatActivity {
             actionBar.setDisplayHomeAsUpEnabled(true);
             actionBar.setTitle(getString(R.string.taskview_fab_edit_task));
         }
+    }
+
+    private void setActionBarTitle(@NonNull String title) {
+        if (getSupportActionBar() != null)
+            getSupportActionBar().setTitle(title);
     }
 }

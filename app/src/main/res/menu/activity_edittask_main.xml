@@ -4,7 +4,7 @@
     <item
         android:id="@+id/action_save"
         android:orderInCategory="100"
-        android:title="Save"
+        android:title="@string/taskedit_save"
         app:showAsAction="always" />
     <!--<item-->
         <!--android:id="@+id/action_cancel"-->

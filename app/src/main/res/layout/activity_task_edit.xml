@@ -28,7 +28,7 @@
                     android:id="@+id/edit_task_title"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="Project Title"
+                    android:hint="@string/taskedit_project_title"
                     android:inputType="text"
                     android:maxLines="1" />
 
@@ -42,7 +42,7 @@
                     android:id="@+id/edit_task_description"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="Project Description"
+                    android:hint="@string/taskedit_project_description"
                     android:inputType="textMultiLine"
                     android:maxLines="5" />
 
@@ -60,7 +60,7 @@
                 android:id="@+id/btn_due_date"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Due Date:"
+                tools:text="Due Date:"
                 android:textAllCaps="false"/>
 
             <android.support.design.widget.TextInputLayout
