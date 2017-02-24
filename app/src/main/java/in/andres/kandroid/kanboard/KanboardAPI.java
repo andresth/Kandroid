@@ -1034,7 +1034,7 @@ public class KanboardAPI {
 
     public void createTask(@NonNull String title, int projectid, @Nullable String colorid,
                            @Nullable Integer columnid, @Nullable Integer ownerid,
-                           @Nullable Integer creatorid, @Nullable String duedate,
+                           @Nullable Integer creatorid, @Nullable Date duedate,
                            @Nullable String description, @Nullable Integer categoryid,
                            @Nullable Integer score, @Nullable Integer swimlaneid,
                            @Nullable Integer priority, @Nullable Integer recurrencestatus,
