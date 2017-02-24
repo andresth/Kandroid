@@ -72,9 +72,9 @@ public class ProjectTasksFragment extends Fragment {
                     Log.i(Constants.TAG, "Launching TaskDetailActivity from ProjectTasksFragment.");
                     if (childPosition == parent.getExpandableListAdapter().getChildrenCount(groupPosition) - 1){
                         Intent intent = new Intent(getContext(), TaskEditActivity.class);
-                        intent.putExtra("column", mColumn.getId());
-                        intent.putExtra("project", ((MainActivity) getActivity()).getProject().getId());
-                        intent.putExtra("swimlane", ((MainActivity) getActivity()).getProject().getSwimlanes().get(groupPosition).getId());
+                        intent.putExtra("columnid", mColumn.getId());
+                        intent.putExtra("projectid", ((MainActivity) getActivity()).getProject().getId());
+                        intent.putExtra("swimlaneid", ((MainActivity) getActivity()).getProject().getSwimlanes().get(groupPosition).getId());
                         startActivity(intent);
                         return true;
                     }

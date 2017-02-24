@@ -136,6 +136,11 @@
     <string name="error_msg_remove_subtask">Error while removing subtask!</string>
     <string name="error_msg_not_implemented">Function not yet implemented!</string>
 
+    <string name="taskedit_new_task">New Task</string>
+    <string name="taskedit_save">Save</string>
+    <string name="taskedit_project_title">Title</string>
+    <string name="taskedit_project_description">Description</string>
+
     <!--Menu strings-->
     <string name="action_edit">Edit</string>
     <string name="action_delete">Delete</string>
