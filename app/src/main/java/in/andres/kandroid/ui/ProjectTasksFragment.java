@@ -62,7 +62,7 @@ public class ProjectTasksFragment extends Fragment {
             getView().findViewById(R.id.fragment_dash_errortext).setVisibility(View.GONE);
             getView().findViewById(R.id.expandable_list).setVisibility(View.VISIBLE);
             mColumn = (KanboardColumn) getArguments().getSerializable("column");
-            ProjectTaskAdapter listAdapter = new ProjectTaskAdapter(getContext(), ((MainActivity)getActivity()).getProject(), ((MainActivity)getActivity()).getProject().getGroupedActiveTasks().get(mColumn.getId()));
+            ProjectTaskAdapter listAdapter = new ProjectTaskAdapter(getContext(), ((MainActivity)getActivity()).getProject(), ((MainActivity)getActivity()).getProject().getGroupedActiveTasks().get(mColumn.getId()), true);
             ((ExpandableListView) getView().findViewById(R.id.expandable_list)).setAdapter(listAdapter);
             for (int i = 0; i < listAdapter.getGroupCount(); i++)
                 ((ExpandableListView) getView().findViewById(R.id.expandable_list)).expandGroup(i);
@@ -71,6 +71,11 @@ public class ProjectTasksFragment extends Fragment {
                 public boolean onChildClick(ExpandableListView parent, View v, int groupPosition, int childPosition, long id) {
                     Log.i(Constants.TAG, "Launching TaskDetailActivity from ProjectTasksFragment.");
                     if (childPosition == parent.getExpandableListAdapter().getChildrenCount(groupPosition) - 1){
+                        Intent intent = new Intent(getContext(), TaskEditActivity.class);
+                        intent.putExtra("column", mColumn.getId());
+                        intent.putExtra("project", ((MainActivity) getActivity()).getProject().getId());
+                        intent.putExtra("swimlane", ((MainActivity) getActivity()).getProject().getSwimlanes().get(groupPosition).getId());
+                        startActivity(intent);
                         return true;
                     }
 
