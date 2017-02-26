@@ -31,14 +31,21 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ProgressBar;
+import android.widget.Spinner;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.Date;
+import java.util.Enumeration;
+import java.util.HashMap;
+import java.util.Hashtable;
 
 import in.andres.kandroid.R;
 import in.andres.kandroid.Utils;
@@ -63,6 +70,7 @@ public class TaskEditActivity extends AppCompatActivity {
     private int creatorId;
     private int colorId;
     private int projectid;
+    private Hashtable<Integer, String> projectUsers;
 
     private EditText editTextTitle;
     private EditText editTextDescription;
@@ -70,6 +78,7 @@ public class TaskEditActivity extends AppCompatActivity {
     private Button btnDueDate;
     private EditText editHoursEstimated;
     private EditText editHoursSpent;
+    private Spinner spinnerProjectUsers;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -83,6 +92,7 @@ public class TaskEditActivity extends AppCompatActivity {
         btnDueDate = (Button) findViewById(R.id.btn_due_date);
         editHoursEstimated = (EditText) findViewById(R.id.edit_hours_estimated);
         editHoursSpent = (EditText) findViewById(R.id.edit_hours_spent);
+        spinnerProjectUsers = (Spinner) findViewById(R.id.user_spinner);
 
         if (getIntent().hasExtra("task")) {
             isNewTask = false;
@@ -93,6 +103,7 @@ public class TaskEditActivity extends AppCompatActivity {
             dueDate = task.getDateDue();
             timeEstimated = task.getTimeEstimated();
             timeSpent = task.getTimeSpent();
+            ownerId = task.getOwnerId();
             setActionBarTitle(getString(R.string.taskview_fab_edit_task));
         } else {
             isNewTask = true;
@@ -103,6 +114,20 @@ public class TaskEditActivity extends AppCompatActivity {
             columnId = getIntent().getIntExtra("columnid",0);
             swimlaneId = getIntent().getIntExtra("swimlaneid", 0);
             setActionBarTitle(getString(R.string.taskedit_new_task));
+        }
+
+        if (getIntent().hasExtra("projectusers")) {
+            if (getIntent().getSerializableExtra("projectusers") instanceof HashMap) {
+                projectUsers = new Hashtable<>((HashMap<Integer, String>) getIntent().getSerializableExtra("projectusers"));
+                ArrayList<String> possibleOwners = Collections.list(projectUsers.elements());
+                possibleOwners.add(0, "");
+                ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, possibleOwners);
+                adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                spinnerProjectUsers.setAdapter(adapter);
+                if (ownerId != 0) {
+                    spinnerProjectUsers.setSelection(possibleOwners.indexOf(projectUsers.get(ownerId)));
+                }
+            }
         }
 
         editTextTitle.setText(taskTitle);
@@ -193,11 +218,21 @@ public class TaskEditActivity extends AppCompatActivity {
                             finish();
                         }
                     });
+                    ownerId = spinnerProjectUsers.getSelectedItemPosition();
+                    if (spinnerProjectUsers.getSelectedItemPosition() != 0) {
+                        for (Enumeration<Integer> iter = projectUsers.keys(); iter.hasMoreElements();) {
+                            Integer key = iter.nextElement();
+                            if (projectUsers.get(key).contentEquals((String) spinnerProjectUsers.getSelectedItem())) {
+                                ownerId = key;
+                                break;
+                            }
+                        }
+                    }
                     if (isNewTask) {
-                        kanboardAPI.createTask(editTextTitle.getText().toString(), projectid, null, columnId, null, null, dueDate, editTextDescription.getText().toString(), null, null, swimlaneId, null, null, null, null, null, null, null);
+                        kanboardAPI.createTask(editTextTitle.getText().toString(), projectid, null, columnId, ownerId, null, dueDate, editTextDescription.getText().toString(), null, null, swimlaneId, null, null, null, null, null, null, null);
 
                     } else {
-                        kanboardAPI.updateTask(task.getId(), editTextTitle.getText().toString(), null, null, dueDate, editTextDescription.getText().toString(), null, null, null, null, null, null, null, null, null);
+                        kanboardAPI.updateTask(task.getId(), editTextTitle.getText().toString(), null, ownerId, dueDate, editTextDescription.getText().toString(), null, null, null, null, null, null, null, null, null);
                     }
                     ProgressBar prog = new ProgressBar(TaskEditActivity.this);
                     prog.getIndeterminateDrawable().setColorFilter(Color.WHITE, android.graphics.PorterDuff.Mode.MULTIPLY);

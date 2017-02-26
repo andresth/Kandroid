@@ -469,7 +469,7 @@ public class TaskDetailActivity extends AppCompatActivity {
                 collapseFABMenu();
                 Intent intent = new Intent(getBaseContext(), TaskEditActivity.class);
                 intent.putExtra("task", task);
-                intent.putExtra("users", (Hashtable<Integer, String>)users);
+                intent.putExtra("projectusers", (Hashtable<Integer, String>)users);
                 startActivityForResult(intent, 0);
             }
         });

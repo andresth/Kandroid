@@ -29,6 +29,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ExpandableListView;
 
+import java.util.Hashtable;
+
 import in.andres.kandroid.Constants;
 import in.andres.kandroid.ProjectTaskAdapter;
 import in.andres.kandroid.R;
@@ -70,11 +72,14 @@ public class ProjectTasksFragment extends Fragment {
                 @Override
                 public boolean onChildClick(ExpandableListView parent, View v, int groupPosition, int childPosition, long id) {
                     Log.i(Constants.TAG, "Launching TaskDetailActivity from ProjectTasksFragment.");
+                    MainActivity mainActivity = (MainActivity) getActivity();
                     if (childPosition == parent.getExpandableListAdapter().getChildrenCount(groupPosition) - 1){
                         Intent intent = new Intent(getContext(), TaskEditActivity.class);
                         intent.putExtra("columnid", mColumn.getId());
                         intent.putExtra("projectid", ((MainActivity) getActivity()).getProject().getId());
                         intent.putExtra("swimlaneid", ((MainActivity) getActivity()).getProject().getSwimlanes().get(groupPosition).getId());
+                        Log.d(Constants.TAG, mainActivity.getProject().getProjectUsers().getClass().toString());
+                        intent.putExtra("projectusers", (Hashtable<Integer, String>) mainActivity.getProject().getProjectUsers());
                         startActivity(intent);
                         return true;
                     }
