@@ -211,14 +211,14 @@ public class TaskEditActivity extends AppCompatActivity {
                     kanboardAPI.addOnCreateTaskListener(new OnCreateTaskListener() {
                         @Override
                         public void onCreateTask(boolean success, Integer taskid) {
-                            setResult(Constants.ResultOK, new Intent());
+                            setResult(Constants.ResultChanged, new Intent());
                             finish();
                         }
                     });
                     kanboardAPI.addOnUpdateTaskListener(new OnUpdateTaskListener() {
                         @Override
                         public void onUpdateTask(boolean success) {
-                            setResult(Constants.ResultOK, new Intent());
+                            setResult(Constants.ResultChanged, new Intent());
                             finish();
                         }
                     });

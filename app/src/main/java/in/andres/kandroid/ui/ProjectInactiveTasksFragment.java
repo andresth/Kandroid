@@ -68,7 +68,7 @@ public class ProjectInactiveTasksFragment extends Fragment {
                     Intent taskIntent = new Intent(getContext(), TaskDetailActivity.class);
                     taskIntent.putExtra("task", clickedTask);
                     taskIntent.putExtra("me", ((MainActivity)getActivity()).getMe());
-                    startActivity(taskIntent);
+                    startActivityForResult(taskIntent, Constants.RequestEditTask);
                     return true;
                 }
             });
@@ -77,6 +77,13 @@ public class ProjectInactiveTasksFragment extends Fragment {
             getView().findViewById(R.id.fragment_dash_errortext).setVisibility(View.VISIBLE);
             getView().findViewById(R.id.expandable_list).setVisibility(View.GONE);
         }
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == Constants.RequestEditTask && resultCode == Constants.ResultChanged)
+            ((MainActivity) getActivity()).refresh();
     }
 
     @Override

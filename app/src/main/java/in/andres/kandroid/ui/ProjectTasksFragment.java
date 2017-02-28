@@ -78,9 +78,8 @@ public class ProjectTasksFragment extends Fragment {
                         intent.putExtra("columnid", mColumn.getId());
                         intent.putExtra("projectid", ((MainActivity) getActivity()).getProject().getId());
                         intent.putExtra("swimlaneid", ((MainActivity) getActivity()).getProject().getSwimlanes().get(groupPosition).getId());
-                        Log.d(Constants.TAG, mainActivity.getProject().getProjectUsers().getClass().toString());
                         intent.putExtra("projectusers", (Hashtable<Integer, String>) mainActivity.getProject().getProjectUsers());
-                        startActivity(intent);
+                        startActivityForResult(intent, Constants.RequestEditTask);
                         return true;
                     }
 
@@ -93,7 +92,7 @@ public class ProjectTasksFragment extends Fragment {
                     taskIntent.putExtra("swimlane", project.getSwimlanes().get(groupPosition));
                     if (clickedTask.getCategoryId() > 0)
                         taskIntent.putExtra("category", project.getCategoryHashtable().get(clickedTask.getCategoryId()));
-                    startActivity(taskIntent);
+                    startActivityForResult(taskIntent, Constants.RequestEditTask);
                     return true;
                 }
             });
@@ -102,6 +101,13 @@ public class ProjectTasksFragment extends Fragment {
             getView().findViewById(R.id.fragment_dash_errortext).setVisibility(View.VISIBLE);
             getView().findViewById(R.id.expandable_list).setVisibility(View.GONE);
         }
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == Constants.RequestEditTask && resultCode == Constants.ResultChanged)
+            ((MainActivity) getActivity()).refresh();
     }
 
     @Override
