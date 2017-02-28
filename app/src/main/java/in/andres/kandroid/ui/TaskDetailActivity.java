@@ -470,7 +470,7 @@ public class TaskDetailActivity extends AppCompatActivity {
                 Intent intent = new Intent(getBaseContext(), TaskEditActivity.class);
                 intent.putExtra("task", task);
                 intent.putExtra("projectusers", (Hashtable<Integer, String>)users);
-                startActivityForResult(intent, 0);
+                startActivityForResult(intent, Constants.RequestEditTask);
             }
         });
 
@@ -546,7 +546,8 @@ public class TaskDetailActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        refresh();
+        if (requestCode == Constants.RequestEditTask && resultCode == Constants.ResultOK)
+            refresh();
     }
 
     @Override
