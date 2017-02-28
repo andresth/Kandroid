@@ -44,6 +44,7 @@ import java.io.BufferedReader;
 import java.io.DataOutputStream;
 import java.io.InputStreamReader;
 import java.net.Authenticator;
+import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.PasswordAuthentication;
 import java.net.ProtocolException;
@@ -274,9 +275,9 @@ public class LoginActivity extends AppCompatActivity {
         @Override
         protected Integer doInBackground(Void... params) {
             // TODO: attempt authentication against a network service.
-            HttpsURLConnection con;
+            HttpURLConnection con;
             try {
-                con = (HttpsURLConnection) mUrl.openConnection();
+                con = (HttpURLConnection) mUrl.openConnection();
                 con.setRequestMethod("POST");
                 con.setConnectTimeout(120000);
                 con.setReadTimeout(120000);

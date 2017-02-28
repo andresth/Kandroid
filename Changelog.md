@@ -3,6 +3,7 @@
 * Basic UI to add and modify tasks
 
 #### improvements
+* Support for HTTP connections to host
 
 #### fixes
 
