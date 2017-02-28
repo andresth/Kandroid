@@ -8,8 +8,8 @@ android {
         applicationId "in.andres.kandroid"
         minSdkVersion 21
         targetSdkVersion 25
-        versionCode 8
-        versionName "0.4.3"
+        versionCode 9
+        versionName "0.5-beta.1"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
