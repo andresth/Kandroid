@@ -21,6 +21,7 @@ package in.andres.kandroid.ui;
 
 import android.app.DatePickerDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.preference.PreferenceManager;
@@ -47,6 +48,7 @@ import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Hashtable;
 
+import in.andres.kandroid.Constants;
 import in.andres.kandroid.R;
 import in.andres.kandroid.Utils;
 import in.andres.kandroid.kanboard.KanboardAPI;
@@ -209,12 +211,14 @@ public class TaskEditActivity extends AppCompatActivity {
                     kanboardAPI.addOnCreateTaskListener(new OnCreateTaskListener() {
                         @Override
                         public void onCreateTask(boolean success, Integer taskid) {
+                            setResult(Constants.ResultOK, new Intent());
                             finish();
                         }
                     });
                     kanboardAPI.addOnUpdateTaskListener(new OnUpdateTaskListener() {
                         @Override
                         public void onUpdateTask(boolean success) {
+                            setResult(Constants.ResultOK, new Intent());
                             finish();
                         }
                     });
