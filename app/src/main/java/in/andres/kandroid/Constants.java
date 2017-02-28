@@ -21,6 +21,6 @@ package in.andres.kandroid;
 
 public interface Constants {
     String TAG = "Kandroid";
-    int ResultOK = 1;
+    int ResultChanged = 1;
     int RequestEditTask = 1;
 }

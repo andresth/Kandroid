@@ -67,7 +67,14 @@ public class DashOverdueFragment extends ListFragment {
         Intent taskIntent = new Intent(getContext(), TaskDetailActivity.class);
         taskIntent.putExtra("task", clickedTask);
         taskIntent.putExtra("me", ((MainActivity)getActivity()).getMe());
-        startActivity(taskIntent);
+        startActivityForResult(taskIntent, Constants.RequestEditTask);
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == Constants.RequestEditTask && resultCode == Constants.ResultChanged)
+            ((MainActivity) getActivity()).refresh();
     }
 
     class DashOverdueAdapter extends ArrayAdapter<KanboardTask> {

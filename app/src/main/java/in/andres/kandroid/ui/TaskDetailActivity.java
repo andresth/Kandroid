@@ -165,9 +165,10 @@ public class TaskDetailActivity extends AppCompatActivity {
     private OnRemoveTaskListener removeTaskListener = new OnRemoveTaskListener() {
         @Override
         public void onRemoveTask(boolean success) {
-            if (success)
+            if (success) {
+                setResult(Constants.ResultChanged);
                 finish();
-            else
+            } else
                 Snackbar.make(findViewById(R.id.root_layout), getString(R.string.error_msg_remove_task), Snackbar.LENGTH_LONG).show();
         }
     };
@@ -455,6 +456,7 @@ public class TaskDetailActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 collapseFABMenu();
+                setResult(Constants.ResultChanged);
                 if (task.getIsActive()) {
                     kanboardAPI.closeTask(task.getId());
                 } else {
@@ -546,8 +548,10 @@ public class TaskDetailActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == Constants.RequestEditTask && resultCode == Constants.ResultOK)
+        if (requestCode == Constants.RequestEditTask && resultCode == Constants.ResultChanged) {
+            setResult(Constants.ResultChanged);
             refresh();
+        }
     }
 
     @Override

@@ -656,7 +656,7 @@ public class MainActivity extends AppCompatActivity
         return false;
     }
 
-    private void refresh() {
+    protected void refresh() {
         if (!createKandoardAPI())
             return;
 

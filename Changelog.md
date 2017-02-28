@@ -4,6 +4,7 @@
 
 #### improvements
 * Support for HTTP connections to host
+* Refresh view when a task was edited
 
 #### fixes
 
