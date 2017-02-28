@@ -35,6 +35,7 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.Authenticator;
+import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.PasswordAuthentication;
 import java.net.SocketTimeoutException;
@@ -88,7 +89,7 @@ public class KanboardAPI {
     private class KanboardAsync extends AsyncTask<KanboardRequest, Void, KanboardResult> {
         @Override
         protected KanboardResult doInBackground(KanboardRequest... params) {
-            HttpsURLConnection con = null;
+            HttpURLConnection con = null;
 //            int httpResponseCode = 0;
 //            String httpResonseMessage = null;
             List<JSONObject> responseList = new ArrayList<>();
@@ -96,7 +97,7 @@ public class KanboardAPI {
                 try {
                     Log.i(Constants.TAG, String.format("API: Send Request \"%s\"", params[0].Command));
                     if (BuildConfig.DEBUG) Log.v(Constants.TAG, String.format("API: Data:\n%s", s));
-                    con = (HttpsURLConnection) kanboardURL.openConnection();
+                    con = (HttpURLConnection) kanboardURL.openConnection();
                     if (con == null)
                         return new KanboardResult(params[0], new JSONObject[]{new JSONObject("{\"jsonrpc\":\"2.0\",\"error\":{\"code\":0,\"message\":\"Unable to open connection\"},\"id\":null}")}, 0);
                     con.setConnectTimeout(120000);
@@ -750,6 +751,7 @@ public class KanboardAPI {
             tmpURL += "jsonrpc.php";
         }
         kanboardURL = new URL(tmpURL);
+        Log.i(Constants.TAG, String.format("Host uses %s", kanboardURL.getProtocol()));
 //        threadPoolExecutor = new ThreadPoolExecutor(12, 12, 20, TimeUnit.SECONDS, new ArrayBlockingQueue<Runnable>(256));
         threadPoolExecutor = (ThreadPoolExecutor) AsyncTask.THREAD_POOL_EXECUTOR;
         threadPoolExecutor.setCorePoolSize(12);
