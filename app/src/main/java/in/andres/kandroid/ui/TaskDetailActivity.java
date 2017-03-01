@@ -531,15 +531,6 @@ public class TaskDetailActivity extends AppCompatActivity {
             }
 
             setTaskDetails();
-
-            if (task.getIsActive()) {
-                fabMenuButtonOpenCloseTask.setImageDrawable(getDrawable(R.drawable.task_close));
-                fabMenuLabelOpenCloseTask.setText(getString(R.string.taskview_fab_close_task));
-            } else {
-                fabMenuButtonOpenCloseTask.setImageDrawable(getDrawable(R.drawable.task_open));
-                fabMenuLabelOpenCloseTask.setText(getString(R.string.taskview_fab_open_task));
-            }
-
             refresh();
         }
         setupActionBar();
@@ -935,6 +926,14 @@ public class TaskDetailActivity extends AppCompatActivity {
         if (task.getDescription() != null && !task.getDescription().contentEquals("")) {
             textDescription.setText(Utils.fromHtml(mRenderer.render(mParser.parse(task.getDescription()))));
             findViewById(R.id.card_description).setVisibility(View.VISIBLE);
+        }
+
+        if (task.getIsActive()) {
+            fabMenuButtonOpenCloseTask.setImageDrawable(getDrawable(R.drawable.task_close));
+            fabMenuLabelOpenCloseTask.setText(getString(R.string.taskview_fab_close_task));
+        } else {
+            fabMenuButtonOpenCloseTask.setImageDrawable(getDrawable(R.drawable.task_open));
+            fabMenuLabelOpenCloseTask.setText(getString(R.string.taskview_fab_open_task));
         }
     }
 
