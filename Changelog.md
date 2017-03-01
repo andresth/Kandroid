@@ -7,6 +7,8 @@
 * Refresh view when a task was edited
 
 #### fixes
+* Task owner might show null sometimes
+* Wrong text on close task button
 
 ## v0.4.3
 #### fixes
