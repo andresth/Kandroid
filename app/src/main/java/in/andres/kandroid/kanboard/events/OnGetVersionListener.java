@@ -5,5 +5,5 @@ package in.andres.kandroid.kanboard.events;
  */
 
 public interface OnGetVersionListener {
-    void onGetVersion(boolean success, String version);
+    void onGetVersion(boolean success, int[] version, String tag);
 }

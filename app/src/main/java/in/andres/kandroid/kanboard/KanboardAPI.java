@@ -51,6 +51,7 @@ import java.util.List;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.regex.PatternSyntaxException;
 
 import in.andres.kandroid.BuildConfig;
 import in.andres.kandroid.Constants;
@@ -237,17 +238,31 @@ public class KanboardAPI {
             }
 
             if (s.Request.Command.equalsIgnoreCase("getVersion")) {
-                String res = null;
+                String res;
+                int[] version = null;
+                String tag = null;
                 try {
                     if (s.Result[0].has("result")) {
                         success = true;
                         res = s.Result[0].getString("result");
+                        version = new int[3];
+                        try {
+                            Pattern regex = Pattern.compile("^(\\d+)\\.(\\d+)\\.(\\d+)(?:,(.*)){0,1}$", Pattern.CASE_INSENSITIVE | Pattern.UNICODE_CASE);
+                            Matcher regexMatcher = regex.matcher(res);
+                            version[0] = Integer.parseInt(regexMatcher.group(1));
+                            version[1] = Integer.parseInt(regexMatcher.group(2));
+                            version[2] = Integer.parseInt(regexMatcher.group(3));
+                            if (regexMatcher.groupCount() == 4)
+                                tag = regexMatcher.group(4).trim();
+                        }catch (PatternSyntaxException ex) {
+                            // Syntax error in the regular expression
+                        }
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
                 for (OnGetVersionListener l: onGetVersionListeners)
-                    l.onGetVersion(success, res);
+                    l.onGetVersion(success, version, tag);
                 return;
             }
 
