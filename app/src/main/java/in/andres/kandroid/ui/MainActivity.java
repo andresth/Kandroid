@@ -71,6 +71,7 @@ import in.andres.kandroid.kanboard.KanboardSwimlane;
 import in.andres.kandroid.kanboard.KanboardTask;
 import in.andres.kandroid.kanboard.KanboardUserInfo;
 import in.andres.kandroid.kanboard.KanbordEvents;
+import in.andres.kandroid.kanboard.events.OnErrorListener;
 import in.andres.kandroid.kanboard.events.OnGetActiveSwimlanesListener;
 import in.andres.kandroid.kanboard.events.OnGetAllCategoriesListener;
 import in.andres.kandroid.kanboard.events.OnGetAllTasksListener;
@@ -145,19 +146,32 @@ public class MainActivity extends AppCompatActivity
 
         @Override
         public void onError(KanboardError error) {
-            new AlertDialog.Builder(self)
-                    .setTitle("Error")
-                    .setMessage("Code: " + Integer.toString(error.Code) + "\n" +
-                                "Message: " + error.Message + "\n" +
-                                "HTTP Response: " + Integer.toString(error.HTTPReturnCode))
-                    .setNeutralButton("Dismiss", null)
-                    .setIcon(android.R.drawable.ic_dialog_alert)
-                    .show();
+//            new AlertDialog.Builder(self)
+//                    .setTitle("Error")
+//                    .setMessage("Code: " + Integer.toString(error.Code) + "\n" +
+//                                "Message: " + error.Message + "\n" +
+//                                "HTTP Response: " + Integer.toString(error.HTTPReturnCode))
+//                    .setNeutralButton("Dismiss", null)
+//                    .setIcon(android.R.drawable.ic_dialog_alert)
+//                    .show();
         }
 
         @Override
         public void onDebug(boolean success, String message) {
 
+        }
+    };
+    private OnErrorListener errorListener = new OnErrorListener() {
+        @Override
+        public void onError(KanboardError error) {
+            new AlertDialog.Builder(self)
+                    .setTitle("Error")
+                    .setMessage("Code: " + Integer.toString(error.Code) + "\n" +
+                            "Message: " + error.Message + "\n" +
+                            "HTTP Response: " + Integer.toString(error.HTTPReturnCode))
+                    .setNeutralButton("Dismiss", null)
+                    .setIcon(android.R.drawable.ic_dialog_alert)
+                    .show();
         }
     };
     private OnGetMeListener getMeListener = new OnGetMeListener() {
@@ -636,6 +650,7 @@ public class MainActivity extends AppCompatActivity
             try {
                 kanboardAPI = new KanboardAPI(serverURL, username, password);
                 kanboardAPI.addListener(eventHandler);
+                kanboardAPI.addErrorListener(errorListener);
                 kanboardAPI.addOnGetMeListener(getMeListener);
                 kanboardAPI.addOnGetMyDashboardListener(getMyDashboardListener);
                 kanboardAPI.addOnGetMyActivityStreamListener(getMyActivityStreamListener);

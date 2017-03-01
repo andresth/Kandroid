@@ -56,6 +56,7 @@ import in.andres.kandroid.kanboard.events.OnCloseTaskListener;
 import in.andres.kandroid.kanboard.events.OnCreateCommentListener;
 import in.andres.kandroid.kanboard.events.OnCreateSubtaskListener;
 import in.andres.kandroid.kanboard.events.OnCreateTaskListener;
+import in.andres.kandroid.kanboard.events.OnErrorListener;
 import in.andres.kandroid.kanboard.events.OnGetActiveSwimlanesListener;
 import in.andres.kandroid.kanboard.events.OnGetAllCategoriesListener;
 import in.andres.kandroid.kanboard.events.OnGetAllCommentsListener;
@@ -180,7 +181,9 @@ public class KanboardAPI {
             // Handle Errors
             if (s == null) {
                 KanboardError res = new KanboardError(null, null, 0);
-                for (KanbordEvents l: listeners)
+//                for (KanbordEvents l: listeners)
+//                    l.onError(res);
+                for (OnErrorListener l: onErrorListeners)
                     l.onError(res);
                 return;
             }
@@ -188,7 +191,9 @@ public class KanboardAPI {
                 Log.e(Constants.TAG, s.Result[0].toString());
                 JSONObject err = s.Result[0].optJSONObject("error");
                 KanboardError res = new KanboardError(s.Request, err, s.ReturnCode);
-                for (KanbordEvents l: listeners)
+//                for (KanbordEvents l: listeners)
+//                    l.onError(res);
+                for (OnErrorListener l: onErrorListeners)
                     l.onError(res);
             }
 
@@ -746,6 +751,7 @@ public class KanboardAPI {
     private HashSet<OnCreateTaskListener> onCreateTaskListeners = new HashSet<>();
     private HashSet<OnUpdateTaskListener> onUpdateTaskListeners = new HashSet<>();
     private HashSet<OnGetVersionListener> onGetVersionListeners = new HashSet<>();
+    private HashSet<OnErrorListener> onErrorListeners = new HashSet<>();
 
     //HashSets for AsyncTask limiting
     private HashSet<Integer> hasSubtaskTimerSet = new HashSet<>();
@@ -1013,6 +1019,14 @@ public class KanboardAPI {
 
     public void removeOnGetVersionListener(@NonNull OnGetVersionListener listener) {
         onGetVersionListeners.remove(listener);
+    }
+
+    public void addErrorListener(@NonNull OnErrorListener listener) {
+        onErrorListeners.add(listener);
+    }
+
+    public void removeErrorListener(@NonNull OnErrorListener listener) {
+        onErrorListeners.remove(listener);
     }
 
     // API Calls
