@@ -178,8 +178,9 @@ public class TaskDetailActivity extends AppCompatActivity {
             hideProgress();
             if (success) {
                 users = result;
-                textOwner.setText(Utils.fromHtml(getString(R.string.taskview_owner, result.get(task.getOwnerId()))));
-                textCreator.setText(Utils.fromHtml(getString(R.string.taskview_creator, result.get(task.getCreatorId()))));
+                setTaskDetails();
+//                textOwner.setText(Utils.fromHtml(getString(R.string.taskview_owner, result.get(task.getOwnerId()))));
+//                textCreator.setText(Utils.fromHtml(getString(R.string.taskview_creator, result.get(task.getCreatorId()))));
 
                 //Send change notification to update usernames in comments
                 if (commentListview.getAdapter() != null)
