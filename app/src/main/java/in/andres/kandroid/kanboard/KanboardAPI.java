@@ -38,8 +38,10 @@ import java.net.Authenticator;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.PasswordAuthentication;
+import java.net.ProtocolException;
 import java.net.SocketTimeoutException;
 import java.net.URL;
+import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
@@ -131,7 +133,8 @@ public class KanboardAPI {
                     con.disconnect();
 
                     Log.i(Constants.TAG, String.format("API: Received Response \"%s\"", params[0].Command));
-                    if (BuildConfig.DEBUG) Log.v(Constants.TAG, String.format("API: Data:\n%s", responseStr.toString()));
+                    if (BuildConfig.DEBUG)
+                        Log.v(Constants.TAG, String.format("API: Data:\n%s", responseStr.toString()));
                     JSONObject response;
                     try {
                         response = new JSONObject(responseStr.toString());
@@ -141,19 +144,35 @@ public class KanboardAPI {
                             response.put("jsonrpc", "2.0");
                             response.put("id", null);
                             response.put("error", new JSONObject()
-                                                    .put("code", con.getResponseCode())
-                                                    .put("message", con.getResponseMessage()));
+                                    .put("code", con.getResponseCode())
+                                    .put("message", con.getResponseMessage()));
                         } else {
                             e.printStackTrace();
                             response = null;
                         }
                     }
                     responseList.add(response);
+                } catch (UnknownHostException e) {
+                    Log.e(Constants.TAG, "API: Unknown Host.");
+                    e.printStackTrace();
+                    try {
+                        responseList.add(new JSONObject("{\"jsonrpc\":\"2.0\",\"error\":{\"code\":-10,\"message\":\"Unknown Host\"},\"id\":null}"));
+                    } catch (JSONException e1) {
+                        e1.printStackTrace();
+                    }
+                } catch (ProtocolException e) {
+                    Log.e(Constants.TAG, "API: Protocol Exception.");
+                    e.printStackTrace();
+                    try {
+                        responseList.add(new JSONObject("{\"jsonrpc\":\"2.0\",\"error\":{\"code\":-20,\"message\":\"Protocol Exception\"},\"id\":null}"));
+                    } catch (JSONException e1) {
+                        e1.printStackTrace();
+                    }
                 } catch (SocketTimeoutException e) {
                     Log.e(Constants.TAG, String.format("API: Connection timed out.\tRequest: %s", params[0].Command));
                     e.printStackTrace();
                     try {
-                        responseList.add(new JSONObject("{\"jsonrpc\":\"2.0\",\"error\":{\"code\":0,\"message\":\"Network Timeout\"},\"id\":null}"));
+                        responseList.add(new JSONObject("{\"jsonrpc\":\"2.0\",\"error\":{\"code\":-30,\"message\":\"Network Timeout\"},\"id\":null}"));
                     } catch (JSONException e1) {
                         e1.printStackTrace();
                     }
