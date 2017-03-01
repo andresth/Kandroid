@@ -50,6 +50,14 @@ public class KanboardRequest {
         return new KanboardRequest("getMe", new String[] {"{\"jsonrpc\": \"2.0\", \"method\": \"getMe\", \"id\": 1}"});
     }
 
+    public static KanboardRequest getVersion() {
+        return new KanboardRequest("getVersion", new String[] {"{\n" +
+                "    \"jsonrpc\": \"2.0\",\n" +
+                "    \"method\": \"getVersion\",\n" +
+                "    \"id\": 1661138292\n" +
+                "}"});
+    }
+
     @NonNull
     public static KanboardRequest getMyProjectsList() {
         return new KanboardRequest("getMyProjectsList", new String[] {"{\"jsonrpc\": \"2.0\", \"method\": \"getMyProjectsList\", \"id\": 1}"});

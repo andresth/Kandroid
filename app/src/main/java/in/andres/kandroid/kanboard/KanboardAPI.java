@@ -50,8 +50,6 @@ import java.util.concurrent.ThreadPoolExecutor;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import javax.net.ssl.HttpsURLConnection;
-
 import in.andres.kandroid.BuildConfig;
 import in.andres.kandroid.Constants;
 import in.andres.kandroid.kanboard.events.OnCloseTaskListener;
@@ -74,6 +72,7 @@ import in.andres.kandroid.kanboard.events.OnGetProjectByIdListener;
 import in.andres.kandroid.kanboard.events.OnGetProjectUsersListener;
 import in.andres.kandroid.kanboard.events.OnGetSwimlaneListener;
 import in.andres.kandroid.kanboard.events.OnGetTaskListener;
+import in.andres.kandroid.kanboard.events.OnGetVersionListener;
 import in.andres.kandroid.kanboard.events.OnOpenTaskListener;
 import in.andres.kandroid.kanboard.events.OnRemoveCommentListener;
 import in.andres.kandroid.kanboard.events.OnRemoveSubtaskListener;
@@ -210,6 +209,21 @@ public class KanboardAPI {
                     l.onGetMe(success, res);
                 for (OnGetMeListener l: onGetMeListeners)
                     l.onGetMe(success, res);
+                return;
+            }
+
+            if (s.Request.Command.equalsIgnoreCase("getVersion")) {
+                String res = null;
+                try {
+                    if (s.Result[0].has("result")) {
+                        success = true;
+                        res = s.Result[0].getString("result");
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                for (OnGetVersionListener l: onGetVersionListeners)
+                    l.onGetVersion(success, res);
                 return;
             }
 
@@ -731,6 +745,7 @@ public class KanboardAPI {
     private HashSet<OnRemoveTaskListener> onRemoveTaskListeners = new HashSet<>();
     private HashSet<OnCreateTaskListener> onCreateTaskListeners = new HashSet<>();
     private HashSet<OnUpdateTaskListener> onUpdateTaskListeners = new HashSet<>();
+    private HashSet<OnGetVersionListener> onGetVersionListeners = new HashSet<>();
 
     //HashSets for AsyncTask limiting
     private HashSet<Integer> hasSubtaskTimerSet = new HashSet<>();
@@ -992,10 +1007,22 @@ public class KanboardAPI {
         onUpdateTaskListeners.remove(listener);
     }
 
+    public void addOnGetVersionListener(@NonNull OnGetVersionListener listener) {
+        onGetVersionListeners.add(listener);
+    }
+
+    public void removeOnGetVersionListener(@NonNull OnGetVersionListener listener) {
+        onGetVersionListeners.remove(listener);
+    }
+
     // API Calls
 
     public void getMe() {
         new KanboardAsync().executeOnExecutor(threadPoolExecutor, KanboardRequest.getMe());
+    }
+
+    public void getVersion() {
+        new KanboardAsync().executeOnExecutor(threadPoolExecutor, KanboardRequest.getVersion());
     }
 
     public void getMyProjectsList() {
