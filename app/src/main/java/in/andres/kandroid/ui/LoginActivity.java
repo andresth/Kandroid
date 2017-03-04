@@ -29,6 +29,7 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.MenuItem;
 import android.view.View;
@@ -42,6 +43,7 @@ import org.json.JSONObject;
 
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.Authenticator;
 import java.net.HttpURLConnection;
@@ -54,13 +56,18 @@ import java.net.UnknownHostException;
 
 import javax.net.ssl.HttpsURLConnection;
 
+import in.andres.kandroid.Constants;
 import in.andres.kandroid.R;
+import in.andres.kandroid.kanboard.KanboardAPI;
+import in.andres.kandroid.kanboard.KanboardError;
+import in.andres.kandroid.kanboard.events.OnErrorListener;
+import in.andres.kandroid.kanboard.events.OnGetVersionListener;
 
 public class LoginActivity extends AppCompatActivity {
     /**
      * Keep track of the login task to ensure we can cancel it if requested.
      */
-    private UserLoginTask mAuthTask = null;
+    private KanboardAPI kanboardAPI = null;
 
     // UI references.
     private EditText mServerURLView;
@@ -139,7 +146,7 @@ public class LoginActivity extends AppCompatActivity {
      * errors are presented and no actual login attempt is made.
      */
     private void attemptLogin() {
-        if (mAuthTask != null) {
+        if (kanboardAPI != null) {
             return;
         }
 
@@ -148,10 +155,10 @@ public class LoginActivity extends AppCompatActivity {
         mPasswordView.setError(null);
 
         // Store values at the time of the login attempt.
-        String serverurl = mServerURLView.getText().toString();
+        final String serverurl = mServerURLView.getText().toString();
 //        String apikey = mAPIKeyView.getText().toString();
-        String username = mUsernameView.getText().toString();
-        String password = mPasswordView.getText().toString();
+        final String username = mUsernameView.getText().toString();
+        final String password = mPasswordView.getText().toString();
 
         boolean cancel = false;
         View focusView = null;
@@ -190,10 +197,49 @@ public class LoginActivity extends AppCompatActivity {
             // Show a progress spinner, and kick off a background task to
             // perform the user login attempt.
             try {
-                mAuthTask = new UserLoginTask(serverurl, username, password);
-                mAuthTask.execute();
+                kanboardAPI = new KanboardAPI(serverurl, username, password);
+                kanboardAPI.addErrorListener(new OnErrorListener() {
+                    @Override
+                    public void onError(KanboardError error) {
+                        showProgress(false);
+                        Log.e(Constants.TAG, String.format("%s (%d; %d)", error.Message, error.Code, error.HTTPReturnCode));
+                        if (error.Code == -10) {
+                            mServerURLView.setError(getString(R.string.error_host_unknown));
+                            mServerURLView.requestFocus();
+                        } else if (error.Code == -30) {
+                            mServerURLView.setError(getString(R.string.error_server_url));
+                            mServerURLView.requestFocus();
+                        } else if (error.HTTPReturnCode == 401 || error.HTTPReturnCode == 403 || error.Code == -20) {
+                            mUsernameView.setError(getString(R.string.error_incorrect_username));
+                            mPasswordView.setError(getString(R.string.error_incorrect_password));
+                            mPasswordView.requestFocus();
+                        }
+                        kanboardAPI = null;
+                    }
+                });
+                kanboardAPI.addOnGetVersionListener(new OnGetVersionListener() {
+                    @Override
+                    public void onGetVersion(boolean success, int[] version, String tag) {
+                        showProgress(false);
+                        if (version[0] >= Constants.minKanboardVersion[0] &&
+                            version[1] >= Constants.minKanboardVersion[1] &&
+                            version[2] >= Constants.minKanboardVersion[2]) {
+                            SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+                            SharedPreferences.Editor editor = preferences.edit();
+                            editor.putString("serverurl", serverurl.trim());
+                            editor.putString("username", username);
+                            editor.putString("password", password);
+                            editor.apply();
+                            finish();
+                        } else {
+                            //TODO: Wrong version
+                        }
+                        kanboardAPI = null;
+                    }
+                });
+                kanboardAPI.getVersion();
                 showProgress(true);
-            } catch (MalformedURLException e) {
+            } catch (IOException e) {
                 e.printStackTrace();
             }
         }
@@ -237,114 +283,6 @@ public class LoginActivity extends AppCompatActivity {
             // and hide the relevant UI components.
             mProgressView.setVisibility(show ? View.VISIBLE : View.GONE);
             mLoginFormView.setVisibility(show ? View.GONE : View.VISIBLE);
-        }
-    }
-
-    /**
-     * Represents an asynchronous login/registration task used to authenticate
-     * the user.
-     */
-    public class UserLoginTask extends AsyncTask<Void, Void, Integer> {
-
-        private final URL mUrl;
-        private final String mServerUrl;
-        private final String mUsername;
-        private final String mPassword;
-
-        UserLoginTask(String serverurl, final String username, final String password) throws MalformedURLException {
-            String tmpURL = serverurl;
-            if (!serverurl.endsWith("jsonrpc.php")) {
-                if (!serverurl.endsWith("/"))
-                    tmpURL += "/";
-                tmpURL += "jsonrpc.php";
-            }
-            mUrl = new URL(tmpURL);
-            mServerUrl = serverurl;
-            mUsername = username;
-            mPassword = password;
-
-            Authenticator.setDefault(new Authenticator() {
-                @Override
-                protected PasswordAuthentication getPasswordAuthentication() {
-                    return new PasswordAuthentication(username, password.toCharArray());
-                }
-
-            });
-        }
-
-        @Override
-        protected Integer doInBackground(Void... params) {
-            // TODO: attempt authentication against a network service.
-            HttpURLConnection con;
-            try {
-                con = (HttpURLConnection) mUrl.openConnection();
-                con.setRequestMethod("POST");
-                con.setConnectTimeout(120000);
-                con.setReadTimeout(120000);
-                con.setDoOutput(true);
-                con.setDoInput(true);
-                DataOutputStream out = new DataOutputStream(con.getOutputStream());
-                out.writeBytes("{\"jsonrpc\": \"2.0\", \"method\": \"getMe\", \"id\": 1}");
-                out.flush();
-                out.close();
-
-                BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
-                String line;
-                StringBuilder responseStr = new StringBuilder();
-                while ((line = in.readLine()) != null) {
-                    responseStr.append(line);
-                }
-                in.close();
-
-                JSONObject response = new JSONObject(responseStr.toString());
-
-                if (response.has("error"))
-                    return response.optJSONObject("error").optInt("code");
-                else
-                    return con.getResponseCode();
-            } catch (UnknownHostException e) {
-                return -1;
-            } catch (ProtocolException e) {
-                return -2;
-            } catch (SocketTimeoutException e) {
-                return -3;
-            } catch (Exception e) {
-                e.printStackTrace();
-                return Integer.MIN_VALUE;
-            }
-        }
-
-        @Override
-        protected void onPostExecute(final Integer success) {
-            mAuthTask = null;
-            showProgress(false);
-
-            if ((success >= 400) || success == -2) {
-                mUsernameView.setError(getString(R.string.error_incorrect_username));
-                mPasswordView.setError(getString(R.string.error_incorrect_password));
-                mPasswordView.requestFocus();
-            } else if (success == -3) {
-                mServerURLView.setError(getString(R.string.error_server_url));
-                mServerURLView.requestFocus();
-            } else if (success == -1) {
-                mServerURLView.setError(getString(R.string.error_host_unknown));
-                mServerURLView.requestFocus();
-            } else if (success == 200) {
-                SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-                SharedPreferences.Editor editor = preferences.edit();
-                editor.putString("serverurl", mServerUrl);
-//                editor.putString("apikey", apikey);
-                editor.putString("username", mUsername);
-                editor.putString("password", mPassword);
-                editor.apply();
-                finish();
-            }
-        }
-
-        @Override
-        protected void onCancelled() {
-            mAuthTask = null;
-            showProgress(false);
         }
     }
 }
