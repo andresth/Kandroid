@@ -799,6 +799,7 @@ public class KanboardAPI {
             }
 
         });
+        serverURL = serverURL.trim();
         String tmpURL = serverURL;
         if (!serverURL.endsWith("jsonrpc.php")) {
             if (!serverURL.endsWith("/"))
