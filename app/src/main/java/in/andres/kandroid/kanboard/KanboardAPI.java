@@ -93,8 +93,7 @@ public class KanboardAPI {
         @Override
         protected KanboardResult doInBackground(KanboardRequest... params) {
             HttpURLConnection con = null;
-//            int httpResponseCode = 0;
-//            String httpResonseMessage = null;
+            int httpResponseCode = 0;
             List<JSONObject> responseList = new ArrayList<>();
             for (String s: params[0].JSON) {
                 try {
@@ -129,8 +128,7 @@ public class KanboardAPI {
                         responseStr.append(line);
                     }
                     in.close();
-//                    httpResponseCode = con.getResponseCode();
-//                    httpResonseMessage = con.getResponseMessage();
+                    httpResponseCode = con.getResponseCode();
                     con.disconnect();
 
                     Log.i(Constants.TAG, String.format("API: Received Response \"%s\"", params[0].Command));
@@ -188,13 +186,7 @@ public class KanboardAPI {
                 }
             }
 
-            assert con != null;
-            try {
-                return new KanboardResult(params[0], responseList.toArray(new JSONObject[]{}), con.getResponseCode());
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            return null;
+            return new KanboardResult(params[0], responseList.toArray(new JSONObject[]{}), httpResponseCode);
         }
         @Override
         protected void onPostExecute(KanboardResult s) {
@@ -249,20 +241,25 @@ public class KanboardAPI {
                         try {
                             Pattern regex = Pattern.compile("^(\\d+)\\.(\\d+)\\.(\\d+)(?:,(.*)){0,1}$", Pattern.CASE_INSENSITIVE | Pattern.UNICODE_CASE);
                             Matcher regexMatcher = regex.matcher(res);
-                            version[0] = Integer.parseInt(regexMatcher.group(1));
-                            version[1] = Integer.parseInt(regexMatcher.group(2));
-                            version[2] = Integer.parseInt(regexMatcher.group(3));
-                            if (regexMatcher.groupCount() == 4)
-                                tag = regexMatcher.group(4).trim();
+                            if (regexMatcher.find()) {
+                                version[0] = Integer.parseInt(regexMatcher.group(1));
+                                version[1] = Integer.parseInt(regexMatcher.group(2));
+                                version[2] = Integer.parseInt(regexMatcher.group(3));
+                                if (regexMatcher.groupCount() == 4 && regexMatcher.group(4) != null)
+                                    tag = regexMatcher.group(4).trim();
+
+                                for (OnGetVersionListener l: onGetVersionListeners)
+                                    l.onGetVersion(success, version, tag);
+                            }
                         }catch (PatternSyntaxException ex) {
+                            ex.printStackTrace();
+                            throw ex;
                             // Syntax error in the regular expression
                         }
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
-                for (OnGetVersionListener l: onGetVersionListeners)
-                    l.onGetVersion(success, version, tag);
                 return;
             }
 
