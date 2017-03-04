@@ -19,6 +19,7 @@
     <string name="error_incorrect_username">This username is incorrect</string>
     <string name="error_incorrect_password">This password is incorrect</string>
     <string name="error_field_required">This field is required</string>
+    <string name="error_wrong_kanboard_version">This server uses a version below %1$d.%2$d.%3$d. Please upgrade.</string>
     <string name="permission_rationale">"Contacts permissions are needed for providing email completions."</string>
     <string name="action_projects">Projects</string>
     <string name="action_refresh">Refresh</string>

@@ -5,6 +5,7 @@
 #### improvements
 * Support for HTTP connections to host
 * Refresh view when a task was edited
+* Check Kanboard version on login
 
 #### fixes
 * Task owner might show null sometimes
