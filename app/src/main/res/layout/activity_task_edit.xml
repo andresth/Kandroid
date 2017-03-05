@@ -63,6 +63,15 @@
                 tools:text="Due Date:"
                 android:textAllCaps="false"/>
 
+            <Button
+                android:id="@+id/color_button"
+                android:textAllCaps="false"
+                android:enabled="false"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="sdkjfhlskd"
+                android:drawableStart="@drawable/shape_circle" />
+
             <android.support.design.widget.TextInputLayout
                 android:visibility="gone"
                 android:layout_width="match_parent"
@@ -96,12 +105,11 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Owner:"/>
+                android:text="@string/taskedit_owner"/>
             <Spinner
                 android:id="@+id/user_spinner"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"></Spinner>
-
+                android:layout_height="wrap_content" />
 
         </LinearLayout>
     </ScrollView>

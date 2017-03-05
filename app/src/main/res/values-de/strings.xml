@@ -142,4 +142,7 @@
     <string name="taskedit_project_title">Titel</string>
     <string name="error_wrong_kanboard_version">Dieser Sever verwendet eine Software Version die älter als  %1$d.%2$d.%3$d ist. Bitte führen Sie ein Update durch.</string>
     <string name="taskedit_clear_date">Entfernen</string>
+    <string name="taskedit_color"><![CDATA[<b>Farbe:</b> %s]]></string>
+    <string name="taskedit_seclect_color">Farbe auswählen</string>
+    <string name="taskedit_owner">Zuständig:</string>
 </resources>
