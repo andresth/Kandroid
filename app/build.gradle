@@ -36,4 +36,5 @@ dependencies {
     compile group: 'com.atlassian.commonmark', name:'commonmark', version:'0.8.0'
     compile 'org.apache.commons:commons-lang3:3.5'
     compile 'ch.acra:acra:4.9.2'
+    compile 'com.thebluealliance:spectrum:0.7.1'
 }
