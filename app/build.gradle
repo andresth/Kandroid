@@ -8,7 +8,7 @@ android {
         applicationId "in.andres.kandroid"
         minSdkVersion 21
         targetSdkVersion 25
-        versionCode 9
+        versionCode 10
         versionName "0.5"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
