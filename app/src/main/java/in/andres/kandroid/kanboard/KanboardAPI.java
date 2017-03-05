@@ -264,7 +264,7 @@ public class KanboardAPI {
                 return;
             }
 
-            if (s.Request.Command.equalsIgnoreCase("getDefaultColor")) {
+            if (s.Request.Command.equalsIgnoreCase("getDefaultTaskColor")) {
                 String res = null;
                 try {
                     if (s.Result[0].has("result")) {
@@ -280,7 +280,7 @@ public class KanboardAPI {
                 return;
             }
 
-            if (s.Request.Command.equalsIgnoreCase("getDefaultColors")) {
+            if (s.Request.Command.equalsIgnoreCase("getDefaultTaskColors")) {
                 Dictionary<String, KanboardColor> res = null;
                 try {
                     if (s.Result[0].has("result")) {
@@ -1132,7 +1132,7 @@ public class KanboardAPI {
         new KanboardAsync().executeOnExecutor(threadPoolExecutor, KanboardRequest.getDefaultTaskColors());
     }
 
-    public void getDefaultColor() {
+    public void getDefaultTaskColor() {
         new KanboardAsync().executeOnExecutor(threadPoolExecutor, KanboardRequest.getDefaultTaskColor());
     }
 
