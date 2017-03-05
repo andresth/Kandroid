@@ -157,7 +157,7 @@ public class TaskEditActivity extends AppCompatActivity {
                         btnStartDate.setText(Utils.fromHtml(getString(R.string.taskview_date_start, startDate)));
                     }
                 }, calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH));
-                dlgDate.setButton(DatePickerDialog.BUTTON_NEUTRAL, "Clear", new DialogInterface.OnClickListener() {
+                dlgDate.setButton(DatePickerDialog.BUTTON_NEUTRAL, getString(R.string.taskedit_clear_date), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         startDate = null;
@@ -185,7 +185,7 @@ public class TaskEditActivity extends AppCompatActivity {
                         btnDueDate.setText(Utils.fromHtml(getString(R.string.taskview_date_due, dueDate)));
                     }
                 }, calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH));
-                dlgDate.setButton(DatePickerDialog.BUTTON_NEUTRAL, "Clear", new DialogInterface.OnClickListener() {
+                dlgDate.setButton(DatePickerDialog.BUTTON_NEUTRAL, getString(R.string.taskedit_clear_date), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         dueDate = null;

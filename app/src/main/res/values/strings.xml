@@ -141,6 +141,7 @@
     <string name="taskedit_save">Save</string>
     <string name="taskedit_project_title">Title</string>
     <string name="taskedit_project_description">Description</string>
+    <string name="taskedit_clear_date">Clear</string>
 
     <!--Menu strings-->
     <string name="action_edit">Edit</string>

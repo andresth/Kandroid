@@ -141,4 +141,5 @@
     <string name="taskedit_project_description">Beschreibung</string>
     <string name="taskedit_project_title">Titel</string>
     <string name="error_wrong_kanboard_version">Dieser Sever verwendet eine Software Version die älter als  %1$d.%2$d.%3$d ist. Bitte führen Sie ein Update durch.</string>
+    <string name="taskedit_clear_date">Entfernen</string>
 </resources>
