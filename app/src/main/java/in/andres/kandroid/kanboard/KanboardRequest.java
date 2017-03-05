@@ -58,6 +58,22 @@ public class KanboardRequest {
                 "}"});
     }
 
+    public static KanboardRequest getDefaultTaskColors() {
+        return new KanboardRequest("getDefaultTaskColors", new String[] {"{\n" +
+                "    \"jsonrpc\": \"2.0\",\n" +
+                "    \"method\": \"getDefaultTaskColors\",\n" +
+                "    \"id\": 2108929212\n" +
+                "}"});
+    }
+
+    public static KanboardRequest getDefaultTaskColor() {
+        return new KanboardRequest("getDefaultTaskColor", new String[] {"{\n" +
+                "    \"jsonrpc\": \"2.0\",\n" +
+                "    \"method\": \"getDefaultTaskColor\",\n" +
+                "    \"id\": 1144775215\n" +
+                "}"});
+    }
+
     @NonNull
     public static KanboardRequest getMyProjectsList() {
         return new KanboardRequest("getMyProjectsList", new String[] {"{\"jsonrpc\": \"2.0\", \"method\": \"getMyProjectsList\", \"id\": 1}"});

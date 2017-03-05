@@ -44,6 +44,7 @@ import java.net.URL;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Dictionary;
 import java.util.HashSet;
 import java.util.Hashtable;
 import java.util.Iterator;
@@ -67,6 +68,8 @@ import in.andres.kandroid.kanboard.events.OnGetAllSubtasksListener;
 import in.andres.kandroid.kanboard.events.OnGetAllTasksListener;
 import in.andres.kandroid.kanboard.events.OnGetCategoryListener;
 import in.andres.kandroid.kanboard.events.OnGetColumnsListener;
+import in.andres.kandroid.kanboard.events.OnGetDefaultColorListener;
+import in.andres.kandroid.kanboard.events.OnGetDefaultColorsListener;
 import in.andres.kandroid.kanboard.events.OnGetMeListener;
 import in.andres.kandroid.kanboard.events.OnGetMyActivityStreamListener;
 import in.andres.kandroid.kanboard.events.OnGetMyDashboardListener;
@@ -231,13 +234,12 @@ public class KanboardAPI {
 
             if (s.Request.Command.equalsIgnoreCase("getVersion")) {
                 String res;
-                int[] version = null;
+                int[] version = new int[3];
                 String tag = null;
                 try {
                     if (s.Result[0].has("result")) {
                         success = true;
                         res = s.Result[0].getString("result");
-                        version = new int[3];
                         try {
                             Pattern regex = Pattern.compile("^(\\d+)\\.(\\d+)\\.(\\d+)(?:,(.*)){0,1}$", Pattern.CASE_INSENSITIVE | Pattern.UNICODE_CASE);
                             Matcher regexMatcher = regex.matcher(res);
@@ -247,9 +249,6 @@ public class KanboardAPI {
                                 version[2] = Integer.parseInt(regexMatcher.group(3));
                                 if (regexMatcher.groupCount() == 4 && regexMatcher.group(4) != null)
                                     tag = regexMatcher.group(4).trim();
-
-                                for (OnGetVersionListener l: onGetVersionListeners)
-                                    l.onGetVersion(success, version, tag);
                             }
                         }catch (PatternSyntaxException ex) {
                             ex.printStackTrace();
@@ -259,6 +258,46 @@ public class KanboardAPI {
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();
+                }
+                for (OnGetVersionListener l: onGetVersionListeners)
+                    l.onGetVersion(success, version, tag);
+                return;
+            }
+
+            if (s.Request.Command.equalsIgnoreCase("getDefaultColor")) {
+                String res = null;
+                try {
+                    if (s.Result[0].has("result")) {
+                        success = true;
+                        res = s.Result[0].getString("result");
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                for (OnGetDefaultColorListener l: onGetDefaultColorListeners) {
+                    l.onGetDefaultColor(success, res);
+                }
+                return;
+            }
+
+            if (s.Request.Command.equalsIgnoreCase("getDefaultColors")) {
+                Dictionary<String, KanboardColor> res = null;
+                try {
+                    if (s.Result[0].has("result")) {
+                        success = true;
+                        res = new Hashtable<>();
+                        JSONObject jso = s.Result[0].getJSONObject("result");
+                        Iterator<String> iter = jso.keys();
+                        while (iter.hasNext()) {
+                            String key = iter.next();
+                            res.put(key, new KanboardColor(key, jso.getJSONObject(key)));
+                        }
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                for (OnGetDefaultColorsListener l: onGetDefaultColorsListeners) {
+                    l.onGetDefaultColors(success, res);
                 }
                 return;
             }
@@ -783,6 +822,8 @@ public class KanboardAPI {
     private HashSet<OnUpdateTaskListener> onUpdateTaskListeners = new HashSet<>();
     private HashSet<OnGetVersionListener> onGetVersionListeners = new HashSet<>();
     private HashSet<OnErrorListener> onErrorListeners = new HashSet<>();
+    private HashSet<OnGetDefaultColorListener> onGetDefaultColorListeners = new HashSet<>();
+    private HashSet<OnGetDefaultColorsListener> onGetDefaultColorsListeners = new HashSet<>();
 
     //HashSets for AsyncTask limiting
     private HashSet<Integer> hasSubtaskTimerSet = new HashSet<>();
@@ -1053,6 +1094,22 @@ public class KanboardAPI {
         onGetVersionListeners.remove(listener);
     }
 
+    public void addOnGetDefaultColorListener(@NonNull OnGetDefaultColorListener listener) {
+        onGetDefaultColorListeners.add(listener);
+    }
+
+    public void removeOnGetDefaultColorListener(@NonNull OnGetDefaultColorListener listener) {
+        onGetDefaultColorListeners.remove(listener);
+    }
+
+    public void addOnGetDefaultColorsListener(@NonNull OnGetDefaultColorsListener listener) {
+        onGetDefaultColorsListeners.add(listener);
+    }
+
+    public void removeOnGetDefaultColorsListener(@NonNull OnGetDefaultColorsListener listener) {
+        onGetDefaultColorsListeners.remove(listener);
+    }
+
     public void addErrorListener(@NonNull OnErrorListener listener) {
         onErrorListeners.add(listener);
     }
@@ -1069,6 +1126,14 @@ public class KanboardAPI {
 
     public void getVersion() {
         new KanboardAsync().executeOnExecutor(threadPoolExecutor, KanboardRequest.getVersion());
+    }
+
+    public void getDefaultTaskColors() {
+        new KanboardAsync().executeOnExecutor(threadPoolExecutor, KanboardRequest.getDefaultTaskColors());
+    }
+
+    public void getDefaultColor() {
+        new KanboardAsync().executeOnExecutor(threadPoolExecutor, KanboardRequest.getDefaultTaskColor());
     }
 
     public void getMyProjectsList() {
