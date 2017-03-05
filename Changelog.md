@@ -1,5 +1,12 @@
 ## development
 #### new features
+
+#### improvements
+
+#### fixes
+
+## v0.5
+#### new features
 * Basic UI to add and modify tasks
 
 #### improvements
