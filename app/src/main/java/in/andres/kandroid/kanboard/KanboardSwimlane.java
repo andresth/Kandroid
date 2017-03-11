@@ -58,7 +58,7 @@ public class KanboardSwimlane implements Serializable {
     }
 
     public String getDescription() {
-        return Description;
+        return Description.contentEquals("null") ? null : Description;
     }
 
     public int getPosition() {

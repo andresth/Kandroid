@@ -110,7 +110,7 @@ public class ProjectTaskAdapter extends BaseExpandableListAdapter {
         projectNbTasks.setText(mContext.getResources().getQuantityString(R.plurals.format_nb_tasks, taskCount, taskCount));
         RelativeLayout.LayoutParams lp = (RelativeLayout.LayoutParams) sidebar.getLayoutParams();
         lp.removeRule(RelativeLayout.ALIGN_BOTTOM);
-        projectDescription.setText(swimlane.getDescription());
+        projectDescription.setText(swimlane.getDescription() == null ? "" : swimlane.getDescription());
         lp.addRule(RelativeLayout.ALIGN_BOTTOM, projectDescription.getId());
         sidebar.setLayoutParams(lp);
         projectColumns.setVisibility(View.GONE);
