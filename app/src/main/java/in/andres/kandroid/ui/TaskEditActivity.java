@@ -64,9 +64,10 @@ import in.andres.kandroid.kanboard.KanboardTask;
 import in.andres.kandroid.kanboard.events.OnCreateTaskListener;
 import in.andres.kandroid.kanboard.events.OnGetDefaultColorListener;
 import in.andres.kandroid.kanboard.events.OnGetDefaultColorsListener;
+import in.andres.kandroid.kanboard.events.OnGetVersionListener;
 import in.andres.kandroid.kanboard.events.OnUpdateTaskListener;
 
-public class TaskEditActivity extends AppCompatActivity implements OnCreateTaskListener, OnUpdateTaskListener, OnGetDefaultColorListener, OnGetDefaultColorsListener {
+public class TaskEditActivity extends AppCompatActivity implements OnCreateTaskListener, OnUpdateTaskListener, OnGetDefaultColorListener, OnGetDefaultColorsListener, OnGetVersionListener {
     private KanboardTask task;
     private String taskTitle;
     private String taskDescription;
@@ -171,8 +172,10 @@ public class TaskEditActivity extends AppCompatActivity implements OnCreateTaskL
             kanboardAPI.addOnUpdateTaskListener(this);
             kanboardAPI.addOnGetDefaultColorListener(this);
             kanboardAPI.addOnGetDefaultColorsListener(this);
+            kanboardAPI.addOnGetVersionListener(this);
             kanboardAPI.getDefaultTaskColor();
             kanboardAPI.getDefaultTaskColors();
+            kanboardAPI.getVersion();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -341,6 +344,17 @@ public class TaskEditActivity extends AppCompatActivity implements OnCreateTaskL
         }
         Log.d(Constants.TAG, colors.toString());
         setButtonColor();
+    }
+
+    @Override
+    public void onGetVersion(boolean success, int[] version, String tag) {
+        if (success) {
+            if (version[0] >= 1 &&
+                    version[1] >= 0 &&
+                    version[2] >= 40) {
+                btnStartDate.setVisibility(View.VISIBLE);
+            }
+        }
     }
 
     private void setButtonColor() {

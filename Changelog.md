@@ -2,6 +2,7 @@
 #### new features
 
 #### improvements
+* Option to set start date when Kanboard version is 1.0.40 or higher
 
 #### fixes
 
