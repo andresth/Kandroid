@@ -302,7 +302,7 @@ public class KanboardRequest {
                                              @Nullable Integer priority, @Nullable Integer recurrencestatus,
                                              @Nullable Integer recurrencetrigger, @Nullable Integer recurrencefactor,
                                              @Nullable Integer recurrencetimeframe, @Nullable Integer recurrencebasedate,
-                                             @Nullable String[] tags) {
+                                             @Nullable String[] tags, @Nullable Date starteddate) {
         String content = String.format("" +
                 "   \"title\": \"%s\",\n" +
                 "   \"project_id\": %d", StringEscapeUtils.escapeJson(title), projectid);
@@ -336,6 +336,8 @@ public class KanboardRequest {
             content += String.format(", \n \"recurrence_timeframe\": %d", recurrencetimeframe);
         if (recurrencebasedate != null)
             content += String.format(", \n \"recurrence_basedate\": %d", recurrencebasedate);
+        if (starteddate != null)
+            content += String.format(", \n \"recurrence_basedate\": %td/%tm/%tY %tH:%tM");
         //TODO: Add tags
         return new KanboardRequest("createTask", new String[] {String.format(
                 "{\n" +
@@ -357,7 +359,7 @@ public class KanboardRequest {
                                              @Nullable Integer priority, @Nullable Integer recurrencestatus,
                                              @Nullable Integer recurrencetrigger, @Nullable Integer recurrencefactor,
                                              @Nullable Integer recurrencetimeframe, @Nullable Integer recurrencebasedate,
-                                             @Nullable String[] tags) {
+                                             @Nullable String[] tags, @Nullable Date starteddate) {
         String content = String.format("" +
                 "   \"title\": \"%s\",\n" +
                 "   \"id\": %d", StringEscapeUtils.escapeJson(title), taskid);
@@ -385,6 +387,8 @@ public class KanboardRequest {
             content += String.format(", \n \"recurrence_timeframe\": %d", recurrencetimeframe);
         if (recurrencebasedate != null)
             content += String.format(", \n \"recurrence_basedate\": %d", recurrencebasedate);
+        if (starteddate != null)
+            content += String.format(", \n \"recurrence_basedate\": %td/%tm/%tY %tH:%tM");
         //TODO: Add tags
         return new KanboardRequest("updateTask", new String[] {String.format(
                 "{\n" +

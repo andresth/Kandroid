@@ -1180,11 +1180,11 @@ public class KanboardAPI {
                            @Nullable Integer priority, @Nullable Integer recurrencestatus,
                            @Nullable Integer recurrencetrigger, @Nullable Integer recurrencefactor,
                            @Nullable Integer recurrencetimeframe, @Nullable Integer recurrencebasedate,
-                           @Nullable String[] tags) {
+                           @Nullable String[] tags, @Nullable Date starteddate) {
         new KanboardAsync().executeOnExecutor(threadPoolExecutor, KanboardRequest.createTask(title,
                 projectid, colorid, columnid, ownerid, creatorid, duedate, description, categoryid,
                 score, swimlaneid, priority, recurrencestatus, recurrencetrigger, recurrencefactor,
-                recurrencetimeframe, recurrencebasedate, tags));
+                recurrencetimeframe, recurrencebasedate, tags, starteddate));
     }
 
     public void updateTask(int taskid, @NonNull String title, @Nullable String colorid,
@@ -1195,11 +1195,11 @@ public class KanboardAPI {
                            @Nullable Integer priority, @Nullable Integer recurrencestatus,
                            @Nullable Integer recurrencetrigger, @Nullable Integer recurrencefactor,
                            @Nullable Integer recurrencetimeframe, @Nullable Integer recurrencebasedate,
-                           @Nullable String[] tags) {
+                           @Nullable String[] tags, @Nullable Date starteddate) {
         new KanboardAsync().executeOnExecutor(threadPoolExecutor, KanboardRequest.updateTask(taskid,
                 title, colorid, ownerid, duedate, description, categoryid, score,
                 priority, recurrencestatus, recurrencetrigger, recurrencefactor,
-                recurrencetimeframe, recurrencebasedate, tags));
+                recurrencetimeframe, recurrencebasedate, tags, starteddate));
     }
 
     public void getTask(int taskid) {

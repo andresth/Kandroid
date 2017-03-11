@@ -275,10 +275,10 @@ public class TaskEditActivity extends AppCompatActivity implements OnCreateTaskL
                     }
                 }
                 if (isNewTask) {
-                    kanboardAPI.createTask(editTextTitle.getText().toString(), projectid, colorId != null ? colorId : defaultColor, columnId, ownerId, null, dueDate, editTextDescription.getText().toString(), null, null, swimlaneId, null, null, null, null, null, null, null);
+                    kanboardAPI.createTask(editTextTitle.getText().toString(), projectid, colorId != null ? colorId : defaultColor, columnId, ownerId, null, dueDate, editTextDescription.getText().toString(), null, null, swimlaneId, null, null, null, null, null, null, null, startDate);
 
                 } else {
-                    kanboardAPI.updateTask(task.getId(), editTextTitle.getText().toString(), colorId != null ? colorId : defaultColor, ownerId, dueDate, editTextDescription.getText().toString(), null, null, null, null, null, null, null, null, null);
+                    kanboardAPI.updateTask(task.getId(), editTextTitle.getText().toString(), colorId != null ? colorId : defaultColor, ownerId, dueDate, editTextDescription.getText().toString(), null, null, null, null, null, null, null, null, null, startDate);
                 }
                 ProgressBar prog = new ProgressBar(TaskEditActivity.this);
                 prog.getIndeterminateDrawable().setColorFilter(Color.WHITE, android.graphics.PorterDuff.Mode.MULTIPLY);
