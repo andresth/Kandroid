@@ -337,7 +337,7 @@ public class KanboardRequest {
         if (recurrencebasedate != null)
             content += String.format(", \n \"recurrence_basedate\": %d", recurrencebasedate);
         if (starteddate != null)
-            content += String.format(", \n \"started_date\": \"%1$td/%1$tm/%1$tY %1$tH:%1$tM\"", starteddate);
+            content += String.format(", \n \"date_started\": \"%1$tF %1$tH:%1$tM\"", starteddate);
         //TODO: Add tags
         return new KanboardRequest("createTask", new String[] {String.format(
                 "{\n" +
@@ -388,7 +388,7 @@ public class KanboardRequest {
         if (recurrencebasedate != null)
             content += String.format(", \n \"recurrence_basedate\": %d", recurrencebasedate);
         if (starteddate != null)
-            content += String.format(", \n \"started_date\": \"%1$td/%1$tm/%1$tY %1$tH:%1$tM\"", starteddate);
+            content += String.format(", \n \"date_started\": \"%1$tF %1$tH:%1$tM\"", starteddate);
         //TODO: Add tags
         return new KanboardRequest("updateTask", new String[] {String.format(
                 "{\n" +
