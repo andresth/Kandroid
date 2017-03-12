@@ -55,6 +55,7 @@ import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Hashtable;
 
+import in.andres.kandroid.BuildConfig;
 import in.andres.kandroid.Constants;
 import in.andres.kandroid.R;
 import in.andres.kandroid.Utils;
@@ -352,7 +353,8 @@ public class TaskEditActivity extends AppCompatActivity implements OnCreateTaskL
             if (version[0] >= 1 &&
                     version[1] >= 0 &&
                     version[2] >= 40) {
-                btnStartDate.setVisibility(View.VISIBLE);
+                if (BuildConfig.DEBUG)
+                    btnStartDate.setVisibility(View.VISIBLE);
             }
         }
     }
