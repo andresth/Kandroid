@@ -6,6 +6,7 @@
 
 #### fixes
 * fixed null description in default swimlane
+* fixed bug that crashed task view
 
 ## v0.5
 #### new features

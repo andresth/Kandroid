@@ -67,6 +67,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Dictionary;
 import java.util.Enumeration;
+import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.List;
 import java.util.Locale;
@@ -649,7 +650,7 @@ public class TaskDetailActivity extends AppCompatActivity {
         category = (KanboardCategory) savedInstanceState.getSerializable("category");
         swimlane = (KanboardSwimlane) savedInstanceState.getSerializable("swimlane");
         me = (KanboardUserInfo) savedInstanceState.getSerializable("me");
-        users = (Hashtable<Integer, String>) savedInstanceState.getSerializable("users");
+        users = new Hashtable<>((HashMap<Integer, String>) savedInstanceState.getSerializable("users"));
         comments = (ArrayList<KanboardComment>) savedInstanceState.getSerializable("comments");
         subtasks = (ArrayList<KanboardSubtask>) savedInstanceState.getSerializable("subtasks");
 
