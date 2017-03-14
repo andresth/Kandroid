@@ -145,4 +145,5 @@
     <string name="taskedit_color"><![CDATA[<b>Farbe:</b> %s]]></string>
     <string name="taskedit_seclect_color">Farbe auswählen</string>
     <string name="taskedit_owner">Zuständig:</string>
+    <string name="taskedit_priority">Priorität:</string>
 </resources>
