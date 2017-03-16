@@ -52,8 +52,16 @@ public class KanboardSubtask implements Comparable<KanboardSubtask>, Serializabl
         UserId = json.optInt("user_id", -1);
         Status = json.optInt("status");
         Title = json.optString("title");
-        TimeEstimated = Double.parseDouble(json.optString("time_estimated"));
-        TimeSpent = Double.parseDouble(json.optString("time_spent"));
+        try {
+            TimeEstimated = Double.parseDouble(json.optString("time_estimated"));
+        } catch (NumberFormatException e) {
+            TimeEstimated = 0;
+        }
+        try {
+            TimeSpent = Double.parseDouble(json.optString("time_spent"));
+        } catch (NumberFormatException e) {
+            TimeSpent = 0;
+        }
         // Dashboard properties
         ProjectId = json.optInt("project_id", -1);
         TaskName = json.optString("task_name");
