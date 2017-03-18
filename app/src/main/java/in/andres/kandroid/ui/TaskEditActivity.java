@@ -29,6 +29,7 @@ import android.graphics.drawable.Drawable;
 import android.preference.PreferenceManager;
 import android.support.annotation.ColorInt;
 import android.support.annotation.NonNull;
+import android.support.v4.content.res.ResourcesCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -365,7 +366,7 @@ public class TaskEditActivity extends AppCompatActivity implements OnCreateTaskL
 
         btnColor.setEnabled(true);
 
-        Drawable dot = getDrawable(R.drawable.shape_circle);
+        Drawable dot = ResourcesCompat.getDrawable(getResources(), R.drawable.shape_circle, null);
         if (colorId != null) {
             dot.setColorFilter(kanboardColors.get(colorId).getBackground(), PorterDuff.Mode.MULTIPLY);
             btnColor.setText(Utils.fromHtml(getString(R.string.taskedit_color, kanboardColors.get(colorId).getName())));

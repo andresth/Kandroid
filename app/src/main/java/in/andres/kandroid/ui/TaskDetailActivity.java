@@ -30,6 +30,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.content.res.ResourcesCompat;
 import android.support.v4.view.ViewCompat;
 import android.support.v4.widget.NestedScrollView;
 import android.support.v7.app.ActionBar;
@@ -931,10 +932,10 @@ public class TaskDetailActivity extends AppCompatActivity {
         }
 
         if (task.getIsActive()) {
-            fabMenuButtonOpenCloseTask.setImageDrawable(getDrawable(R.drawable.task_close));
+            fabMenuButtonOpenCloseTask.setImageDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable.task_close, null));
             fabMenuLabelOpenCloseTask.setText(getString(R.string.taskview_fab_close_task));
         } else {
-            fabMenuButtonOpenCloseTask.setImageDrawable(getDrawable(R.drawable.task_open));
+            fabMenuButtonOpenCloseTask.setImageDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable.task_open, null));
             fabMenuLabelOpenCloseTask.setText(getString(R.string.taskview_fab_open_task));
         }
     }
