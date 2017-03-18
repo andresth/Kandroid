@@ -651,7 +651,11 @@ public class TaskDetailActivity extends AppCompatActivity {
         category = (KanboardCategory) savedInstanceState.getSerializable("category");
         swimlane = (KanboardSwimlane) savedInstanceState.getSerializable("swimlane");
         me = (KanboardUserInfo) savedInstanceState.getSerializable("me");
-        users = new Hashtable<>((HashMap<Integer, String>) savedInstanceState.getSerializable("users"));
+        Object ou = savedInstanceState.getSerializable("users");
+        if (ou instanceof HashMap)
+            users = new Hashtable<>((HashMap<Integer, String>) ou);
+        else
+            users = (Hashtable<Integer, String>) ou;
         comments = (ArrayList<KanboardComment>) savedInstanceState.getSerializable("comments");
         subtasks = (ArrayList<KanboardSubtask>) savedInstanceState.getSerializable("subtasks");
 
