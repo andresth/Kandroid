@@ -327,14 +327,21 @@ public class KanboardAPI {
                 try {
                     if (s.Result[0].has("result")) {
                         success = true;
-                        JSONObject dash = s.Result[0].getJSONObject("result");
+                        Object dash = s.Result[0].get("result");
                         res = new KanboardDashboard(dash);
                     }
                 } catch (JSONException | MalformedURLException e) {
                     e.printStackTrace();
+                    for (OnErrorListener l: onErrorListeners) {
+                        try {
+                            l.onError(new KanboardError(s.Request, new JSONObject("{\"message\": \"\", \"code\": -50}"), 200));
+                        } catch (JSONException e1) {
+                            e1.printStackTrace();
+                        }
+                    }
                 }
-                for (KanbordEvents l: listeners)
-                    l.onGetMyDashboard(success, res);
+//                for (KanbordEvents l: listeners)
+//                    l.onGetMyDashboard(success, res);
                 for (OnGetMyDashboardListener l: onGetMyDashboardListeners)
                     l.onGetMyDashboard(success, res);
                 return;
