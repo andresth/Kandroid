@@ -3,6 +3,9 @@
 
 Android App for [Kanboard](https://kanboard.net/).
 
+## Limitations
+Due to the new dashboard format, Kanboard 1.0.41 is currently not supported.
+
 ![Login](screenshots/login.png)
 ![Projects](screenshots/projects.png)
 ![Overdue Tasks](screenshots/overdue_tasks.png)
