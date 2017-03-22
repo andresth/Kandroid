@@ -65,7 +65,7 @@ public class DashProjectsFragment extends Fragment {
             assert getView() != null : "DashProjectsFragment: getView() returned null";
             getView().findViewById(R.id.fragment_dash_errortext).setVisibility(View.GONE);
             getView().findViewById(R.id.expandable_list).setVisibility(View.VISIBLE);
-            DashProjectsAdapter listAdapter = new DashProjectsAdapter(getContext(), ((MainActivity)getActivity()).getDashboard());
+            DashProjectsAdapter listAdapter = new DashProjectsAdapter(getContext(), ((MainActivity)getActivity()).getDashboard(), ((MainActivity)getActivity()).getColors());
             ((ExpandableListView) getView().findViewById(R.id.expandable_list)).setAdapter(listAdapter);
             ((ExpandableListView) getView().findViewById(R.id.expandable_list)).setOnChildClickListener(new ExpandableListView.OnChildClickListener() {
                 @Override

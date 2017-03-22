@@ -20,6 +20,8 @@
 package in.andres.kandroid;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -37,9 +39,11 @@ import org.commonmark.renderer.html.HtmlRenderer;
 import org.commonmark.renderer.html.HtmlWriter;
 
 import java.util.ArrayList;
+import java.util.Dictionary;
 import java.util.List;
 import java.util.Locale;
 
+import in.andres.kandroid.kanboard.KanboardColor;
 import in.andres.kandroid.kanboard.KanboardColumn;
 import in.andres.kandroid.kanboard.KanboardDashboard;
 import in.andres.kandroid.kanboard.KanboardProject;
@@ -49,6 +53,7 @@ public class DashProjectsAdapter extends BaseExpandableListAdapter {
     private Context mContext;
     private LayoutInflater mInflater;
     private KanboardDashboard mDashboard;
+    private Dictionary<String, KanboardColor> mColors;
     private Parser mParser = Parser.builder().build();
     private HtmlRenderer mRenderer = HtmlRenderer.builder().nodeRendererFactory(new HtmlNodeRendererFactory() {
         @Override
@@ -58,10 +63,11 @@ public class DashProjectsAdapter extends BaseExpandableListAdapter {
         }
     }).build();
 
-    public DashProjectsAdapter(Context context, KanboardDashboard values) {
+    public DashProjectsAdapter(@NonNull Context context, @NonNull KanboardDashboard values, @Nullable Dictionary<String, KanboardColor> colors) {
         mContext = context;
         mInflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         mDashboard = values;
+        mColors = colors;
     }
 
     @Override
@@ -138,8 +144,11 @@ public class DashProjectsAdapter extends BaseExpandableListAdapter {
         convertView.findViewById(R.id.task_owner).setVisibility(View.INVISIBLE);
         convertView.findViewById(R.id.task_category).setVisibility(View.INVISIBLE);
 
-        if (child.getColorBackground() != null)
-            convertView.findViewById(R.id.list_card).setBackgroundColor(child.getColorBackground());
+        if (mColors != null && !child.getColorId().isEmpty())
+            convertView.findViewById(R.id.list_card).setBackgroundColor(mColors.get(child.getColorId()).getBackground());
+
+//        if (child.getColorBackground() != null)
+//            convertView.findViewById(R.id.list_card).setBackgroundColor(child.getColorBackground());
 
         return convertView;
     }

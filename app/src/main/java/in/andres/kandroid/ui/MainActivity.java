@@ -62,6 +62,7 @@ import in.andres.kandroid.R;
 import in.andres.kandroid.kanboard.KanboardAPI;
 import in.andres.kandroid.kanboard.KanboardActivity;
 import in.andres.kandroid.kanboard.KanboardCategory;
+import in.andres.kandroid.kanboard.KanboardColor;
 import in.andres.kandroid.kanboard.KanboardColumn;
 import in.andres.kandroid.kanboard.KanboardDashboard;
 import in.andres.kandroid.kanboard.KanboardError;
@@ -76,6 +77,7 @@ import in.andres.kandroid.kanboard.events.OnGetActiveSwimlanesListener;
 import in.andres.kandroid.kanboard.events.OnGetAllCategoriesListener;
 import in.andres.kandroid.kanboard.events.OnGetAllTasksListener;
 import in.andres.kandroid.kanboard.events.OnGetColumnsListener;
+import in.andres.kandroid.kanboard.events.OnGetDefaultColorsListener;
 import in.andres.kandroid.kanboard.events.OnGetMeListener;
 import in.andres.kandroid.kanboard.events.OnGetMyActivityStreamListener;
 import in.andres.kandroid.kanboard.events.OnGetMyDashboardListener;
@@ -108,6 +110,7 @@ public class MainActivity extends AppCompatActivity
     private List<KanboardProjectInfo> mProjects;
     private KanboardProject mProject = null;
     private KanboardDashboard mDashboard = null;
+    private Dictionary<String, KanboardColor> mColors = null;
 
     private List<KanboardActivity> mMyActivities = null;
     private List<KanboardTask> mMyOverduetasks = null;
@@ -299,6 +302,17 @@ public class MainActivity extends AppCompatActivity
                 mProjectUsers = result;
                 if (!showProgress(false)) {
                     combineProject();
+                }
+            }
+        }
+    };
+    private OnGetDefaultColorsListener getDefaultColorsListener = new OnGetDefaultColorsListener() {
+        @Override
+        public void onGetDefaultColors(boolean success, Dictionary<String, KanboardColor> colors) {
+            if (success) {
+                mColors = colors;
+                if (!showProgress(false)) {
+                    combineDashboard();
                 }
             }
         }
@@ -662,6 +676,7 @@ public class MainActivity extends AppCompatActivity
                 kanboardAPI.addOnGetAllTasksListener(getAllTasksListener);
                 kanboardAPI.addOnGetOverdueTasksByProjectListener(getOverdueTasksByProjectListener);
                 kanboardAPI.addOnGetProjectUsersListener(getProjectUsersListener);
+                kanboardAPI.addOnGetDefaultColorsListener(getDefaultColorsListener);
                 return true;
             } catch (IOException e) {
                 Log.e(Constants.TAG, "Failed to create API object.");
@@ -681,6 +696,8 @@ public class MainActivity extends AppCompatActivity
 
         if (mode == 0) {
             Log.i(Constants.TAG, "Loading dashboard data.");
+            showProgress(true);
+            kanboardAPI.getDefaultTaskColors();
             showProgress(true);
             kanboardAPI.getMyDashboard();
             showProgress(true);
@@ -720,6 +737,10 @@ public class MainActivity extends AppCompatActivity
 
     public KanboardUserInfo getMe() {
         return Me;
+    }
+
+    public Dictionary<String, KanboardColor> getColors() {
+        return mColors;
     }
 
     //endregion
