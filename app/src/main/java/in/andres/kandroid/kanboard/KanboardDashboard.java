@@ -21,8 +21,10 @@ package in.andres.kandroid.kanboard;
 
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.util.Log;
 
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.Serializable;
@@ -31,6 +33,8 @@ import java.util.ArrayList;
 import java.util.Dictionary;
 import java.util.Hashtable;
 import java.util.List;
+
+import in.andres.kandroid.Constants;
 
 @SuppressWarnings("unused")
 public class KanboardDashboard implements Serializable {
@@ -41,33 +45,55 @@ public class KanboardDashboard implements Serializable {
     private List<KanboardTask> OverdueTasks;
     private List<KanboardActivity> Activities;
 
-    public KanboardDashboard(@NonNull JSONObject dashboard) throws MalformedURLException {
+    public KanboardDashboard(@NonNull Object dashboard) throws MalformedURLException {
         this(dashboard, null, null);
     }
 
-    public KanboardDashboard(@NonNull JSONObject dashboard, @Nullable JSONArray overdue, @Nullable JSONArray activities) throws MalformedURLException {
+    public KanboardDashboard(@NonNull Object dashboard, @Nullable JSONArray overdue, @Nullable JSONArray activities) throws MalformedURLException {
         GroupedTasks = new Hashtable<>();
         Projects = new ArrayList<>();
-        JSONArray projects = dashboard.optJSONArray("projects");
-        if (projects != null)
-            for (int i = 0; i < projects.length(); i++) {
-                KanboardProject tmpProject = new KanboardProject(projects.optJSONObject(i));
-                Projects.add(tmpProject);
-                GroupedTasks.put(tmpProject.getId(), new ArrayList<KanboardTask>());
-            }
-        Tasks = new ArrayList<>();
-        JSONArray tasks = dashboard.optJSONArray("tasks");
-        if (tasks != null)
-            for (int i = 0; i < tasks.length(); i++) {
-                KanboardTask tmpTask = new KanboardTask(tasks.optJSONObject(i));
+        if (dashboard instanceof JSONObject) {
+            Log.i(Constants.TAG, "Old Dashboard");
+            JSONObject dash = (JSONObject) dashboard;
+            JSONArray projects = dash.optJSONArray("projects");
+            if (projects != null)
+                for (int i = 0; i < projects.length(); i++) {
+                    KanboardProject tmpProject = new KanboardProject(projects.optJSONObject(i));
+                    Projects.add(tmpProject);
+                    GroupedTasks.put(tmpProject.getId(), new ArrayList<KanboardTask>());
+                }
+            Tasks = new ArrayList<>();
+            JSONArray tasks = dash.optJSONArray("tasks");
+            if (tasks != null)
+                for (int i = 0; i < tasks.length(); i++) {
+                    KanboardTask tmpTask = new KanboardTask(tasks.optJSONObject(i));
+                    Tasks.add(tmpTask);
+                    GroupedTasks.get(tmpTask.getProjectId()).add(tmpTask);
+                }
+            Subtasks = new ArrayList<>();
+            JSONArray subtasks = dash.optJSONArray("subtasks");
+            if (subtasks != null)
+                for (int i = 0; i < subtasks.length(); i++)
+                    Subtasks.add(new KanboardSubtask(subtasks.optJSONObject(i)));
+        } else {
+            Log.i(Constants.TAG, "New Dashboard");
+            Tasks = new ArrayList<>();
+            JSONArray dash = (JSONArray) dashboard;
+            for (int i = 0; i < dash.length(); i++) {
+                JSONObject item = dash.optJSONObject(i);
+                KanboardTask tmpTask = new KanboardTask(item);
                 Tasks.add(tmpTask);
+                if (!((Hashtable) GroupedTasks).containsKey(tmpTask.getProjectId())) {
+                    GroupedTasks.put(tmpTask.getProjectId(), new ArrayList<KanboardTask>());
+                    try {
+                        Projects.add(new KanboardProject(new JSONObject(String.format("{\"id\": \"%d\",\"name\": \"%s\"}", tmpTask.getProjectId(), tmpTask.getProjectName()))));
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
                 GroupedTasks.get(tmpTask.getProjectId()).add(tmpTask);
             }
-        Subtasks = new ArrayList<>();
-        JSONArray subtasks = dashboard.optJSONArray("subtasks");
-        if (subtasks != null)
-            for (int i = 0; i < subtasks.length(); i++)
-                Subtasks.add(new KanboardSubtask(subtasks.optJSONObject(i)));
+        }
 
         if (overdue != null) {
             OverdueTasks = new ArrayList<>();
