@@ -82,6 +82,7 @@ import in.andres.kandroid.kanboard.events.OnGetMeListener;
 import in.andres.kandroid.kanboard.events.OnGetMyActivityStreamListener;
 import in.andres.kandroid.kanboard.events.OnGetMyDashboardListener;
 import in.andres.kandroid.kanboard.events.OnGetMyOverdueTasksListener;
+import in.andres.kandroid.kanboard.events.OnGetMyProjectsListener;
 import in.andres.kandroid.kanboard.events.OnGetOverdueTasksByProjectListener;
 import in.andres.kandroid.kanboard.events.OnGetProjectByIdListener;
 import in.andres.kandroid.kanboard.events.OnGetProjectUsersListener;
@@ -107,10 +108,11 @@ public class MainActivity extends AppCompatActivity
 
     private KanboardAPI kanboardAPI;
     private KanboardUserInfo Me;
-    private List<KanboardProjectInfo> mProjects;
+//    private List<KanboardProjectInfo> mProjects;
     private KanboardProject mProject = null;
     private KanboardDashboard mDashboard = null;
     private Dictionary<String, KanboardColor> mColors = null;
+    private List<KanboardProject> mProjectList = null;
 
     private List<KanboardActivity> mMyActivities = null;
     private List<KanboardTask> mMyOverduetasks = null;
@@ -129,15 +131,15 @@ public class MainActivity extends AppCompatActivity
 
         @Override
         public void onGetMyProjectsList(boolean success, List<KanboardProjectInfo> projects) {
-            showProgress(false);
-            mProjects = projects;
-            NavigationView nav = (NavigationView) findViewById(R.id.nav_view);
-            SubMenu proj = nav.getMenu().findItem(R.id.projects).getSubMenu();
-            proj.clear();
-            for (KanboardProjectInfo item: mProjects) {
-                MenuItem m =proj.add(Menu.NONE, item.ID, Menu.NONE, item.Name);
-                m.setIcon(R.drawable.project);
-            }
+//            showProgress(false);
+//            mProjects = projects;
+//            NavigationView nav = (NavigationView) findViewById(R.id.nav_view);
+//            SubMenu proj = nav.getMenu().findItem(R.id.projects).getSubMenu();
+//            proj.clear();
+//            for (KanboardProjectInfo item: mProjects) {
+//                MenuItem m =proj.add(Menu.NONE, item.ID, Menu.NONE, item.Name);
+//                m.setIcon(R.drawable.project);
+//            }
         }
 
         @Override
@@ -311,6 +313,18 @@ public class MainActivity extends AppCompatActivity
         public void onGetDefaultColors(boolean success, Dictionary<String, KanboardColor> colors) {
             if (success) {
                 mColors = colors;
+                if (!showProgress(false)) {
+                    combineDashboard();
+                }
+            }
+        }
+    };
+    private OnGetMyProjectsListener getMyProjectsListener = new OnGetMyProjectsListener() {
+        @Override
+        public void onGetMyProjects(boolean success, List<KanboardProject> result) {
+            if (success) {
+                mProjectList = result;
+                Log.i("Projects", Integer.toString(mProjectList.get(0).getId()));
                 if (!showProgress(false)) {
                     combineDashboard();
                 }
@@ -511,8 +525,8 @@ public class MainActivity extends AppCompatActivity
     //region private methods
 
     private void combineDashboard() {
-        if (mDashboard != null && mMyOverduetasks != null && mMyActivities != null) {
-            mDashboard.setExtra(mMyOverduetasks, mMyActivities);
+        if (mDashboard != null && mMyOverduetasks != null && mMyActivities != null && mProjectList != null) {
+            mDashboard.setExtra(mMyOverduetasks, mMyActivities, mProjectList);
             populateProjectsMenu();
             showDashboard();
         } else {
@@ -677,6 +691,7 @@ public class MainActivity extends AppCompatActivity
                 kanboardAPI.addOnGetOverdueTasksByProjectListener(getOverdueTasksByProjectListener);
                 kanboardAPI.addOnGetProjectUsersListener(getProjectUsersListener);
                 kanboardAPI.addOnGetDefaultColorsListener(getDefaultColorsListener);
+                kanboardAPI.addOnGetMyProjectsListener(getMyProjectsListener);
                 return true;
             } catch (IOException e) {
                 Log.e(Constants.TAG, "Failed to create API object.");
@@ -698,6 +713,8 @@ public class MainActivity extends AppCompatActivity
             Log.i(Constants.TAG, "Loading dashboard data.");
             showProgress(true);
             kanboardAPI.getDefaultTaskColors();
+            showProgress(true);
+            kanboardAPI.getMyProjects();
             showProgress(true);
             kanboardAPI.getMyDashboard();
             showProgress(true);
@@ -741,6 +758,10 @@ public class MainActivity extends AppCompatActivity
 
     public Dictionary<String, KanboardColor> getColors() {
         return mColors;
+    }
+
+    public List<KanboardProject> getProjectList() {
+        return mProjectList;
     }
 
     //endregion

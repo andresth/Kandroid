@@ -45,6 +45,8 @@ public class KanboardDashboard implements Serializable {
     private List<KanboardTask> OverdueTasks;
     private List<KanboardActivity> Activities;
 
+    private boolean newDashFormat = false;
+
     public KanboardDashboard(@NonNull Object dashboard) throws MalformedURLException {
         this(dashboard, null, null);
     }
@@ -77,6 +79,7 @@ public class KanboardDashboard implements Serializable {
                     Subtasks.add(new KanboardSubtask(subtasks.optJSONObject(i)));
         } else {
             Log.i(Constants.TAG, "New Dashboard");
+            newDashFormat = true;
             Tasks = new ArrayList<>();
             JSONArray dash = (JSONArray) dashboard;
             for (int i = 0; i < dash.length(); i++) {
@@ -114,9 +117,21 @@ public class KanboardDashboard implements Serializable {
         }
     }
 
-    public void setExtra(List<KanboardTask> overdueTasks, List<KanboardActivity> activities) {
+    public void setExtra(List<KanboardTask> overdueTasks, List<KanboardActivity> activities, List<KanboardProject> projectList) {
         OverdueTasks = overdueTasks;
         Activities = activities;
+        if (newDashFormat) {
+            List<KanboardProject> tmpProject = new ArrayList<>();
+            for (KanboardProject pn : projectList) {
+                for (KanboardProject po : Projects) {
+                    if (po.getId() == pn.getId()) {
+                        tmpProject.add(pn);
+                        break;
+                    }
+                }
+            }
+            Projects = tmpProject;
+        }
     }
 
     public List<KanboardProject> getProjects() {
