@@ -394,6 +394,8 @@ public class MainActivity extends AppCompatActivity
             savedInstanceState.putSerializable("dashboard", mDashboard);
         if (mProject != null)
             savedInstanceState.putSerializable("project", mProject);
+        if (mProjectList != null)
+            savedInstanceState.putSerializable("projectList", (ArrayList<KanboardProject>) mProjectList);
 
         savedInstanceState.putInt("ViewPagerItem", mViewPager.getCurrentItem());
 
@@ -410,6 +412,9 @@ public class MainActivity extends AppCompatActivity
 
         if (savedInstanceState.containsKey("dashboard")) {
             mDashboard = (KanboardDashboard) savedInstanceState.getSerializable("dashboard");
+        }
+        if (savedInstanceState.containsKey("projectList")) {
+            mProjectList = (ArrayList<KanboardProject>) savedInstanceState.getSerializable("projectList");
             populateProjectsMenu();
         }
         if (savedInstanceState.containsKey("project"))
@@ -545,12 +550,12 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void populateProjectsMenu() {
-        if (mDashboard == null) {
+        if (mProjectList == null) {
             if (BuildConfig.DEBUG) Log.d("Kandroid", "Tried to populate drawer, but mDashboard was null");
             return;
         }
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this.getBaseContext());
-        List<KanboardProject> projList = new ArrayList<>(mDashboard.getProjects());
+        List<KanboardProject> projList = mProjectList;
         if (preferences.getBoolean("projects_sort_alphabetic", false))
             Collections.sort(projList);
         NavigationView nav = (NavigationView) findViewById(R.id.nav_view);
