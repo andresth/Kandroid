@@ -80,6 +80,11 @@ public class KanboardRequest {
     }
 
     @NonNull
+    public static KanboardRequest getMyProjects() {
+        return new KanboardRequest("getMyProjects", new String[] {"{\"jsonrpc\": \"2.0\", \"method\": \"getMyProjects\", \"id\": 2134420212}"});
+    }
+
+    @NonNull
     public static KanboardRequest getMyDashboard() {
         return new KanboardRequest("getMyDashboard", new  String[] {"{\"jsonrpc\": \"2.0\", \"method\": \"getMyDashboard\", \"id\": 1}"});
     }

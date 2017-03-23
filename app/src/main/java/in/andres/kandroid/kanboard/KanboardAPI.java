@@ -74,6 +74,7 @@ import in.andres.kandroid.kanboard.events.OnGetMeListener;
 import in.andres.kandroid.kanboard.events.OnGetMyActivityStreamListener;
 import in.andres.kandroid.kanboard.events.OnGetMyDashboardListener;
 import in.andres.kandroid.kanboard.events.OnGetMyOverdueTasksListener;
+import in.andres.kandroid.kanboard.events.OnGetMyProjectsListener;
 import in.andres.kandroid.kanboard.events.OnGetOverdueTasksByProjectListener;
 import in.andres.kandroid.kanboard.events.OnGetProjectByIdListener;
 import in.andres.kandroid.kanboard.events.OnGetProjectUsersListener;
@@ -319,6 +320,25 @@ public class KanboardAPI {
                 }
                     for (KanbordEvents l: listeners)
                         l.onGetMyProjectsList(success, res);
+                return;
+            }
+
+            if (s.Request.Command.equalsIgnoreCase("getMyProjects")) {
+                List<KanboardProject> res = null;
+                try {
+                    if (s.Result[0].has("result")) {
+                        success = true;
+                        res = new ArrayList<>();
+                        JSONArray jsa = s.Result[0].getJSONArray("result");
+                        for (int i = 0; i < jsa.length(); i++) {
+                            res.add(new KanboardProject(jsa.getJSONObject(i)));
+                        }
+                    }
+                } catch (JSONException | MalformedURLException e) {
+                    e.printStackTrace();
+                }
+                    for (OnGetMyProjectsListener l: onGetMyProjectsListeners)
+                        l.onGetMyProjects(success, res);
                 return;
             }
 
@@ -831,6 +851,7 @@ public class KanboardAPI {
     private HashSet<OnErrorListener> onErrorListeners = new HashSet<>();
     private HashSet<OnGetDefaultColorListener> onGetDefaultColorListeners = new HashSet<>();
     private HashSet<OnGetDefaultColorsListener> onGetDefaultColorsListeners = new HashSet<>();
+    private HashSet<OnGetMyProjectsListener> onGetMyProjectsListeners = new HashSet<>();
 
     //HashSets for AsyncTask limiting
     private HashSet<Integer> hasSubtaskTimerSet = new HashSet<>();
@@ -1117,6 +1138,14 @@ public class KanboardAPI {
         onGetDefaultColorsListeners.remove(listener);
     }
 
+    public void addOnGetMyProjectsListener(@NonNull OnGetMyProjectsListener listener) {
+        onGetMyProjectsListeners.add(listener);
+    }
+
+    public void removeOnGetMyProjectsListener(@NonNull OnGetMyProjectsListener listener) {
+        onGetMyProjectsListeners.remove(listener);
+    }
+
     public void addErrorListener(@NonNull OnErrorListener listener) {
         onErrorListeners.add(listener);
     }
@@ -1145,6 +1174,10 @@ public class KanboardAPI {
 
     public void getMyProjectsList() {
         new KanboardAsync().executeOnExecutor(threadPoolExecutor, KanboardRequest.getMyProjectsList());
+    }
+
+    public void getMyProjects() {
+        new KanboardAsync().executeOnExecutor(threadPoolExecutor, KanboardRequest.getMyProjects());
     }
 
     public void getMyDashboard() {
