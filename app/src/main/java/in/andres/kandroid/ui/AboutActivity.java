@@ -19,11 +19,13 @@
 
 package in.andres.kandroid.ui;
 
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 
+import in.andres.kandroid.BuildConfig;
 import in.andres.kandroid.R;
 
 public class AboutActivity extends AppCompatActivity {
@@ -40,6 +42,7 @@ public class AboutActivity extends AppCompatActivity {
         if (actionBar != null) {
             // Show the Up button in the action bar.
             actionBar.setDisplayHomeAsUpEnabled(true);
+            actionBar.setTitle(getString(R.string.title_activity_about, BuildConfig.VERSION_NAME));
         }
     }
 
