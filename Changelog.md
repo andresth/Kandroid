@@ -5,6 +5,16 @@
 * ~~Option to set start date when Kanboard version is 1.0.40 or higher~~
 
 #### fixes
+
+
+## v0.5.1
+#### new features
+
+#### improvements
+* Support for Kanboard v1.0.41
+* Show version number in about activity
+
+#### fixes
 * fixed null description in default swimlane
 * fixed bug that crashed task view
 
