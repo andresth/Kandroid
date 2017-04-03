@@ -1,0 +1,165 @@
+<resources>
+    <string name="app_name" translatable="false">Kandroid</string>
+
+    <string name="navigation_drawer_open">Abrir caja de navegación</string>
+    <string name="navigation_drawer_close">Cerrra caja de navegación</string>
+
+    <string name="action_settings">Ajustes</string>
+    <string name="title_activity_login">Inicio de sesión</string>
+
+    <!-- Strings related to login -->
+    <string name="prompt_serverurl">URL del servidor Kanboard</string>
+    <string name="prompt_apikey">API Key para el servidor Kanboard</string>
+    <string name="prompt_username">Usuario</string>
+    <string name="prompt_password">Contraseña</string>
+    <string name="action_sign">Iniciar sesión</string>
+    <string name="error_server_url">No se puede conectar al servidor</string>
+    <string name="error_host_unknown">Host desconocido</string>
+    <string name="error_invalid_password">La contraseña es muy corta</string>
+    <string name="error_incorrect_username">El usuario es incorrecto</string>
+    <string name="error_incorrect_password">La contraseña es incorrecta</string>
+    <string name="error_field_required">Este campo es requerido</string>
+    <string name="error_wrong_kanboard_version">Este servidor utiliza una versión por debajo de %1$d.%2$d.%3$d. Por favor actualice.</string>
+    <string name="permission_rationale">"Permisos para contactos son necesarios para proporcionar completado de correos electrónicos."</string>
+    <string name="action_projects">Proyectos</string>
+    <string name="action_refresh">Refrescar</string>
+    <string name="action_dashboard">Tablero</string>
+    <string name="action_overdue">Tareas atrasadas</string>
+    <string name="action_about">Acerca</string>
+    <string name="title_activity_about">Acerca de Kandroid v%s</string>
+    <string name="txt_about" translatable="false">A JSON RPC client for http://kanboard.net\n\nCopyright © 2016-2017 Thomas Andres\n\nThis program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.\n        \nThis program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.\n\nYou should have received a copy of the GNU General Public License along with this program.  If not, see http://www.gnu.org/licenses.\n\n\nLibraries:\n\nhttps://commons.apache.org/proper/commons-lang\n(Apache License, Version 2.0)\n\nhttps://github.com/atlassian/commonmark-java\n(BSD 2-clause)\n\nhttps://github.com/the-blue-alliance/spectrum\n(MIT)\n\nhttp://acra.ch/\n(Apache License, Version 2.0)\n\nhttp://emojione.com\n(CC BY 4.0)</string>
+
+    <!-- Strings related to Settings -->
+    <string name="settings_cat_projects">Proyectos</string>
+    <string name="settings_cat_crash">Informes de problema</string>
+    <string name="setting_sort_projects">Ordenas proyectos alfabéticamente</string>
+    <string name="title_activity_settings">Ajustes</string>
+    <string name="pref_enable_acra">Enviar informes de problema</string>
+    <string name="pref_acra_enabled">Los informes de error serán enviados</string>
+    <string name="pref_acra_disabled">Los informes de error no serán enviados</string>
+    <string name="pref_acra_user_email">Correo electrónico</string>
+    <string name="pref_acra_user_email_summary">Correo electrónico a ser incluído en los reportes</string>
+    <string name="pref_acra_alwaysaccept">Enviar reportes automáticamente</string>
+    <string name="pref_acra_alwaysaccept_enabled">Los informes se enviarán automáticamente</string>
+    <string name="pref_acra_alwaysaccept_disabled">Enviar reportes debe ser confirmado</string>
+
+    <!-- Strings related to Tabs -->
+    <string name="tab_projects">Mis Proyectos y Tareas</string>
+    <string name="tab_overdue_tasks">Tareas Atrasadas</string>
+    <string name="tab_activity">Actividades</string>
+    <string name="tab_overview">Resumen</string>
+    <string name="tab_inactive_tasks">Tareas Inactivas</string>
+
+    <string name="caption_name">Nombre:</string>
+    <string name="caption_description"><big><b><u>Descripción</u></b></big></string>
+    <string name="caption_tasks"><big><b><u>Tareas</u></b></big></string>
+    <string name="caption_columns"><big><b><u>Columnas</u></b></big></string>
+    <string name="caption_swimlanes"><big><b><u>Carriles</u></b></big></string>
+    <string name="caption_modify_date"><big><b><u>Última modificación</u></b></big></string>
+    <string name="caption_project_members"><big><b><u>Miembros del Proyecto</u></b></big></string>
+
+    <string name="error_no_list_data">No hay información disponible!\nPresione refrescar.</string>
+
+    <plurals name="format_nb_tasks">
+        <item quantity="one">%d Tarea</item>
+        <item quantity="other">%d Tareas</item>
+    </plurals>
+    <plurals name="format_overdue_days">
+        <item quantity="one">%d dia atrasado</item>
+        <item quantity="other">%d días atrasados</item>
+    </plurals>
+    <plurals name="format_overdue_hours">
+        <item quantity="one">%d hora atrasada</item>
+        <item quantity="other">%d horas atrasadas</item>
+    </plurals>
+    <plurals name="format_nb_active_tasks">
+        <item quantity="one">%d tarea activa</item>
+        <item quantity="other">%d tareas activas</item>
+    </plurals>
+    <plurals name="format_nb_inactive_tasks">
+        <item quantity="one">%d tarea inactiva</item>
+        <item quantity="other">%d tareas inactivas</item>
+    </plurals>
+    <plurals name="format_nb_overdue_tasks">
+        <item quantity="one">%d tarea atrasada</item>
+        <item quantity="other">%d tareas atrasadas</item>
+    </plurals>
+    <plurals name="format_nb_total_tasks">
+        <item quantity="one">%d total de tarea</item>
+        <item quantity="other">%d total de tareas</item>
+    </plurals>
+
+    <!--TaskActivity-->
+    <string name="taskview_category"><![CDATA[<b>Categoría:</b> %s]]></string>
+    <string name="taskview_status"><![CDATA[<b>Estado:</b> %s]]></string>
+    <string name="taskview_status_open">abierta</string>
+    <string name="taskview_status_closed">cerrada</string>
+    <string name="taskview_swimlane"><![CDATA[<b>Carril:</b> %s]]></string>
+    <string name="taskview_position"><![CDATA[<b>Posición:</b> %d]]></string>
+    <string name="taskview_priority"><![CDATA[<b>Prioridad:</b> %d]]></string>
+    <string name="taskview_owner"><![CDATA[<b>Propietario:</b> %s]]></string>
+    <string name="taskview_creator"><![CDATA[<b>Creador:</b> %s]]></string>
+    <string name="taskview_date_created"><![CDATA[<b>Creada:</b> %tF]]></string>
+    <string name="taskview_date_modified"><![CDATA[<b>Modificada:</b> %tF]]></string>
+    <string name="taskview_date_moved"><![CDATA[<b>Movida:</b> %tF]]></string>
+    <string name="taskview_hours_estimated"><![CDATA[<b>Horas estimadas:</b> %.2fh]]></string>
+    <string name="taskview_hours_spent"><![CDATA[<b>Horas invertidas:</b> %.2fh]]></string>
+    <string name="taskview_date_start"><![CDATA[<b>Fecha de inicio:</b> %tF]]></string>
+    <string name="taskview_date_due"><![CDATA[<b>Fecha de fin:</b> %tF]]></string>
+    <string name="taskview_caption_information"><big><b><u>Información</u></b></big></string>
+    <string name="taskview_caption_timetracking"><big><b><u>Registro de tiempos</u></b></big></string>
+    <string name="taskview_caption_comments"><big><b><u>Comentarios</u></b></big></string>
+    <string name="taskview_caption_description"><big><b><u>Descripción</u></b></big></string>
+    <string name="taskview_caption_subtask"><big><b><u>Subtareas</u></b></big></string>
+    <string name="taskview_fab_new_comment">Nuevo Comentario</string>
+    <string name="taskview_dlg_update_comment">Editar Comentario</string>
+    <string name="taskview_fab_new_subtask">Nueva Subtarea</string>
+    <string name="taskview_dlg_update_subtask">Editar Subtarea</string>
+    <string name="taskview_fab_close_task">Cerrar Tarea</string>
+    <string name="taskview_fab_open_task">Abrir Tarea</string>
+    <string name="taskview_fab_remove_task">Eliminar Tarea</string>
+    <string name="taskview_fab_edit_task">Editar Tarea</string>
+    <string name="task_not_assigned">no asignado</string>
+    <string name="subtask_dlg_owner">Propietario:</string>
+    <string name="subtask_dlg_title">Título:</string>
+    <string name="delete_dlg_message">¿Esta seguro?</string>
+    <string name="delete_dlg_task">Eliminar Tarea</string>
+    <string name="delete_dlg_subtask">Eliminar Subtarea</string>
+    <string name="delete_dlg_comment">Eliminar Comentario</string>
+    <string name="error_msg_remove_task">Error mientras eliminaba tarea!</string>
+    <string name="error_msg_open_task">Error mientras abria tarea!</string>
+    <string name="error_msg_close_task">Error mientras cerraba tarea!</string>
+    <string name="error_msg_create_comment">Error mientras eliminaba tarea!</string>
+    <string name="error_msg_update_comment">Error mientras creaba comentario!</string>
+    <string name="error_msg_remove_comment">Error mientras actualizaba comentario!</string>
+    <string name="error_msg_create_subtask">Error mientras creaba subtarea!</string>
+    <string name="error_msg_update_subtask">Error mientras actualizaba subtarea!</string>
+    <string name="error_msg_remove_subtask">Error mientras eliminaba subtarea!</string>
+    <string name="error_msg_not_implemented">Función aún no se ha implementado!</string>
+
+    <string name="taskedit_new_task">Nueva Tarea</string>
+    <string name="taskedit_save">Guardar</string>
+    <string name="taskedit_project_title">Título</string>
+    <string name="taskedit_project_description">Descripción</string>
+    <string name="taskedit_clear_date">Limpiar</string>
+    <string name="taskedit_owner">Propietario:</string>
+    <string name="taskedit_priority">Prioridad:</string>
+    <string name="taskedit_color"><![CDATA[<b>Color:</b> %s]]></string>
+    <string name="taskedit_seclect_color">Elija un color</string>
+
+    <!--Menu strings-->
+    <string name="action_edit">Editarar</string>
+    <string name="action_delete">Eliminar</string>
+    <string name="menu_caption_comment">Comentario #%d</string>
+    <string name="menu_caption_subtask">Comentario #%d</string>
+
+    <!--ARAC strings-->
+    <string name="acra_send_mail" translatable="false">Send email</string>
+    <string name="acra_dialog_title" translatable="false">Kandroid has crashed</string>
+    <string name="acra_dialog_comment_prompt" translatable="false">You might add your comments about the problem below:</string>
+    <string name="acra_dialog_text" translatable="false">An unexpected error occurred forcing the
+    application to stop. Please help us fix this by sending us the error data via email.</string>
+    <string name="acra_dialog_text_upload" translatable="false">An unexpected error occurred forcing the
+    application to stop. Please help us fix this by sending us error data,
+    all you have to do is click OK.</string>
+</resources>
