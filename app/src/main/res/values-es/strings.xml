@@ -1,6 +1,4 @@
 <resources>
-    <string name="app_name" translatable="false">Kandroid</string>
-
     <string name="navigation_drawer_open">Abrir caja de navegación</string>
     <string name="navigation_drawer_close">Cerrra caja de navegación</string>
 
@@ -27,7 +25,6 @@
     <string name="action_overdue">Tareas atrasadas</string>
     <string name="action_about">Acerca</string>
     <string name="title_activity_about">Acerca de Kandroid v%s</string>
-    <string name="txt_about" translatable="false">A JSON RPC client for http://kanboard.net\n\nCopyright © 2016-2017 Thomas Andres\n\nThis program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.\n        \nThis program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.\n\nYou should have received a copy of the GNU General Public License along with this program.  If not, see http://www.gnu.org/licenses.\n\n\nLibraries:\n\nhttps://commons.apache.org/proper/commons-lang\n(Apache License, Version 2.0)\n\nhttps://github.com/atlassian/commonmark-java\n(BSD 2-clause)\n\nhttps://github.com/the-blue-alliance/spectrum\n(MIT)\n\nhttp://acra.ch/\n(Apache License, Version 2.0)\n\nhttp://emojione.com\n(CC BY 4.0)</string>
 
     <!-- Strings related to Settings -->
     <string name="settings_cat_projects">Proyectos</string>
@@ -153,13 +150,4 @@
     <string name="menu_caption_comment">Comentario #%d</string>
     <string name="menu_caption_subtask">Comentario #%d</string>
 
-    <!--ARAC strings-->
-    <string name="acra_send_mail" translatable="false">Send email</string>
-    <string name="acra_dialog_title" translatable="false">Kandroid has crashed</string>
-    <string name="acra_dialog_comment_prompt" translatable="false">You might add your comments about the problem below:</string>
-    <string name="acra_dialog_text" translatable="false">An unexpected error occurred forcing the
-    application to stop. Please help us fix this by sending us the error data via email.</string>
-    <string name="acra_dialog_text_upload" translatable="false">An unexpected error occurred forcing the
-    application to stop. Please help us fix this by sending us error data,
-    all you have to do is click OK.</string>
 </resources>
