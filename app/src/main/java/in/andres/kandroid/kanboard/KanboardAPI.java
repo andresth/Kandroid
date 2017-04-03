@@ -108,7 +108,7 @@ public class KanboardAPI {
                         return new KanboardResult(params[0], new JSONObject[]{new JSONObject("{\"jsonrpc\":\"2.0\",\"error\":{\"code\":0,\"message\":\"Unable to open connection\"},\"id\":null}")}, 0);
                     con.setConnectTimeout(120000);
                     con.setReadTimeout(120000);
-                    con.setInstanceFollowRedirects(false);
+                    con.setInstanceFollowRedirects(true);
                     con.setRequestMethod("POST");
                     con.setRequestProperty("Content-Type", "application/json");
                     con.setRequestProperty("charset", "utf-8");
