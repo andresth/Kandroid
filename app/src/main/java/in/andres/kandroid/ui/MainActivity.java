@@ -324,7 +324,6 @@ public class MainActivity extends AppCompatActivity
         public void onGetMyProjects(boolean success, List<KanboardProject> result) {
             if (success) {
                 mProjectList = result;
-                Log.i("Projects", Integer.toString(mProjectList.get(0).getId()));
                 if (!showProgress(false)) {
                     combineDashboard();
                 }
