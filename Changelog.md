@@ -7,6 +7,12 @@
 #### fixes
 
 
+## v0.5.2
+#### new features
+
+#### improvements
+* Spanish translation (thanks to Esteban Monge)
+
 ## v0.5.1
 #### new features
 
