@@ -1334,6 +1334,10 @@ public class KanboardAPI {
         }
     }
 
+    public void getAllTaskFiles(int taskid) {
+        new KanboardAsync().executeOnExecutor(threadPoolExecutor, KanboardRequest.getAllTaskFiles(taskid));
+    }
+
     public void KB_getDashboard() {
         new KanboardAsync().executeOnExecutor(threadPoolExecutor, KanboardRequest.KD_getDashboard());
     }

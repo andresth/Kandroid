@@ -575,6 +575,19 @@ public class KanboardRequest {
                 "    \"params\": [%d, %d]\n" +
                 "}", subtaskid, userid)}, listener);
     }
+
+    @NonNull
+    public static KanboardRequest getAllTaskFiles(int taskid) {
+        return new KanboardRequest("getAllTaskFiles", new String[] {String.format(
+                "{\n" +
+                        "    \"jsonrpc\": \"2.0\",\n" +
+                        "    \"method\": \"getAllTaskFiles\",\n" +
+                        "    \"id\": 1880662820,\n" +
+                        "    \"params\": {\n" +
+                        "        \"task_id\": %d\n" +
+                        "    }\n" +
+                        "}", taskid)});
+    }
     //endregion
 
     //region Custom API
