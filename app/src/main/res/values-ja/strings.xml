@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="navigation_drawer_open">ナビゲーションドロワーを開く</string>
+    <string name="navigation_drawer_close">ナビゲーションドロワーを閉じる</string>
+
+    <string name="action_settings">設定</string>
+    <string name="title_activity_login">サインイン</string>
+
+    <!-- Strings related to login -->
+    <string name="prompt_serverurl">Kanboard サーバーの URL</string>
+    <string name="prompt_apikey">Kanboard サーバーの API キー</string>
+    <string name="prompt_username">ユーザー名</string>
+    <string name="prompt_password">パスワード</string>
+    <string name="action_sign">サインイン</string>
+    <string name="error_server_url">サーバーに接続できません</string>
+    <string name="error_host_unknown">不明なホスト</string>
+    <string name="error_invalid_password">このパスワードは短すぎます</string>
+    <string name="error_incorrect_username">このユーザー名は間違っています</string>
+    <string name="error_incorrect_password">このパスワードは間違っています</string>
+    <string name="error_field_required">このフィールドは必須です</string>
+    <string name="error_wrong_kanboard_version">このサーバーは次のバージョンを使用しています %1$d.%2$d.%3$d. アップグレードしてください。</string>
+    <string name="permission_rationale">"メールアドレスの自動補完は連絡先のアクセス許可が必要です。"</string>
+    <string name="action_projects">プロジェクト</string>
+    <string name="action_refresh">更新</string>
+    <string name="action_dashboard">ダッシュボード</string>
+    <string name="action_overdue">期限超過タスク</string>
+    <string name="action_about">アプリについて</string>
+    <string name="title_activity_about">Kandroid v%s について</string>
+
+    <!-- Strings related to Settings -->
+    <string name="settings_cat_projects">プロジェクト</string>
+    <string name="settings_cat_crash">クラッシュレポート</string>
+    <string name="setting_sort_projects">プロジェクトをアルファベット順にソート</string>
+    <string name="title_activity_settings">設定</string>
+    <string name="pref_enable_acra">クラッシュレポートを送信</string>
+    <string name="pref_acra_enabled">クラッシュレポートを送信します</string>
+    <string name="pref_acra_disabled">クラッシュレポートを送信しません</string>
+    <string name="pref_acra_user_email">メールアドレス</string>
+    <string name="pref_acra_user_email_summary">レポートにメールアドレスを含めます</string>
+    <string name="pref_acra_alwaysaccept">レポートを自動的に送信</string>
+    <string name="pref_acra_alwaysaccept_enabled">レポートを自動的に送信します</string>
+    <string name="pref_acra_alwaysaccept_disabled">レポートの送信に確認が必要です</string>
+
+    <!-- Strings related to Tabs -->
+    <string name="tab_projects">自分のプロジェクト &amp; タスク</string>
+    <string name="tab_overdue_tasks">期限超過タスク</string>
+    <string name="tab_activity">アクティビティ</string>
+    <string name="tab_overview">概要</string>
+    <string name="tab_inactive_tasks">非アクティブタスク</string>
+
+    <string name="caption_name">名前:</string>
+    <string name="caption_description"><big><b><u>説明</u></b></big></string>
+    <string name="caption_tasks"><big><b><u>タスク</u></b></big></string>
+    <string name="caption_columns"><big><b><u>カラム</u></b></big></string>
+    <string name="caption_swimlanes"><big><b><u>スイムレーン</u></b></big></string>
+    <string name="caption_modify_date"><big><b><u>最終更新</u></b></big></string>
+    <string name="caption_project_members"><big><b><u>プロジェクトメンバー</u></b></big></string>
+
+    <string name="error_no_list_data">データはありません!\n更新を押してください。</string>
+
+    <plurals name="format_nb_tasks">
+        <item quantity="one">%d タスク</item>
+        <item quantity="other">%d タスク</item>
+    </plurals>
+    <plurals name="format_overdue_days">
+        <item quantity="one">%d 日期限超過</item>
+        <item quantity="other">%d 日期限超過</item>
+    </plurals>
+    <plurals name="format_overdue_hours">
+        <item quantity="one">%d 時間期限超過</item>
+        <item quantity="other">%d 時間期限超過</item>
+    </plurals>
+    <plurals name="format_nb_active_tasks">
+        <item quantity="one">%d アクティブタスク</item>
+        <item quantity="other">%d アクティブタスク</item>
+    </plurals>
+    <plurals name="format_nb_inactive_tasks">
+        <item quantity="one">%d 非アクティブタスク</item>
+        <item quantity="other">%d 非アクティブタスク</item>
+    </plurals>
+    <plurals name="format_nb_overdue_tasks">
+        <item quantity="one">%d 期限超過タスク</item>
+        <item quantity="other">%d 期限超過タスク</item>
+    </plurals>
+    <plurals name="format_nb_total_tasks">
+        <item quantity="one">%d タスク合計</item>
+        <item quantity="other">%d タスク合計</item>
+    </plurals>
+
+    <!--TaskActivity-->
+    <string name="taskview_category"><![CDATA[<b>カテゴリー:</b> %s]]></string>
+    <string name="taskview_status"><![CDATA[<b>ステータス:</b> %s]]></string>
+    <string name="taskview_status_open">オープン</string>
+    <string name="taskview_status_closed">クローズ</string>
+    <string name="taskview_swimlane"><![CDATA[<b>スイムレーン:</b> %s]]></string>
+    <string name="taskview_position"><![CDATA[<b>位置:</b> %d]]></string>
+    <string name="taskview_priority"><![CDATA[<b>優先度:</b> %d]]></string>
+    <string name="taskview_owner"><![CDATA[<b>オーナー:</b> %s]]></string>
+    <string name="taskview_creator"><![CDATA[<b>作成者:</b> %s]]></string>
+    <string name="taskview_date_created"><![CDATA[<b>作成:</b> %tF]]></string>
+    <string name="taskview_date_modified"><![CDATA[<b>更新:</b> %tF]]></string>
+    <string name="taskview_date_moved"><![CDATA[<b>移動:</b> %tF]]></string>
+    <string name="taskview_hours_estimated"><![CDATA[<b>見積時間:</b> %.2fh]]></string>
+    <string name="taskview_hours_spent"><![CDATA[<b>使用時間:</b> %.2fh]]></string>
+    <string name="taskview_date_start"><![CDATA[<b>開始日:</b> %tF]]></string>
+    <string name="taskview_date_due"><![CDATA[<b>期限:</b> %tF]]></string>
+    <string name="taskview_caption_information"><big><b><u>情報</u></b></big></string>
+    <string name="taskview_caption_timetracking"><big><b><u>タイムトラッキング</u></b></big></string>
+    <string name="taskview_caption_comments"><big><b><u>コメント</u></b></big></string>
+    <string name="taskview_caption_description"><big><b><u>説明</u></b></big></string>
+    <string name="taskview_caption_subtask"><big><b><u>サブタスク</u></b></big></string>
+    <string name="taskview_fab_new_comment">新しいコメント</string>
+    <string name="taskview_dlg_update_comment">コメントを編集</string>
+    <string name="taskview_fab_new_subtask">新しいサブタスク</string>
+    <string name="taskview_dlg_update_subtask">サブタスクを編集</string>
+    <string name="taskview_fab_close_task">タスクを閉じる</string>
+    <string name="taskview_fab_open_task">タスクを開く</string>
+    <string name="taskview_fab_remove_task">タスクを削除</string>
+    <string name="taskview_fab_edit_task">タスクを編集</string>
+    <string name="task_not_assigned">未割り当て</string>
+    <string name="subtask_dlg_owner">オーナー:</string>
+    <string name="subtask_dlg_title">タイトル:</string>
+    <string name="delete_dlg_message">よろしいですか?</string>
+    <string name="delete_dlg_task">タスクを削除</string>
+    <string name="delete_dlg_subtask">サブタスクを削除</string>
+    <string name="delete_dlg_comment">コメントを削除</string>
+    <string name="error_msg_remove_task">タスクの削除中にエラーが発生しました!</string>
+    <string name="error_msg_open_task">タスクを開く時にエラーが発生しました!</string>
+    <string name="error_msg_close_task">タスクを閉じる時にエラーが発生しました!</string>
+    <string name="error_msg_create_comment">タスクの作成中にエラーが発生しました!</string>
+    <string name="error_msg_update_comment">コメントの作成中にエラーが発生しました!</string>
+    <string name="error_msg_remove_comment">コメントの更新中にエラーが発生しました!</string>
+    <string name="error_msg_create_subtask">サブタスクの作成中にエラーが発生しました!</string>
+    <string name="error_msg_update_subtask">サブタスクの更新中にエラーが発生しました!</string>
+    <string name="error_msg_remove_subtask">サブタスクの削除中にエラーが発生しました!</string>
+    <string name="error_msg_not_implemented">機能はまだ実装されていません!</string>
+
+    <string name="taskedit_new_task">新しいタスク</string>
+    <string name="taskedit_save">保存</string>
+    <string name="taskedit_project_title">タイトル</string>
+    <string name="taskedit_project_description">説明</string>
+    <string name="taskedit_clear_date">クリア</string>
+    <string name="taskedit_owner">オーナー:</string>
+    <string name="taskedit_priority">優先度:</string>
+    <string name="taskedit_color"><![CDATA[<b>色:</b> %s]]></string>
+    <string name="taskedit_seclect_color">色を選択</string>
+
+    <!--Menu strings-->
+    <string name="action_edit">編集</string>
+    <string name="action_delete">削除</string>
+    <string name="menu_caption_comment">コメント #%d</string>
+    <string name="menu_caption_subtask">サブタスク #%d</string>
+
+    <!--ARAC strings-->
+
+</resources>
