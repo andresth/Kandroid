@@ -374,6 +374,8 @@ public class KanboardRequest {
             content += String.format(", \n \"owner_id\": %d", ownerid);
         if (duedate != null)
             content += String.format(", \n \"date_due\": \"%tF\"", duedate);
+        else
+            content += ", \n \"date_due\": \"\"";
         if (description != null)
             content += String.format(", \n \"description\": \"%s\"", StringEscapeUtils.escapeJson(description));
         if (categoryid != null)
@@ -394,6 +396,8 @@ public class KanboardRequest {
             content += String.format(", \n \"recurrence_basedate\": %d", recurrencebasedate);
         if (starteddate != null)
             content += String.format(", \n \"date_started\": \"%1$tF %1$tH:%1$tM\"", starteddate);
+        else
+            content += ", \n \"date_started\": \"\"";
         //TODO: Add tags
         return new KanboardRequest("updateTask", new String[] {String.format(
                 "{\n" +
