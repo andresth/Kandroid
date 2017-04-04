@@ -2,10 +2,12 @@
 #### new features
 
 #### improvements
+* japanese translation (thanks to naofum)
 * ~~Option to set start date when Kanboard version is 1.0.40 or higher~~
 
 #### fixes
-
+* App is crashing when users project list is empty
+* HTTP redirects should be handled correctly
 
 ## v0.5.2
 #### new features
