@@ -1,13 +1,13 @@
-## development
+## 0.5.3
 #### new features
 
 #### improvements
 * japanese translation (thanks to naofum)
-* ~~Option to set start date when Kanboard version is 1.0.40 or higher~~
 
 #### fixes
-* App is crashing when users project list is empty
+* App is crashing when user has no projects
 * HTTP redirects should be handled correctly
+* Task due date can now be deleted
 
 ## v0.5.2
 #### new features
