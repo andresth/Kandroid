@@ -211,6 +211,7 @@ public class KanboardAPI {
 //                    l.onError(res);
                 for (OnErrorListener l: onErrorListeners)
                     l.onError(res);
+                return;
             }
 
             // Handle Return Messages

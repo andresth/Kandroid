@@ -1,3 +1,11 @@
+## 0.5.4 (development)
+#### new features
+
+#### improvements
+
+#### fixes
+* Wrong login credentials result in kanboard version error
+
 ## 0.5.3
 #### new features
 
