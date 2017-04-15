@@ -13,7 +13,6 @@
     <string name="prompt_apikey">API Key for Kanboard server</string>
     <string name="prompt_username">Username</string>
     <string name="prompt_password">Password</string>
-    <string name="prompt_certificate">Server Certificate (self-signed)</string>
     <string name="action_sign">Sign in</string>
     <string name="error_server_url">Unable to contact server</string>
     <string name="error_host_unknown">Unknown host</string>
@@ -22,6 +21,7 @@
     <string name="error_incorrect_password">This password is incorrect</string>
     <string name="error_field_required">This field is required</string>
     <string name="error_wrong_kanboard_version">This server uses a version below %1$d.%2$d.%3$d. Please upgrade.</string>
+    <string name="error_ssl">Failed to establish an encrypted connection.\nReason: %s</string>
     <string name="permission_rationale">"Contacts permissions are needed for providing email completions."</string>
     <string name="action_projects">Projects</string>
     <string name="action_refresh">Refresh</string>
