@@ -54,6 +54,9 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
 
+import javax.net.ssl.SSLException;
+import javax.net.ssl.SSLHandshakeException;
+
 import in.andres.kandroid.BuildConfig;
 import in.andres.kandroid.Constants;
 import in.andres.kandroid.kanboard.events.OnCloseTaskListener;
@@ -155,6 +158,14 @@ public class KanboardAPI {
                         }
                     }
                     responseList.add(response);
+                } catch (SSLException e) {
+                    Log.e(Constants.TAG, "API: SSL Error.");
+                    e.printStackTrace();
+                    try {
+                        responseList.add(new JSONObject("{\"jsonrpc\":\"2.0\",\"error\":{\"code\":-40,\"message\":\"" + e.getLocalizedMessage() + "\"},\"id\":null}"));
+                    } catch (JSONException e1) {
+                        e1.printStackTrace();
+                    }
                 } catch (UnknownHostException e) {
                     Log.e(Constants.TAG, "API: Unknown Host.");
                     e.printStackTrace();
