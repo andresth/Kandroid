@@ -2,6 +2,7 @@
 #### new features
 
 #### improvements
+* Support for self-signed certificates (when imported into Android)
 
 #### fixes
 * Wrong login credentials result in kanboard version error

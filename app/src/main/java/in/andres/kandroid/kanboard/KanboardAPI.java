@@ -42,6 +42,7 @@ import java.net.ProtocolException;
 import java.net.SocketTimeoutException;
 import java.net.URL;
 import java.net.UnknownHostException;
+import java.security.KeyStore;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Dictionary;
@@ -54,8 +55,10 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
 
+import javax.net.ssl.HttpsURLConnection;
+import javax.net.ssl.SSLContext;
 import javax.net.ssl.SSLException;
-import javax.net.ssl.SSLHandshakeException;
+import javax.net.ssl.TrustManagerFactory;
 
 import in.andres.kandroid.BuildConfig;
 import in.andres.kandroid.Constants;
@@ -100,15 +103,34 @@ public class KanboardAPI {
         @Override
         protected KanboardResult doInBackground(KanboardRequest... params) {
             HttpURLConnection con = null;
+            SSLContext sslcontext = null;
             int httpResponseCode = 0;
             List<JSONObject> responseList = new ArrayList<>();
             for (String s: params[0].JSON) {
                 try {
+
                     Log.i(Constants.TAG, String.format("API: Send Request \"%s\"", params[0].Command));
                     if (BuildConfig.DEBUG) Log.v(Constants.TAG, String.format("API: Data:\n%s", s));
                     con = (HttpURLConnection) kanboardURL.openConnection();
                     if (con == null)
                         return new KanboardResult(params[0], new JSONObject[]{new JSONObject("{\"jsonrpc\":\"2.0\",\"error\":{\"code\":0,\"message\":\"Unable to open connection\"},\"id\":null}")}, 0);
+                    if (kanboardURL.getProtocol().equalsIgnoreCase("https")) {
+//                        CertificateFactory cf = CertificateFactory.getInstance("X.509");
+//                        InputStream caInput = new BufferedInputStream(mContext.getContentResolver().openInputStream(certificatePath));
+//                        Certificate ca;
+//                        try {
+//                            ca = cf.generateCertificate(caInput);
+//                        } finally {
+//                            caInput.close();
+//                        }
+                        KeyStore keyStore = KeyStore.getInstance("AndroidCAStore");
+                        keyStore.load(null);
+                        TrustManagerFactory tmf = TrustManagerFactory.getInstance(TrustManagerFactory.getDefaultAlgorithm());
+                        tmf.init(keyStore);
+                        sslcontext = SSLContext.getInstance("TLS");
+                        sslcontext.init(null, tmf.getTrustManagers(), null);
+                        ((HttpsURLConnection)con).setSSLSocketFactory(sslcontext.getSocketFactory());
+                    }
                     con.setConnectTimeout(120000);
                     con.setReadTimeout(120000);
                     con.setInstanceFollowRedirects(true);
