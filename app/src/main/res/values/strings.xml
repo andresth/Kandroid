@@ -13,6 +13,7 @@
     <string name="prompt_apikey">API Key for Kanboard server</string>
     <string name="prompt_username">Username</string>
     <string name="prompt_password">Password</string>
+    <string name="prompt_certificate">Server Certificate (self-signed)</string>
     <string name="action_sign">Sign in</string>
     <string name="error_server_url">Unable to contact server</string>
     <string name="error_host_unknown">Unknown host</string>
