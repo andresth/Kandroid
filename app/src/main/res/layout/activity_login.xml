@@ -90,37 +90,6 @@
 
             </android.support.design.widget.TextInputLayout>
 
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
-                <android.support.design.widget.TextInputLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentStart="true"
-                    android:layout_toStartOf="@+id/certBtn">
-
-                    <EditText
-                        android:id="@+id/certificate"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:hint="@string/prompt_certificate"
-                        android:imeActionId="@+id/login"
-                        android:imeActionLabel="@string/action_sign"
-                        android:imeOptions="actionUnspecified"
-                        android:inputType="text"
-                        android:maxLines="1" />
-
-                </android.support.design.widget.TextInputLayout>
-                <Button
-                    android:id="@+id/certBtn"
-                    android:layout_width="48dp"
-                    android:layout_height="match_parent"
-                    android:layout_alignParentEnd="true"
-                    android:layout_centerVertical="true"
-                    android:text="..."/>
-            </RelativeLayout>
-
             <Button
                 android:id="@+id/email_sign_in_button"
                 style="?android:textAppearanceSmall"

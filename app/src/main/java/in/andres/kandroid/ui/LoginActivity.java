@@ -22,15 +22,10 @@ package in.andres.kandroid.ui;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
-import android.content.Intent;
 import android.content.SharedPreferences;
-import android.database.Cursor;
-import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.util.Log;
@@ -42,25 +37,8 @@ import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import org.acra.util.IOUtils;
-import org.json.JSONObject;
-
-import java.io.BufferedReader;
-import java.io.DataOutputStream;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.net.Authenticator;
-import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.PasswordAuthentication;
-import java.net.ProtocolException;
-import java.net.SocketTimeoutException;
-import java.net.URL;
-import java.net.UnknownHostException;
-
-import javax.net.ssl.HttpsURLConnection;
 
 import in.andres.kandroid.Constants;
 import in.andres.kandroid.R;
@@ -80,8 +58,6 @@ public class LoginActivity extends AppCompatActivity {
 //    private EditText mAPIKeyView;
     private EditText mUsernameView;
     private EditText mPasswordView;
-    private EditText mCertificatePath;
-    private Button mSelectPathBtn;
     private View mProgressView;
     private View mLoginFormView;
 
@@ -106,25 +82,6 @@ public class LoginActivity extends AppCompatActivity {
                 return false;
             }
         });
-        mCertificatePath = (EditText) findViewById(R.id.certificate);
-        mSelectPathBtn = (Button) findViewById(R.id.certBtn);
-        mSelectPathBtn.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
-                intent.setType("*/*");
-                intent.addCategory(Intent.CATEGORY_OPENABLE);
-                try {
-                    startActivityForResult(
-                            Intent.createChooser(intent, "Select a File to Upload"),
-                            Constants.FileSelectCode);
-                } catch (android.content.ActivityNotFoundException ex) {
-                    // Potentially direct the user to the Market with a Dialog
-                    Toast.makeText(getBaseContext(), "Please install a File Manager.",
-                            Toast.LENGTH_SHORT).show();
-                }
-            }
-        });
 
         Button mEmailSignInButton = (Button) findViewById(R.id.email_sign_in_button);
         mEmailSignInButton.setOnClickListener(new OnClickListener() {
@@ -143,7 +100,6 @@ public class LoginActivity extends AppCompatActivity {
 //        mAPIKeyView.setText(preferences.getString("apikey", ""));
         mUsernameView.setText(preferences.getString("username", ""));
         mPasswordView.setText(preferences.getString("password", ""));
-        mCertificatePath.setText(preferences.getString("certificate", null));
     }
 
     /**
@@ -156,43 +112,6 @@ public class LoginActivity extends AppCompatActivity {
             if (getSupportActionBar() != null)
                 getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        switch (requestCode) {
-            case Constants.FileSelectCode:
-                if (resultCode == RESULT_OK) {
-                    String path = null;
-                    Uri uri = data.getData();
-
-//                    Log.d(Constants.TAG, uri.toString());
-//                    Log.d(Constants.TAG, uri.getScheme());
-//                    if ("content".equalsIgnoreCase(uri.getScheme())) {
-//                        String[] projection = {MediaStore.Files.FileColumns.DATA};
-//                        Cursor cursor = null;
-//                        try {
-//                            Log.d(Constants.TAG, Integer.toString(this.getContentResolver().openInputStream(uri).read()));
-//
-//                            cursor = this.getContentResolver().query(uri, projection, null, null, null);
-//                            int column_index = cursor.getColumnIndexOrThrow(projection[0]);
-//                            if (cursor.moveToFirst()) {
-//                                path = cursor.getString(column_index);
-//                            }
-//                            cursor.close();
-//                        } catch (Exception e) {
-//                            e.printStackTrace();
-//                            // Eat it
-//                        }
-//                    } else if ("file".equalsIgnoreCase(uri.getScheme())) {
-//                        path = uri.getPath();
-//                    }
-                    mCertificatePath.setText(uri.toString());
-                }
-                break;
-        }
-
-        super.onActivityResult(requestCode, resultCode, data);
     }
 
     @Override
@@ -224,7 +143,6 @@ public class LoginActivity extends AppCompatActivity {
 //        String apikey = mAPIKeyView.getText().toString();
         final String username = mUsernameView.getText().toString();
         final String password = mPasswordView.getText().toString();
-        String certpath = mCertificatePath.getText().toString();
 
         boolean cancel = false;
         View focusView = null;
@@ -255,10 +173,6 @@ public class LoginActivity extends AppCompatActivity {
             cancel = true;
         }
 
-        if (TextUtils.isEmpty(certpath)) {
-            certpath = null;
-        }
-
         if (cancel) {
             // There was an error; don't attempt login and focus the first
             // form field with an error.
@@ -267,7 +181,7 @@ public class LoginActivity extends AppCompatActivity {
             // Show a progress spinner, and kick off a background task to
             // perform the user login attempt.
             try {
-                kanboardAPI = new KanboardAPI(serverurl, username, password, certpath);
+                kanboardAPI = new KanboardAPI(serverurl, username, password);
                 kanboardAPI.addErrorListener(new OnErrorListener() {
                     @Override
                     public void onError(KanboardError error) {
