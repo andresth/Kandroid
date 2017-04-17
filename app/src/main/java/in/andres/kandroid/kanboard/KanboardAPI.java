@@ -275,20 +275,28 @@ public class KanboardAPI {
                     if (s.Result[0].has("result")) {
                         success = true;
                         res = s.Result[0].getString("result");
-                        try {
-                            Pattern regex = Pattern.compile("^(\\d+)\\.(\\d+)\\.(\\d+)(?:,(.*)){0,1}$", Pattern.CASE_INSENSITIVE | Pattern.UNICODE_CASE);
-                            Matcher regexMatcher = regex.matcher(res);
-                            if (regexMatcher.find()) {
-                                version[0] = Integer.parseInt(regexMatcher.group(1));
-                                version[1] = Integer.parseInt(regexMatcher.group(2));
-                                version[2] = Integer.parseInt(regexMatcher.group(3));
-                                if (regexMatcher.groupCount() == 4 && regexMatcher.group(4) != null)
-                                    tag = regexMatcher.group(4).trim();
+                        if (res.startsWith("master")) {
+                            Log.d(Constants.TAG, "Development Version");
+                            version[0] = -1;
+                            version[1] = -1;
+                            version[2] = -1;
+                            tag = res;
+                        } else {
+                            try {
+                                Pattern regex = Pattern.compile("^(\\d+)\\.(\\d+)\\.(\\d+)(?:,(.*)){0,1}$", Pattern.CASE_INSENSITIVE | Pattern.UNICODE_CASE);
+                                Matcher regexMatcher = regex.matcher(res);
+                                if (regexMatcher.find()) {
+                                    version[0] = Integer.parseInt(regexMatcher.group(1));
+                                    version[1] = Integer.parseInt(regexMatcher.group(2));
+                                    version[2] = Integer.parseInt(regexMatcher.group(3));
+                                    if (regexMatcher.groupCount() == 4 && regexMatcher.group(4) != null)
+                                        tag = regexMatcher.group(4).trim();
+                                }
+                            } catch (PatternSyntaxException ex) {
+                                ex.printStackTrace();
+                                throw ex;
+                                // Syntax error in the regular expression
                             }
-                        }catch (PatternSyntaxException ex) {
-                            ex.printStackTrace();
-                            throw ex;
-                            // Syntax error in the regular expression
                         }
                     }
                 } catch (JSONException e) {
