@@ -6,6 +6,7 @@
 
 #### fixes
 * Wrong login credentials result in kanboard version error
+* Allow login on servers that run a development version of Kanboard
 
 ## 0.5.3
 #### new features
