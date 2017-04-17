@@ -148,4 +148,5 @@
     <string name="taskedit_owner">Zuständig:</string>
     <string name="taskedit_priority">Priorität:</string>
     <string name="error_ssl">Verschlüselte Verbindung fehlgeschlagen.\nGrund: %s</string>
+    <string name="dlg_devel_version">Auf diesem Server läuft eine Entwicklerversion von Kanboard. Kandroid funktioniert möglicherweise nicht mit diesem Server.</string>
 </resources>

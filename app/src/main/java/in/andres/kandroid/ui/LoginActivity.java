@@ -22,10 +22,13 @@ package in.andres.kandroid.ui;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.util.Log;
@@ -52,6 +55,8 @@ public class LoginActivity extends AppCompatActivity {
      * Keep track of the login task to ensure we can cancel it if requested.
      */
     private KanboardAPI kanboardAPI = null;
+    private Context self;
+
 
     // UI references.
     private EditText mServerURLView;
@@ -66,6 +71,8 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
         setupActionBar();
+
+        self = this;
         // Set up the login form.
         mServerURLView = (EditText) findViewById(R.id.serverurl);
 //        mAPIKeyView = (EditText) findViewById(R.id.apikey);
@@ -208,7 +215,28 @@ public class LoginActivity extends AppCompatActivity {
                     @Override
                     public void onGetVersion(boolean success, int[] version, String tag) {
                         showProgress(false);
-                        if (version[0] >= Constants.minKanboardVersion[0] &&
+                        if (version[0] == -1) {
+                            // Development Version
+                            new AlertDialog.Builder(self)
+                                    .setTitle(android.R.string.dialog_alert_title)
+                                    .setMessage(R.string.dlg_devel_version)
+                                    .setNeutralButton(android.R.string.ok, null)
+                                    .setOnDismissListener(new DialogInterface.OnDismissListener() {
+                                        @Override
+                                        public void onDismiss(DialogInterface dialog) {
+                                            finish();
+                                        }
+                                    })
+                                    .setIcon(android.R.drawable.ic_dialog_alert)
+                                    .show();
+
+                            SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+                            SharedPreferences.Editor editor = preferences.edit();
+                            editor.putString("serverurl", serverurl.trim());
+                            editor.putString("username", username);
+                            editor.putString("password", password);
+                            editor.apply();
+                        } else if (version[0] >= Constants.minKanboardVersion[0] &&
                             version[1] >= Constants.minKanboardVersion[1] &&
                             version[2] >= Constants.minKanboardVersion[2]) {
                             SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
