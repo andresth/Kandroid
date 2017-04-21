@@ -147,7 +147,7 @@ public class DashProjectsAdapter extends BaseExpandableListAdapter {
         convertView.findViewById(R.id.task_owner).setVisibility(View.INVISIBLE);
         convertView.findViewById(R.id.task_category).setVisibility(View.INVISIBLE);
 
-        if (mColors != null && !child.getColorId().isEmpty())
+        if (mColors != null && child.getColorId() != null && !child.getColorId().isEmpty())
             convertView.findViewById(R.id.list_card).setBackgroundColor(mColors.get(child.getColorId()).getBackground());
 
 //        if (child.getColorBackground() != null)

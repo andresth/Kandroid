@@ -113,7 +113,7 @@ public class KanboardTask implements Comparable<KanboardTask>, Serializable {
         else
             MovedDate = null;
 
-        ColorId = json.optString("color_id");
+        ColorId = json.optString("color_id", "");
 
         if (json.has("color"))
             ColorBackground = KanboardAPI.parseColorString(json.optJSONObject("color").optString("background"));
