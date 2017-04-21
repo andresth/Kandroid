@@ -1,4 +1,4 @@
-## 0.5.4 (development)
+## 0.5.4
 #### new features
 
 #### improvements
