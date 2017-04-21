@@ -108,6 +108,10 @@ public class DashProjectsAdapter extends BaseExpandableListAdapter {
 
     @Override
     public View getGroupView(int groupPosition, boolean isExpanded, View convertView, ViewGroup parent) {
+        // Aboard if no groups exist
+        if (getGroupCount() == 0)
+            return convertView;
+
         KanboardProject proj = (KanboardProject) getGroup(groupPosition);
 
         if (convertView == null)
