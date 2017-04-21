@@ -67,11 +67,9 @@ import in.andres.kandroid.kanboard.KanboardColumn;
 import in.andres.kandroid.kanboard.KanboardDashboard;
 import in.andres.kandroid.kanboard.KanboardError;
 import in.andres.kandroid.kanboard.KanboardProject;
-import in.andres.kandroid.kanboard.KanboardProjectInfo;
 import in.andres.kandroid.kanboard.KanboardSwimlane;
 import in.andres.kandroid.kanboard.KanboardTask;
 import in.andres.kandroid.kanboard.KanboardUserInfo;
-import in.andres.kandroid.kanboard.KanbordEvents;
 import in.andres.kandroid.kanboard.events.OnErrorListener;
 import in.andres.kandroid.kanboard.events.OnGetActiveSwimlanesListener;
 import in.andres.kandroid.kanboard.events.OnGetAllCategoriesListener;
@@ -124,48 +122,6 @@ public class MainActivity extends AppCompatActivity
     private List<KanboardTask> mOverdueTasks = null;
     private Dictionary<Integer, String> mProjectUsers = null;
 
-    private KanbordEvents eventHandler = new KanbordEvents() {
-        @Override
-        public void onGetMe(boolean success, KanboardUserInfo userInfo) {
-        }
-
-        @Override
-        public void onGetMyProjectsList(boolean success, List<KanboardProjectInfo> projects) {
-//            showProgress(false);
-//            mProjects = projects;
-//            NavigationView nav = (NavigationView) findViewById(R.id.nav_view);
-//            SubMenu proj = nav.getMenu().findItem(R.id.projects).getSubMenu();
-//            proj.clear();
-//            for (KanboardProjectInfo item: mProjects) {
-//                MenuItem m =proj.add(Menu.NONE, item.ID, Menu.NONE, item.Name);
-//                m.setIcon(R.drawable.project);
-//            }
-        }
-
-        @Override
-        public void onGetMyDashboard(boolean success, KanboardDashboard dash) {
-        }
-
-        public void onGetProjectById(boolean success, KanboardProject project) {
-        }
-
-        @Override
-        public void onError(KanboardError error) {
-//            new AlertDialog.Builder(self)
-//                    .setTitle("Error")
-//                    .setMessage("Code: " + Integer.toString(error.Code) + "\n" +
-//                                "Message: " + error.Message + "\n" +
-//                                "HTTP Response: " + Integer.toString(error.HTTPReturnCode))
-//                    .setNeutralButton("Dismiss", null)
-//                    .setIcon(android.R.drawable.ic_dialog_alert)
-//                    .show();
-        }
-
-        @Override
-        public void onDebug(boolean success, String message) {
-
-        }
-    };
     private OnErrorListener errorListener = new OnErrorListener() {
         @Override
         public void onError(KanboardError error) {
@@ -681,7 +637,6 @@ public class MainActivity extends AppCompatActivity
         } else {
             try {
                 kanboardAPI = new KanboardAPI(serverURL, username, password);
-                kanboardAPI.addListener(eventHandler);
                 kanboardAPI.addErrorListener(errorListener);
                 kanboardAPI.addOnGetMeListener(getMeListener);
                 kanboardAPI.addOnGetMyDashboardListener(getMyDashboardListener);

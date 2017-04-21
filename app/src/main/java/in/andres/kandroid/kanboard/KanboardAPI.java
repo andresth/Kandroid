@@ -80,6 +80,7 @@ import in.andres.kandroid.kanboard.events.OnGetMeListener;
 import in.andres.kandroid.kanboard.events.OnGetMyActivityStreamListener;
 import in.andres.kandroid.kanboard.events.OnGetMyDashboardListener;
 import in.andres.kandroid.kanboard.events.OnGetMyOverdueTasksListener;
+import in.andres.kandroid.kanboard.events.OnGetMyProjectsListListener;
 import in.andres.kandroid.kanboard.events.OnGetMyProjectsListener;
 import in.andres.kandroid.kanboard.events.OnGetOverdueTasksByProjectListener;
 import in.andres.kandroid.kanboard.events.OnGetProjectByIdListener;
@@ -230,8 +231,6 @@ public class KanboardAPI {
             // Handle Errors
             if (s == null) {
                 KanboardError res = new KanboardError(null, null, 0);
-//                for (KanbordEvents l: listeners)
-//                    l.onError(res);
                 for (OnErrorListener l: onErrorListeners)
                     l.onError(res);
                 return;
@@ -240,8 +239,6 @@ public class KanboardAPI {
                 Log.e(Constants.TAG, s.Result[0].toString());
                 JSONObject err = s.Result[0].optJSONObject("error");
                 KanboardError res = new KanboardError(s.Request, err, s.ReturnCode);
-//                for (KanbordEvents l: listeners)
-//                    l.onError(res);
                 for (OnErrorListener l: onErrorListeners)
                     l.onError(res);
                 return;
@@ -260,8 +257,6 @@ public class KanboardAPI {
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
-                for (KanbordEvents l: listeners)
-                    l.onGetMe(success, res);
                 for (OnGetMeListener l: onGetMeListeners)
                     l.onGetMe(success, res);
                 return;
@@ -360,7 +355,7 @@ public class KanboardAPI {
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
-                    for (KanbordEvents l: listeners)
+                    for (OnGetMyProjectsListListener l: onGetMyProjectsListListeners)
                         l.onGetMyProjectsList(success, res);
                 return;
             }
@@ -402,8 +397,6 @@ public class KanboardAPI {
                         }
                     }
                 }
-//                for (KanbordEvents l: listeners)
-//                    l.onGetMyDashboard(success, res);
                 for (OnGetMyDashboardListener l: onGetMyDashboardListeners)
                     l.onGetMyDashboard(success, res);
                 return;
@@ -819,48 +812,43 @@ public class KanboardAPI {
                 return;
             }
 
-            if (s.Request.Command.equalsIgnoreCase("KD_getDashboard")) {
-                KanboardDashboard res = null;
-                try {
-                    if (s.Result[0].has("result") && s.Result[1].has("result") && s.Result[2].has("result")) {
-                        success = true;
-                        res = new KanboardDashboard(s.Result[0].getJSONObject("result"), s.Result[1].getJSONArray("result"), s.Result[2].getJSONArray("result"));
-                    }
-                } catch (JSONException | MalformedURLException e) {
-                    e.printStackTrace();
-                }
-                for (KanbordEvents l: listeners)
-                    l.onGetMyDashboard(success, res);
-                return;
-            }
+//            if (s.Request.Command.equalsIgnoreCase("KD_getDashboard")) {
+//                KanboardDashboard res = null;
+//                try {
+//                    if (s.Result[0].has("result") && s.Result[1].has("result") && s.Result[2].has("result")) {
+//                        success = true;
+//                        res = new KanboardDashboard(s.Result[0].getJSONObject("result"), s.Result[1].getJSONArray("result"), s.Result[2].getJSONArray("result"));
+//                    }
+//                } catch (JSONException | MalformedURLException e) {
+//                    e.printStackTrace();
+//                }
+//                return;
+//            }
 
-            if (s.Request.Command.equalsIgnoreCase("KD_getProjectById")) {
-                KanboardProject res = null;
-                try {
-                    if (s.Result[0].has("result") && s.Result[1].has("result") && s.Result[2].has("result") && s.Result[3].has("result") && s.Result[4].has("result") && s.Result[5].has("result") && s.Result[6].has("result")) {
-                        success = true;
-                        res = new KanboardProject(s.Result[0].optJSONObject("result"),
-                                                  s.Result[1].optJSONArray("result"),
-                                                  s.Result[2].optJSONArray("result"),
-                                                  s.Result[3].optJSONArray("result"),
-                                                  s.Result[4].optJSONArray("result"),
-                                                  s.Result[5].optJSONArray("result"),
-                                                  s.Result[6].optJSONArray("result"),
-                                                  s.Result[7].optJSONObject("result"));
-                    }
-                } catch (MalformedURLException e) {
-                    e.printStackTrace();
-                }
-                for (KanbordEvents l: listeners)
-                    l.onGetProjectById(success, res);
-                return;
-            }
+//            if (s.Request.Command.equalsIgnoreCase("KD_getProjectById")) {
+//                KanboardProject res = null;
+//                try {
+//                    if (s.Result[0].has("result") && s.Result[1].has("result") && s.Result[2].has("result") && s.Result[3].has("result") && s.Result[4].has("result") && s.Result[5].has("result") && s.Result[6].has("result")) {
+//                        success = true;
+//                        res = new KanboardProject(s.Result[0].optJSONObject("result"),
+//                                                  s.Result[1].optJSONArray("result"),
+//                                                  s.Result[2].optJSONArray("result"),
+//                                                  s.Result[3].optJSONArray("result"),
+//                                                  s.Result[4].optJSONArray("result"),
+//                                                  s.Result[5].optJSONArray("result"),
+//                                                  s.Result[6].optJSONArray("result"),
+//                                                  s.Result[7].optJSONObject("result"));
+//                    }
+//                } catch (MalformedURLException e) {
+//                    e.printStackTrace();
+//                }
+//                return;
+//            }
         }
     }
 
     private URL kanboardURL;
     private ThreadPoolExecutor threadPoolExecutor;
-    private HashSet<KanbordEvents> listeners = new HashSet<>();
     private HashSet<OnGetMyDashboardListener> onGetMyDashboardListeners = new HashSet<>();
     private HashSet<OnGetMyActivityStreamListener> onGetMyActivityStreamListeners = new HashSet<>();
     private HashSet<OnGetMyOverdueTasksListener> onGetMyOverdueTasksListeners = new HashSet<>();
@@ -894,6 +882,7 @@ public class KanboardAPI {
     private HashSet<OnGetDefaultColorListener> onGetDefaultColorListeners = new HashSet<>();
     private HashSet<OnGetDefaultColorsListener> onGetDefaultColorsListeners = new HashSet<>();
     private HashSet<OnGetMyProjectsListener> onGetMyProjectsListeners = new HashSet<>();
+    private HashSet<OnGetMyProjectsListListener> onGetMyProjectsListListeners = new HashSet<>();
 
     //HashSets for AsyncTask limiting
     private HashSet<Integer> hasSubtaskTimerSet = new HashSet<>();
@@ -923,14 +912,6 @@ public class KanboardAPI {
     }
 
     // Event Listeners
-
-    public void addListener(@NonNull KanbordEvents listener) {
-        listeners.add(listener);
-    }
-
-    public void removeListener(@NonNull KanbordEvents listener) {
-        listeners.remove(listener);
-    }
 
     public void addOnGetMyDashboardListener(@NonNull OnGetMyDashboardListener listener) {
         onGetMyDashboardListeners.add(listener);
@@ -1196,6 +1177,14 @@ public class KanboardAPI {
         onErrorListeners.remove(listener);
     }
 
+    public void addOnGetMyProjectsListListeners(@NonNull OnGetMyProjectsListListener listener) {
+        onGetMyProjectsListListeners.add(listener);
+    }
+
+    public void removeOnGetMyProjectsListListeners(@NonNull OnGetMyProjectsListListener listener) {
+        onGetMyProjectsListListeners.remove(listener);
+    }
+
     // API Calls
 
     public void getMe() {
@@ -1380,13 +1369,13 @@ public class KanboardAPI {
         new KanboardAsync().executeOnExecutor(threadPoolExecutor, KanboardRequest.getAllTaskFiles(taskid));
     }
 
-    public void KB_getDashboard() {
-        new KanboardAsync().executeOnExecutor(threadPoolExecutor, KanboardRequest.KD_getDashboard());
-    }
-
-    public void KB_getProjectById(int projectid) {
-        new KanboardAsync().executeOnExecutor(threadPoolExecutor, KanboardRequest.KD_getProjectById(projectid));
-    }
+//    public void KB_getDashboard() {
+//        new KanboardAsync().executeOnExecutor(threadPoolExecutor, KanboardRequest.KD_getDashboard());
+//    }
+//
+//    public void KB_getProjectById(int projectid) {
+//        new KanboardAsync().executeOnExecutor(threadPoolExecutor, KanboardRequest.KD_getProjectById(projectid));
+//    }
 
     // TODO: add API calls
 
