@@ -23,6 +23,7 @@ import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
+import android.text.method.LinkMovementMethod;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -114,6 +115,8 @@ public class DashProjectsAdapter extends BaseExpandableListAdapter {
 
         TextView projectName = (TextView) convertView.findViewById(R.id.project_name);
         TextView projectDescription = (TextView) convertView.findViewById(R.id.project_description);
+        //FIXME: List item does not expand when links are clickable
+//        projectDescription.setMovementMethod(LinkMovementMethod.getInstance());
         TextView projectColumns = (TextView) convertView.findViewById(R.id.project_columns);
         TextView projectNbTasks = (TextView) convertView.findViewById(R.id.project_nb_own_tasks);
         projectName.setText(proj.getName());

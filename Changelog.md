@@ -3,6 +3,7 @@
 
 #### improvements
 * Support for self-signed certificates (when imported into Android)
+* Clickable links in project and task descriptions
 
 #### fixes
 * Wrong login credentials result in kanboard version error

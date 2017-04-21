@@ -36,6 +36,7 @@ import android.support.v4.widget.NestedScrollView;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.text.method.LinkMovementMethod;
 import android.util.Log;
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
@@ -395,6 +396,7 @@ public class TaskDetailActivity extends AppCompatActivity {
         textDateDue = (TextView) findViewById(R.id.text_DateDue);
 
         textDescription = (TextView) findViewById(R.id.text_Description);
+        textDescription.setMovementMethod(LinkMovementMethod.getInstance());
 
         commentListview = (ListView) findViewById(R.id.comment_listview);
         registerForContextMenu(commentListview);

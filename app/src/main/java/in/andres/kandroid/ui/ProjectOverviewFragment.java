@@ -24,6 +24,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.text.TextUtils;
 import android.text.format.DateFormat;
+import android.text.method.LinkMovementMethod;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -64,6 +65,7 @@ public class ProjectOverviewFragment extends Fragment {
         if (project != null) {
             assert getView() != null : "ProjectOverviewFragment: getView() returned null";
             TextView projectDescription = (TextView) getView().findViewById(R.id.project_description);
+            projectDescription.setMovementMethod(LinkMovementMethod.getInstance());
             TextView projectNBActiveTasks = (TextView) getView().findViewById(R.id.project_active_tasks);
             TextView projectNBInactiveTasks = (TextView) getView().findViewById(R.id.project_inactive_tasks);
             TextView projectNBOverdueTasks = (TextView) getView().findViewById(R.id.project_overdue_tasks);
