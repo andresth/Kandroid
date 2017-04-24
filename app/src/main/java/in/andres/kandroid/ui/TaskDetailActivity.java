@@ -116,6 +116,7 @@ public class TaskDetailActivity extends AppCompatActivity {
     private Hashtable<Integer, Double> hasTimer = new Hashtable<>();
 //    private HashSet<Integer> hasTimer = new HashSet<>();
     private MenuItem refreshAction;
+    private MenuItem opencloseAction;
     private int activeRequests = 0;
     private boolean progressVisible = false;
     private Context self;
@@ -312,6 +313,9 @@ public class TaskDetailActivity extends AppCompatActivity {
                 textStatus.setText(Utils.fromHtml(getString(R.string.taskview_status, getString(R.string.taskview_status_open))));
                 fabMenuButtonOpenCloseTask.setImageDrawable(getDrawable(R.drawable.task_close));
                 fabMenuLabelOpenCloseTask.setText(getString(R.string.taskview_fab_close_task));
+                if (opencloseAction != null) {
+                    opencloseAction.setTitle(R.string.taskview_fab_close_task);
+                }
                 showProgress();
                 kanboardAPI.getTask(task.getId());
             } else
@@ -325,6 +329,9 @@ public class TaskDetailActivity extends AppCompatActivity {
                 textStatus.setText(Utils.fromHtml(getString(R.string.taskview_status, getString(R.string.taskview_status_closed))));
                 fabMenuButtonOpenCloseTask.setImageDrawable(getDrawable(R.drawable.task_open));
                 fabMenuLabelOpenCloseTask.setText(getString(R.string.taskview_fab_open_task));
+                if (opencloseAction != null) {
+                    opencloseAction.setTitle(R.string.taskview_fab_open_task);
+                }
                 showProgress();
                 kanboardAPI.getTask(task.getId());
             } else
@@ -612,8 +619,14 @@ public class TaskDetailActivity extends AppCompatActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.main, menu);
+        getMenuInflater().inflate(R.menu.activity_taskdetail_main, menu);
         refreshAction = menu.findItem(R.id.action_refresh);
+        opencloseAction = menu.findItem(R.id.action_close_task);
+        if (task.getIsActive()) {
+            opencloseAction.setTitle(R.string.taskview_fab_close_task);
+        } else {
+            opencloseAction.setTitle(R.string.taskview_fab_open_task);
+        }
         if (activeRequests > 0 && refreshAction != null) {
             ProgressBar prog = new ProgressBar(self);
             prog.getIndeterminateDrawable().setColorFilter(Color.WHITE, android.graphics.PorterDuff.Mode.MULTIPLY);
@@ -633,6 +646,29 @@ public class TaskDetailActivity extends AppCompatActivity {
                 return true;
             case R.id.action_refresh:
                 refresh();
+                return true;
+            case R.id.action_new_comment:
+                showCommentDialog(null);
+                return true;
+            case R.id.action_new_subtask:
+                showSubtaskDialog(null);
+                return true;
+            case R.id.action_edit_task:
+                Intent intent = new Intent(getBaseContext(), TaskEditActivity.class);
+                intent.putExtra("task", task);
+                intent.putExtra("projectusers", (Hashtable<Integer, String>)users);
+                startActivityForResult(intent, Constants.RequestEditTask);
+                return true;
+            case R.id.action_close_task:
+                setResult(Constants.ResultChanged);
+                if (task.getIsActive()) {
+                    kanboardAPI.closeTask(task.getId());
+                } else {
+                    kanboardAPI.openTask(task.getId());
+                }
+                return true;
+            case R.id.action_delete_task:
+                showDeleteTaskDialog(task);
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -943,6 +979,13 @@ public class TaskDetailActivity extends AppCompatActivity {
         } else {
             fabMenuButtonOpenCloseTask.setImageDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable.task_open, null));
             fabMenuLabelOpenCloseTask.setText(getString(R.string.taskview_fab_open_task));
+        }
+        if (opencloseAction != null) {
+            if (task.getIsActive()) {
+                opencloseAction.setTitle(getString(R.string.taskview_fab_close_task));
+            } else {
+                opencloseAction.setTitle(getString(R.string.taskview_fab_open_task));
+            }
         }
     }
 

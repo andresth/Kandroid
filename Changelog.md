@@ -1,3 +1,11 @@
+## 0.5.5 (development)
+#### new features
+
+#### improvements
+* replaced floating action button with the default option menu to support smaller layouts
+
+#### fixes
+
 ## 0.5.4
 #### new features
 

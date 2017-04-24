@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/action_refresh"
+        android:orderInCategory="100"
+        android:icon="@drawable/refresh_white"
+        android:title="@string/action_refresh"
+        app:showAsAction="always" />
+    <item
+        android:id="@+id/action_new_subtask"
+        android:orderInCategory="100"
+        android:icon="@drawable/subtask_white"
+        android:title="@string/taskview_fab_new_subtask"
+        app:showAsAction="never"/>
+    <item
+        android:id="@+id/action_new_comment"
+        android:orderInCategory="100"
+        android:icon="@drawable/comment"
+        android:title="@string/taskview_fab_new_comment"
+        app:showAsAction="never"/>
+    <item
+        android:id="@+id/action_edit_task"
+        android:orderInCategory="100"
+        android:icon="@drawable/task_edit"
+        android:title="@string/taskview_fab_edit_task"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/action_close_task"
+        android:orderInCategory="100"
+        android:icon="@drawable/task_edit"
+        android:title="@string/taskview_fab_close_task"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/action_delete_task"
+        android:orderInCategory="100"
+        android:icon="@drawable/task_edit"
+        android:title="@string/taskview_fab_remove_task"
+        app:showAsAction="never" />
+</menu>
