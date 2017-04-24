@@ -6,7 +6,7 @@ android {
     buildToolsVersion "25.0.2"
     defaultConfig {
         applicationId "in.andres.kandroid"
-        minSdkVersion 21
+        minSdkVersion 17
         targetSdkVersion 25
         versionCode 14
         versionName "0.5.4"
