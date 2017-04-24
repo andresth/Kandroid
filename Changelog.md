@@ -6,6 +6,7 @@
 * replaced floating action button with the default option menu to support smaller layouts
 
 #### fixes
+* Various bug fixes
 
 ## 0.5.4
 #### new features
