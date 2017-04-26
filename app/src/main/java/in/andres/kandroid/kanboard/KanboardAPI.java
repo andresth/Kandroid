@@ -71,6 +71,7 @@ import in.andres.kandroid.kanboard.events.OnGetActiveSwimlanesListener;
 import in.andres.kandroid.kanboard.events.OnGetAllCategoriesListener;
 import in.andres.kandroid.kanboard.events.OnGetAllCommentsListener;
 import in.andres.kandroid.kanboard.events.OnGetAllSubtasksListener;
+import in.andres.kandroid.kanboard.events.OnGetAllTaskFilesListener;
 import in.andres.kandroid.kanboard.events.OnGetAllTasksListener;
 import in.andres.kandroid.kanboard.events.OnGetCategoryListener;
 import in.andres.kandroid.kanboard.events.OnGetColumnsListener;
@@ -593,6 +594,25 @@ public class KanboardAPI {
                 return;
             }
 
+            if (s.Request.Command.equalsIgnoreCase("getAllTaskFiles")) {
+                List<KanboardTaskFile> res = null;
+                try {
+                    if (s.Result[0].has("result")) {
+                        success = true;
+                        res = new ArrayList<>();
+                        JSONArray jsa = s.Result[0].getJSONArray("result");
+                        for (int i = 0; i < jsa.length(); i++) {
+                            res.add(new KanboardTaskFile(jsa.getJSONObject(i)));
+                        }
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                for (OnGetAllTaskFilesListener l: onGetAllTaskFilesListeners)
+                    l.onGetAllTaskFiles(success, res);
+                return;
+            }
+
             if (s.Request.Command.equalsIgnoreCase("getActiveSwimlanes")) {
                 List<KanboardSwimlane> res = null;
                 try {
@@ -883,6 +903,7 @@ public class KanboardAPI {
     private HashSet<OnGetDefaultColorsListener> onGetDefaultColorsListeners = new HashSet<>();
     private HashSet<OnGetMyProjectsListener> onGetMyProjectsListeners = new HashSet<>();
     private HashSet<OnGetMyProjectsListListener> onGetMyProjectsListListeners = new HashSet<>();
+    private HashSet<OnGetAllTaskFilesListener> onGetAllTaskFilesListeners = new HashSet<>();
 
     //HashSets for AsyncTask limiting
     private HashSet<Integer> hasSubtaskTimerSet = new HashSet<>();
@@ -1183,6 +1204,14 @@ public class KanboardAPI {
 
     public void removeOnGetMyProjectsListListeners(@NonNull OnGetMyProjectsListListener listener) {
         onGetMyProjectsListListeners.remove(listener);
+    }
+
+    public void addOnGetAllTaskFilesListListeners(@NonNull OnGetAllTaskFilesListener listener) {
+        onGetAllTaskFilesListeners.add(listener);
+    }
+
+    public void removeOnGetAllTaskFilesListeners(@NonNull OnGetAllTaskFilesListener listener) {
+        onGetAllTaskFilesListeners.remove(listener);
     }
 
     // API Calls
