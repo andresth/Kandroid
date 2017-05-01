@@ -588,6 +588,7 @@ public class TaskDetailActivity extends AppCompatActivity {
         outState.putSerializable("users", (Hashtable<Integer, String>) users);
         outState.putSerializable("comments", (ArrayList<KanboardComment>) comments);
         outState.putSerializable("subtasks", (ArrayList<KanboardSubtask>) subtasks);
+        outState.putSerializable("files", (ArrayList<KanboardTaskFile>) files);
 
         if (BuildConfig.DEBUG) Log.d(Constants.TAG, "TaskDetailActivity: saved savedInstanceState");
     }
@@ -730,12 +731,13 @@ public class TaskDetailActivity extends AppCompatActivity {
             users = (Hashtable<Integer, String>) ou;
         comments = (ArrayList<KanboardComment>) savedInstanceState.getSerializable("comments");
         subtasks = (ArrayList<KanboardSubtask>) savedInstanceState.getSerializable("subtasks");
+        files = (ArrayList<KanboardTaskFile>) savedInstanceState.getSerializable("files");
 
         setTaskDetails();
         setCategoryDetails();
         setSwimlaneDetails(swimlane.getName());
 
-        if (comments != null){
+        if (comments != null) {
             commentListview.setAdapter(new CommentAdapter (getBaseContext(), comments));
             findViewById(R.id.card_comments).setVisibility(View.VISIBLE);
         } else {
@@ -747,6 +749,15 @@ public class TaskDetailActivity extends AppCompatActivity {
             findViewById(R.id.card_subtasks).setVisibility(View.VISIBLE);
         } else {
             findViewById(R.id.card_subtasks).setVisibility(View.GONE);
+        }
+
+        if (files != null) {
+            filesListview.setAdapter(new TaskFilesAdapter(getBaseContext(), files));
+            findViewById(R.id.card_files).setVisibility(View.VISIBLE);
+            Log.d(Constants.TAG, "restore files");
+        } else {
+            findViewById(R.id.card_files).setVisibility(View.GONE);
+            Log.d(Constants.TAG, "no files");
         }
 
     }
