@@ -86,12 +86,14 @@ import in.andres.kandroid.kanboard.KanboardComment;
 import in.andres.kandroid.kanboard.KanboardSubtask;
 import in.andres.kandroid.kanboard.KanboardSwimlane;
 import in.andres.kandroid.kanboard.KanboardTask;
+import in.andres.kandroid.kanboard.KanboardTaskFile;
 import in.andres.kandroid.kanboard.KanboardUserInfo;
 import in.andres.kandroid.kanboard.events.OnCloseTaskListener;
 import in.andres.kandroid.kanboard.events.OnCreateCommentListener;
 import in.andres.kandroid.kanboard.events.OnCreateSubtaskListener;
 import in.andres.kandroid.kanboard.events.OnGetAllCommentsListener;
 import in.andres.kandroid.kanboard.events.OnGetAllSubtasksListener;
+import in.andres.kandroid.kanboard.events.OnGetAllTaskFilesListener;
 import in.andres.kandroid.kanboard.events.OnGetCategoryListener;
 import in.andres.kandroid.kanboard.events.OnGetProjectUsersListener;
 import in.andres.kandroid.kanboard.events.OnGetSwimlaneListener;
@@ -112,6 +114,7 @@ public class TaskDetailActivity extends AppCompatActivity {
     private KanboardUserInfo me;
     private List<KanboardComment> comments;
     private List<KanboardSubtask> subtasks;
+    private List<KanboardTaskFile> files;
     private Dictionary<Integer, String> users;
     private Hashtable<Integer, Double> hasTimer = new Hashtable<>();
 //    private HashSet<Integer> hasTimer = new HashSet<>();
@@ -311,7 +314,7 @@ public class TaskDetailActivity extends AppCompatActivity {
         public void onOpenTask(boolean success) {
             if (success) {
                 textStatus.setText(Utils.fromHtml(getString(R.string.taskview_status, getString(R.string.taskview_status_open))));
-                fabMenuButtonOpenCloseTask.setImageDrawable(getDrawable(R.drawable.task_close));
+                fabMenuButtonOpenCloseTask.setImageDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable.task_close, null));
                 fabMenuLabelOpenCloseTask.setText(getString(R.string.taskview_fab_close_task));
                 if (opencloseAction != null) {
                     opencloseAction.setTitle(R.string.taskview_fab_close_task);
@@ -327,7 +330,7 @@ public class TaskDetailActivity extends AppCompatActivity {
         public void onCloseTask(boolean success) {
             if (success) {
                 textStatus.setText(Utils.fromHtml(getString(R.string.taskview_status, getString(R.string.taskview_status_closed))));
-                fabMenuButtonOpenCloseTask.setImageDrawable(getDrawable(R.drawable.task_open));
+                fabMenuButtonOpenCloseTask.setImageDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable.task_open, null));
                 fabMenuLabelOpenCloseTask.setText(getString(R.string.taskview_fab_open_task));
                 if (opencloseAction != null) {
                     opencloseAction.setTitle(R.string.taskview_fab_open_task);
@@ -336,6 +339,17 @@ public class TaskDetailActivity extends AppCompatActivity {
                 kanboardAPI.getTask(task.getId());
             } else
                 Snackbar.make(findViewById(R.id.root_layout), getString(R.string.error_msg_close_task), Snackbar.LENGTH_LONG).show();
+        }
+    };
+    private OnGetAllTaskFilesListener getAllTaskFilesListener = new OnGetAllTaskFilesListener() {
+        @Override
+        public void onGetAllTaskFiles(boolean success, List<KanboardTaskFile> result) {
+            hideProgress();
+            if (success && result.size() > 0) {
+                findViewById(R.id.card_files).setVisibility(View.VISIBLE);
+                files = result;
+                filesListview.setAdapter(new TaskFilesAdapter(getBaseContext(), files));
+            }
         }
     };
     //endregion
@@ -362,6 +376,8 @@ public class TaskDetailActivity extends AppCompatActivity {
 
     private ListView subtaskListview;
 
+    private ListView filesListview;
+
     private FloatingActionButton fabMenu;
     private FloatingActionButton fabMenuButtonRemoveTask;
     private FloatingActionButton fabMenuButtonOpenCloseTask;
@@ -385,6 +401,7 @@ public class TaskDetailActivity extends AppCompatActivity {
         findViewById(R.id.card_description).setVisibility(View.GONE);
         findViewById(R.id.card_subtasks).setVisibility(View.GONE);
         findViewById(R.id.card_comments).setVisibility(View.GONE);
+        findViewById(R.id.card_files).setVisibility(View.GONE);
 
         textCategory = (TextView) findViewById(R.id.text_category);
         textStatus = (TextView) findViewById(R.id.text_status);
@@ -410,6 +427,8 @@ public class TaskDetailActivity extends AppCompatActivity {
 
         subtaskListview = (ListView) findViewById(R.id.subtask_listview);
         registerForContextMenu(subtaskListview);
+
+        filesListview = (ListView) findViewById(R.id.files_listview);
 
         fabMenu = (FloatingActionButton) findViewById(R.id.fab);
         fabMenuButtonRemoveTask = (FloatingActionButton) findViewById(R.id.fab_menu_button_remove_task);
@@ -515,6 +534,7 @@ public class TaskDetailActivity extends AppCompatActivity {
             kanboardAPI.addOnRemoveSubtaskListener(removeSubtaskListener);
             kanboardAPI.addOnOpenTaskListener(openTaskListener);
             kanboardAPI.addOnCloseTaskListener(closeTaskListener);
+            kanboardAPI.addOnGetAllTaskFilesListListeners(getAllTaskFilesListener);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -779,6 +799,8 @@ public class TaskDetailActivity extends AppCompatActivity {
         kanboardAPI.getAllComments(task.getId());
         showProgress();
         kanboardAPI.getAllSubtasks(task.getId());
+        showProgress();
+        kanboardAPI.getAllTaskFiles(task.getId());
     }
 
     private void showCommentDialog(@Nullable final KanboardComment comment) {
@@ -1120,6 +1142,39 @@ public class TaskDetailActivity extends AppCompatActivity {
             ((TextView) convertView.findViewById(R.id.date)).setText(Utils.fromHtml(String.format("<small>%tF</small>", mObjects.get(position).getDateModification())));
             ((TextView) convertView.findViewById(R.id.comment)).setText(Utils.fromHtml(mRenderer.render(mParser.parse(mObjects.get(position).getContent()))));
 
+            return convertView;
+        }
+    }
+
+    private class TaskFilesAdapter extends ArrayAdapter<KanboardTaskFile> {
+        private Context mContext;
+        private LayoutInflater mInflater;
+        List<KanboardTaskFile> mObjects;
+
+        public TaskFilesAdapter(Context context, List<KanboardTaskFile> objects) {
+            super(context, R.layout.listitem_comment, objects);
+            mContext = context;
+            mInflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            mObjects = objects;
+
+        }
+
+        @NonNull
+        @Override
+        public View getView(int position, View convertView, @NonNull ViewGroup parent) {
+            if (convertView == null) {
+                convertView = mInflater.inflate(R.layout.listitem_taskfiles, parent, false);
+                convertView.setLongClickable(true);
+            }
+
+            ((TextView) convertView.findViewById(R.id.filename)).setText(String.format("%s", mObjects.get(position).getName()));
+            double size = mObjects.get(position).getSize();
+            int rounds = 0;
+            while (size > 1024 && rounds < 4) {
+                size /= 1024;
+                rounds++;
+            }
+            ((TextView) convertView.findViewById(R.id.filesize)).setText(String.format(Locale.getDefault(), "%.2f %s", size, mContext.getResources().getStringArray(R.array.file_sizes)[rounds]));
             return convertView;
         }
     }

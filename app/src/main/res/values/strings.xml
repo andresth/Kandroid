@@ -112,6 +112,7 @@
     <string name="taskview_caption_information"><big><b><u>Information</u></b></big></string>
     <string name="taskview_caption_timetracking"><big><b><u>Timetracking</u></b></big></string>
     <string name="taskview_caption_comments"><big><b><u>Comments</u></b></big></string>
+    <string name="taskview_caption_files"><big><b><u>Files</u></b></big></string>
     <string name="taskview_caption_description"><big><b><u>Description</u></b></big></string>
     <string name="taskview_caption_subtask"><big><b><u>Subtasks</u></b></big></string>
     <string name="taskview_fab_new_comment">New Comment</string>
@@ -165,4 +166,12 @@
     <string name="acra_dialog_text_upload" translatable="false">An unexpected error occurred forcing the
     application to stop. Please help us fix this by sending us error data,
     all you have to do is click OK.</string>
+
+    <array name="file_sizes">
+        <item>B</item>
+        <item>kiB</item>
+        <item>MiB</item>
+        <item>GiB</item>
+        <item>TiB</item>
+    </array>
 </resources>
