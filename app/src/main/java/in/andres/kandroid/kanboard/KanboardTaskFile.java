@@ -21,10 +21,11 @@ package in.andres.kandroid.kanboard;
 
 import org.json.JSONObject;
 
+import java.io.Serializable;
 import java.util.Date;
 
 @SuppressWarnings("unused")
-public class KanboardTaskFile {
+public class KanboardTaskFile implements Serializable{
     private int id;
     private String name;
     private String path;
