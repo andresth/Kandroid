@@ -153,9 +153,11 @@
 
     <!--Menu strings-->
     <string name="action_edit">Edit</string>
+    <string name="action_download">Download</string>
     <string name="action_delete">Delete</string>
     <string name="menu_caption_comment">Comment #%d</string>
     <string name="menu_caption_subtask">Comment #%d</string>
+    <string name="menu_caption_file">File #%d</string>
 
     <!--ARAC strings-->
     <string name="acra_send_mail" translatable="false">Send email</string>

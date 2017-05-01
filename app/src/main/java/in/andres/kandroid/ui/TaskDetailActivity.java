@@ -429,6 +429,7 @@ public class TaskDetailActivity extends AppCompatActivity {
         registerForContextMenu(subtaskListview);
 
         filesListview = (ListView) findViewById(R.id.files_listview);
+        registerForContextMenu(filesListview);
 
         fabMenu = (FloatingActionButton) findViewById(R.id.fab);
         fabMenuButtonRemoveTask = (FloatingActionButton) findViewById(R.id.fab_menu_button_remove_task);
@@ -614,6 +615,13 @@ public class TaskDetailActivity extends AppCompatActivity {
             MenuInflater inflater = getMenuInflater();
             inflater.inflate(R.menu.activity_taskdetail_context_subtask, menu);
         }
+        if (v.getId() == R.id.files_listview) {
+            menu.setHeaderTitle(getString(R.string.menu_caption_file,
+                    ((KanboardTaskFile)filesListview.getAdapter().getItem(((AdapterView.AdapterContextMenuInfo)menuInfo).position)).getId()
+            ));
+            MenuInflater inflater = getMenuInflater();
+            inflater.inflate(R.menu.activity_taskdetail_context_files, menu);
+        }
     }
 
     @Override
@@ -631,6 +639,12 @@ public class TaskDetailActivity extends AppCompatActivity {
                 return super.onContextItemSelected(item);
             case R.id.action_delete_subtask:
                 showDeleteSubtaskDialog((KanboardSubtask)subtaskListview.getAdapter().getItem(info.position));
+                return true;
+            case R.id.action_download_file:
+                Snackbar.make(findViewById(R.id.root_layout), getString(R.string.error_msg_not_implemented), Snackbar.LENGTH_LONG).show();
+                return true;
+            case R.id.action_delete_file:
+                Snackbar.make(findViewById(R.id.root_layout), getString(R.string.error_msg_not_implemented), Snackbar.LENGTH_LONG).show();
                 return true;
             default:
                 return super.onContextItemSelected(item);
