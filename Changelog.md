@@ -1,6 +1,7 @@
 ## 0.5.5 (development)
 #### new features
 * Support for Android 4.2
+* Rudimentary support for task attachments
 
 #### improvements
 * replaced floating action button with the default option menu to support smaller layouts
