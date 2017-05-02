@@ -592,6 +592,20 @@ public class KanboardRequest {
                         "    }\n" +
                         "}", taskid)});
     }
+
+    @NonNull
+    public static KanboardRequest removeTaskFile(int fileid) {
+        return new KanboardRequest("removeTaskFile", new String[] {String.format(
+                "{\n" +
+                        "    \"jsonrpc\": \"2.0\",\n" +
+                        "    \"method\": \"removeTaskFile\",\n" +
+                        "    \"id\": 447036524,\n" +
+                        "    \"params\": [\n" +
+                        "        \"%d\"\n" +
+                        "    ]" +
+                        "    }\n" +
+                        "}", fileid)});
+    }
     //endregion
 
     //region Custom API

@@ -92,6 +92,7 @@ import in.andres.kandroid.kanboard.events.OnGetVersionListener;
 import in.andres.kandroid.kanboard.events.OnOpenTaskListener;
 import in.andres.kandroid.kanboard.events.OnRemoveCommentListener;
 import in.andres.kandroid.kanboard.events.OnRemoveSubtaskListener;
+import in.andres.kandroid.kanboard.events.OnRemoveTaskFileListener;
 import in.andres.kandroid.kanboard.events.OnRemoveTaskListener;
 import in.andres.kandroid.kanboard.events.OnSubtaskTimetrackingListener;
 import in.andres.kandroid.kanboard.events.OnUpdateCommentListener;
@@ -613,6 +614,13 @@ public class KanboardAPI {
                 return;
             }
 
+            if (s.Request.Command.equalsIgnoreCase("removeTaskFile")) {
+                success = s.Result[0].optBoolean("result", false);
+                for (OnRemoveTaskFileListener l: onRemoveTaskFileListeners)
+                    l.onRemoveTaskFile(success);
+                return;
+            }
+
             if (s.Request.Command.equalsIgnoreCase("getActiveSwimlanes")) {
                 List<KanboardSwimlane> res = null;
                 try {
@@ -904,6 +912,7 @@ public class KanboardAPI {
     private HashSet<OnGetMyProjectsListener> onGetMyProjectsListeners = new HashSet<>();
     private HashSet<OnGetMyProjectsListListener> onGetMyProjectsListListeners = new HashSet<>();
     private HashSet<OnGetAllTaskFilesListener> onGetAllTaskFilesListeners = new HashSet<>();
+    private HashSet<OnRemoveTaskFileListener> onRemoveTaskFileListeners = new HashSet<>();
 
     //HashSets for AsyncTask limiting
     private HashSet<Integer> hasSubtaskTimerSet = new HashSet<>();
@@ -1214,6 +1223,14 @@ public class KanboardAPI {
         onGetAllTaskFilesListeners.remove(listener);
     }
 
+    public void addOnRemoveTaskFileListeners(@NonNull OnRemoveTaskFileListener listener) {
+        onRemoveTaskFileListeners.add(listener);
+    }
+
+    public void removeRemoveTaskFileListeners(@NonNull OnRemoveTaskFileListener listener) {
+        onRemoveTaskFileListeners.remove(listener);
+    }
+
     // API Calls
 
     public void getMe() {
@@ -1396,6 +1413,10 @@ public class KanboardAPI {
 
     public void getAllTaskFiles(int taskid) {
         new KanboardAsync().executeOnExecutor(threadPoolExecutor, KanboardRequest.getAllTaskFiles(taskid));
+    }
+
+    public void removeTaskFile(int fileid) {
+        new KanboardAsync().executeOnExecutor(threadPoolExecutor, KanboardRequest.removeTaskFile(fileid));
     }
 
 //    public void KB_getDashboard() {
