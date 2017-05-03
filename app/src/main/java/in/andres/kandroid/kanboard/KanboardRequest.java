@@ -603,7 +603,6 @@ public class KanboardRequest {
                         "    \"params\": [\n" +
                         "        \"%d\"\n" +
                         "    ]" +
-                        "    }\n" +
                         "}", fileid)});
     }
     //endregion
