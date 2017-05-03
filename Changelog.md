@@ -1,4 +1,4 @@
-## 0.5.5 (development)
+## 0.5.5
 #### new features
 * Support for Android 4.2
 * Rudimentary support for task attachments
