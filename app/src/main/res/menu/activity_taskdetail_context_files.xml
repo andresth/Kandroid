@@ -2,7 +2,8 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android" >
     <item
         android:id="@+id/action_download_file"
-        android:title="@string/action_download" />
+        android:title="@string/action_download"
+        android:visible="false"/>
     <item
         android:id="@+id/action_delete_file"
         android:title="@string/action_delete" />

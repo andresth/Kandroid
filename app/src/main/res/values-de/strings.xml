@@ -152,4 +152,6 @@
     <string name="dlg_devel_version">Auf diesem Server läuft eine Entwicklerversion von Kanboard. Kandroid funktioniert möglicherweise nicht mit diesem Server.</string>
     <string name="action_download">Herunterladen</string>
     <string name="menu_caption_file">Datei #%d</string>
+    <string name="delete_dlg_file">Datei löschen</string>
+    <string name="error_msg_remove_File">Fehler beim löschen der Datei!</string>
 </resources>

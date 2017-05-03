@@ -101,6 +101,7 @@ import in.andres.kandroid.kanboard.events.OnGetTaskListener;
 import in.andres.kandroid.kanboard.events.OnOpenTaskListener;
 import in.andres.kandroid.kanboard.events.OnRemoveCommentListener;
 import in.andres.kandroid.kanboard.events.OnRemoveSubtaskListener;
+import in.andres.kandroid.kanboard.events.OnRemoveTaskFileListener;
 import in.andres.kandroid.kanboard.events.OnRemoveTaskListener;
 import in.andres.kandroid.kanboard.events.OnSubtaskTimetrackingListener;
 import in.andres.kandroid.kanboard.events.OnUpdateCommentListener;
@@ -349,6 +350,19 @@ public class TaskDetailActivity extends AppCompatActivity {
                 findViewById(R.id.card_files).setVisibility(View.VISIBLE);
                 files = result;
                 filesListview.setAdapter(new TaskFilesAdapter(getBaseContext(), files));
+            } else {
+                findViewById(R.id.card_files).setVisibility(View.GONE);
+            }
+        }
+    };
+    private OnRemoveTaskFileListener removeTaskFileListener = new OnRemoveTaskFileListener() {
+        @Override
+        public void onRemoveTaskFile(boolean success) {
+            if (success) {
+                showProgress();
+                kanboardAPI.getAllTaskFiles(task.getId());
+            } else {
+                Snackbar.make(findViewById(R.id.root_layout), getString(R.string.error_msg_remove_subtask), Snackbar.LENGTH_LONG).show();
             }
         }
     };
@@ -536,6 +550,7 @@ public class TaskDetailActivity extends AppCompatActivity {
             kanboardAPI.addOnOpenTaskListener(openTaskListener);
             kanboardAPI.addOnCloseTaskListener(closeTaskListener);
             kanboardAPI.addOnGetAllTaskFilesListListeners(getAllTaskFilesListener);
+            kanboardAPI.addOnRemoveTaskFileListeners(removeTaskFileListener);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -645,7 +660,7 @@ public class TaskDetailActivity extends AppCompatActivity {
                 Snackbar.make(findViewById(R.id.root_layout), getString(R.string.error_msg_not_implemented), Snackbar.LENGTH_LONG).show();
                 return true;
             case R.id.action_delete_file:
-                Snackbar.make(findViewById(R.id.root_layout), getString(R.string.error_msg_not_implemented), Snackbar.LENGTH_LONG).show();
+                showDeleteTaskFileDialog((KanboardTaskFile) filesListview.getAdapter().getItem(info.position));
                 return true;
             default:
                 return super.onContextItemSelected(item);
@@ -937,6 +952,23 @@ public class TaskDetailActivity extends AppCompatActivity {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 kanboardAPI.removeSubtask(subtask.getId());
+            }
+        });
+        dlgBuilder.setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {}
+        });
+        dlgBuilder.show();
+    }
+
+    private void showDeleteTaskFileDialog(final KanboardTaskFile taskfile) {
+        AlertDialog.Builder dlgBuilder = new AlertDialog.Builder(TaskDetailActivity.this);
+        dlgBuilder.setTitle(getString(R.string.delete_dlg_file));
+        dlgBuilder.setMessage(getString(R.string.delete_dlg_message));
+        dlgBuilder.setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                kanboardAPI.removeTaskFile(taskfile.getId());
             }
         });
         dlgBuilder.setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
