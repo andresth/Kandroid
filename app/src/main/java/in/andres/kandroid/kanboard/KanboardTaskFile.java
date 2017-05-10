@@ -45,7 +45,7 @@ public class KanboardTaskFile implements Serializable{
         username = json.optString("username");
         long tmpTime = json.optLong("date");
         if (tmpTime > 0)
-            fileDate = new Date(tmpTime);
+            fileDate = new Date(tmpTime * 1000);
         else
             fileDate = null;
     }
