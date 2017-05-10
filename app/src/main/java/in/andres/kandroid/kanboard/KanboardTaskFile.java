@@ -43,6 +43,11 @@ public class KanboardTaskFile implements Serializable{
         userId = json.optInt("user_id", -1);
         size = json.optLong("size", 0);
         username = json.optString("username");
+        long tmpTime = json.optLong("date");
+        if (tmpTime > 0)
+            fileDate = new Date(tmpTime);
+        else
+            fileDate = null;
     }
 
     public int getId() {
