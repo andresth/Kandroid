@@ -77,4 +77,8 @@ public class KanboardTaskFile implements Serializable{
     public long getSize() {
         return size;
     }
+
+    public Date getFileDate() {
+        return fileDate;
+    }
 }
