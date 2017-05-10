@@ -193,6 +193,8 @@ public class TaskDetailActivity extends AppCompatActivity {
                 //Send change notification to update usernames in comments
                 if (commentListview.getAdapter() != null)
                     ((CommentAdapter) commentListview.getAdapter()).notifyDataSetChanged();
+                if (filesListview.getAdapter() != null)
+                    ((TaskFilesAdapter) filesListview.getAdapter()).notifyDataSetChanged();
             }
         }
     };
@@ -1224,6 +1226,8 @@ public class TaskDetailActivity extends AppCompatActivity {
                 convertView.setLongClickable(true);
             }
 
+            ((TextView) convertView.findViewById(R.id.username)).setText(Utils.fromHtml(String.format("<small>%s</small>", users == null ? mObjects.get(position).getUsername() : users.get(mObjects.get(position).getUserId()))));
+            ((TextView) convertView.findViewById(R.id.date)).setText(Utils.fromHtml(String.format("<small>%tF</small>", mObjects.get(position).getFileDate())));
             ((TextView) convertView.findViewById(R.id.filename)).setText(String.format("%s", mObjects.get(position).getName()));
             double size = mObjects.get(position).getSize();
             int rounds = 0;
