@@ -66,6 +66,7 @@ import in.andres.kandroid.kanboard.events.OnCloseTaskListener;
 import in.andres.kandroid.kanboard.events.OnCreateCommentListener;
 import in.andres.kandroid.kanboard.events.OnCreateSubtaskListener;
 import in.andres.kandroid.kanboard.events.OnCreateTaskListener;
+import in.andres.kandroid.kanboard.events.OnDownloadTaskFileListener;
 import in.andres.kandroid.kanboard.events.OnErrorListener;
 import in.andres.kandroid.kanboard.events.OnGetActiveSwimlanesListener;
 import in.andres.kandroid.kanboard.events.OnGetAllCategoriesListener;
@@ -621,6 +622,15 @@ public class KanboardAPI {
                 return;
             }
 
+            if (s.Request.Command.equalsIgnoreCase("downloadTaskFile")) {
+                int id = s.Result[0].optInt("id");
+                String data = s.Result[0].optString("result", "");
+                success = !data.isEmpty();
+                for (OnDownloadTaskFileListener l: onDownloadTaskFileListeners)
+                    l.onDownloadTaskFile(success, id, data);
+                return;
+            }
+
             if (s.Request.Command.equalsIgnoreCase("getActiveSwimlanes")) {
                 List<KanboardSwimlane> res = null;
                 try {
@@ -913,6 +923,7 @@ public class KanboardAPI {
     private HashSet<OnGetMyProjectsListListener> onGetMyProjectsListListeners = new HashSet<>();
     private HashSet<OnGetAllTaskFilesListener> onGetAllTaskFilesListeners = new HashSet<>();
     private HashSet<OnRemoveTaskFileListener> onRemoveTaskFileListeners = new HashSet<>();
+    private HashSet<OnDownloadTaskFileListener> onDownloadTaskFileListeners = new HashSet<>();
 
     //HashSets for AsyncTask limiting
     private HashSet<Integer> hasSubtaskTimerSet = new HashSet<>();
@@ -1231,6 +1242,14 @@ public class KanboardAPI {
         onRemoveTaskFileListeners.remove(listener);
     }
 
+    public void addOnDownloadTaskFileListeners(@NonNull OnDownloadTaskFileListener listener) {
+        onDownloadTaskFileListeners.add(listener);
+    }
+
+    public void removeDownloadTaskFileListeners(@NonNull OnDownloadTaskFileListener listener) {
+        onDownloadTaskFileListeners.remove(listener);
+    }
+
     // API Calls
 
     public void getMe() {
@@ -1417,6 +1436,10 @@ public class KanboardAPI {
 
     public void removeTaskFile(int fileid) {
         new KanboardAsync().executeOnExecutor(threadPoolExecutor, KanboardRequest.removeTaskFile(fileid));
+    }
+
+    public void downloadTaskFile(int fileid) {
+        new KanboardAsync().executeOnExecutor(threadPoolExecutor, KanboardRequest.downloadTaskFile(fileid));
     }
 
 //    public void KB_getDashboard() {

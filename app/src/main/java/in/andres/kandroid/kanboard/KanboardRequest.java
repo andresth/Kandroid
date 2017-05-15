@@ -605,6 +605,19 @@ public class KanboardRequest {
                         "    ]" +
                         "}", fileid)});
     }
+
+    @NonNull
+    public static KanboardRequest downloadTaskFile(int fileid) {
+        return new KanboardRequest("downloadTaskFile", new String[] {String.format(
+                "{\n" +
+                        "    \"jsonrpc\": \"2.0\",\n" +
+                        "    \"method\": \"downloadTaskFile\",\n" +
+                        "    \"id\": %1$d,\n" +
+                        "    \"params\": [\n" +
+                        "        \"%1$d\"\n" +
+                        "    ]" +
+                        "}", fileid)});
+    }
     //endregion
 
     //region Custom API
