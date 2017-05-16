@@ -24,5 +24,6 @@ public interface Constants {
     int ResultChanged = 1;
     int RequestEditTask = 1;
     int FileSelectCode = 10;
+    int RequestStoragePermission = 20;
     int[] minKanboardVersion = new int[] {1, 0, 38};
 }
