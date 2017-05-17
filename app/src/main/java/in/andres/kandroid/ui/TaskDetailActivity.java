@@ -19,17 +19,25 @@
 
 package in.andres.kandroid.ui;
 
+import android.Manifest;
+import android.app.Activity;
+import android.app.DownloadManager;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.graphics.Color;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.content.res.ResourcesCompat;
 import android.support.v4.view.ViewCompat;
 import android.support.v4.widget.NestedScrollView;
@@ -37,6 +45,7 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.text.method.LinkMovementMethod;
+import android.util.Base64;
 import android.util.Log;
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
@@ -48,6 +57,7 @@ import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.view.animation.OvershootInterpolator;
+import android.webkit.MimeTypeMap;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
@@ -64,6 +74,8 @@ import org.commonmark.renderer.html.HtmlNodeRendererContext;
 import org.commonmark.renderer.html.HtmlNodeRendererFactory;
 import org.commonmark.renderer.html.HtmlRenderer;
 
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -91,6 +103,7 @@ import in.andres.kandroid.kanboard.KanboardUserInfo;
 import in.andres.kandroid.kanboard.events.OnCloseTaskListener;
 import in.andres.kandroid.kanboard.events.OnCreateCommentListener;
 import in.andres.kandroid.kanboard.events.OnCreateSubtaskListener;
+import in.andres.kandroid.kanboard.events.OnDownloadTaskFileListener;
 import in.andres.kandroid.kanboard.events.OnGetAllCommentsListener;
 import in.andres.kandroid.kanboard.events.OnGetAllSubtasksListener;
 import in.andres.kandroid.kanboard.events.OnGetAllTaskFilesListener;
@@ -368,6 +381,41 @@ public class TaskDetailActivity extends AppCompatActivity {
             }
         }
     };
+    private OnDownloadTaskFileListener downloadTaskFileListener = new OnDownloadTaskFileListener() {
+        @Override
+        public void onDownloadTaskFile(boolean success, int id, String data) {
+            if (success) {
+                byte[] inData = Base64.decode(data, Base64.DEFAULT);
+                for (KanboardTaskFile f: files) {
+                    if (f.getId() == id) {
+                        try {
+                            File file = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS), f.getName());
+                            FileOutputStream outData = new FileOutputStream(file);
+                            outData.write(inData);
+                            outData.close();
+                            String mime = MimeTypeMap.getSingleton().getMimeTypeFromExtension(MimeTypeMap.getFileExtensionFromUrl(Uri.fromFile(file).toString()));
+                            if (mime == null) {
+                                mime = "application/octet-stream";
+                            }
+                            if (BuildConfig.DEBUG) {
+                                Log.d(Constants.TAG, Uri.fromFile(file).toString());
+                                Log.d(Constants.TAG, mime);
+                            }
+                            DownloadManager dm = (DownloadManager) getSystemService(Context.DOWNLOAD_SERVICE);
+                            dm.addCompletedDownload(file.getName(), "Kandroid download", false, mime, file.getPath(), file.length(), true);
+//                            Snackbar.make(findViewById(R.id.root_layout), String.format(Locale.getDefault(), "Saved file to: %s", file.getPath()), Snackbar.LENGTH_LONG).show();
+                        } catch (IOException e) {
+                            Log.w(Constants.TAG, "IOError writing file");
+                            e.printStackTrace();
+                        }
+                        break;
+                    }
+                }
+            } else {
+                Snackbar.make(findViewById(R.id.root_layout), "Unable to download file", Snackbar.LENGTH_LONG).show();
+            }
+        }
+    };
     //endregion
 
     private TextView textCategory;
@@ -553,6 +601,7 @@ public class TaskDetailActivity extends AppCompatActivity {
             kanboardAPI.addOnCloseTaskListener(closeTaskListener);
             kanboardAPI.addOnGetAllTaskFilesListListeners(getAllTaskFilesListener);
             kanboardAPI.addOnRemoveTaskFileListeners(removeTaskFileListener);
+            kanboardAPI.addOnDownloadTaskFileListeners(downloadTaskFileListener);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -659,13 +708,46 @@ public class TaskDetailActivity extends AppCompatActivity {
                 showDeleteSubtaskDialog((KanboardSubtask)subtaskListview.getAdapter().getItem(info.position));
                 return true;
             case R.id.action_download_file:
-                Snackbar.make(findViewById(R.id.root_layout), getString(R.string.error_msg_not_implemented), Snackbar.LENGTH_LONG).show();
+                if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
+                    kanboardAPI.downloadTaskFile(((KanboardTaskFile) filesListview.getAdapter().getItem(info.position)).getId());
+                    Snackbar.make(findViewById(R.id.root_layout), "Starting download", Snackbar.LENGTH_LONG).show();
+                } else {
+//                    if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
+//                        new AlertDialog.Builder(this)
+//                                .setMessage("jahksedgrfkjashdgf")
+//                                .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+//                                    @Override
+//                                    public void onClick(DialogInterface dialog, int which) {
+//                                        ActivityCompat.requestPermissions((Activity) self,
+//                                                new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
+//                                                25);
+//                                    }
+//                                }).show();
+//                    }
+                    ActivityCompat.requestPermissions((Activity) self,
+                            new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
+                            Constants.RequestStoragePermission);
+
+                }
                 return true;
             case R.id.action_delete_file:
                 showDeleteTaskFileDialog((KanboardTaskFile) filesListview.getAdapter().getItem(info.position));
                 return true;
             default:
                 return super.onContextItemSelected(item);
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        switch (requestCode) {
+            case Constants.RequestStoragePermission:
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    Snackbar.make(findViewById(R.id.root_layout), "Storage permission was granted, please start the download again.", Snackbar.LENGTH_LONG).show();
+                } else {
+                    Snackbar.make(findViewById(R.id.root_layout), "Storage permission was denied.", Snackbar.LENGTH_LONG).show();
+                }
+                return;
         }
     }
 
