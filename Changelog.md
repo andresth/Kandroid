@@ -1,3 +1,12 @@
+## 0.5.6 (development)
+#### new features
+* Download files attached to tasks
+
+#### improvements
+
+#### fixes
+* Various bug fixes
+
 ## 0.5.5
 #### new features
 * Support for Android 4.2
