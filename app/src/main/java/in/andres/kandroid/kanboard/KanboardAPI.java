@@ -50,6 +50,7 @@ import java.util.HashSet;
 import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Locale;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -171,17 +172,15 @@ public class KanboardAPI {
                     try {
                         response = new JSONObject(responseStr.toString());
                     } catch (JSONException e) {
-                        if (con.getResponseCode() >= 400) {
-                            response = new JSONObject();
-                            response.put("jsonrpc", "2.0");
-                            response.put("id", null);
-                            response.put("error", new JSONObject()
-                                    .put("code", con.getResponseCode())
-                                    .put("message", con.getResponseMessage()));
-                        } else {
-                            e.printStackTrace();
-                            response = null;
-                        }
+                        //server response is not a JSON string, print it for debugging
+                        Log.d(Constants.TAG, String.format(Locale.getDefault(), "Erroneous response: %s", responseStr.toString()));
+                        response = new JSONObject();
+                        response.put("jsonrpc", "2.0");
+                        response.put("id", null);
+                        response.put("error", new JSONObject()
+                                .put("code", con.getResponseCode())
+                                .put("message", con.getResponseMessage()))
+                                .put("data", responseStr.toString());
                     }
                     responseList.add(response);
                 } catch (SSLException e) {
@@ -232,7 +231,7 @@ public class KanboardAPI {
         @Override
         protected void onPostExecute(KanboardResult s) {
             // Handle Errors
-            if (s == null) {
+            if (s == null || s.Result == null) {
                 KanboardError res = new KanboardError(null, null, 0);
                 for (OnErrorListener l: onErrorListeners)
                     l.onError(res);
