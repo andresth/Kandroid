@@ -53,6 +53,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Dictionary;
+import java.util.HashMap;
+import java.util.Hashtable;
 import java.util.List;
 
 import in.andres.kandroid.ArrayPagerAdapter;
@@ -353,6 +355,8 @@ public class MainActivity extends AppCompatActivity
             savedInstanceState.putSerializable("projectList", (ArrayList<KanboardProject>) mProjectList);
         if (Me != null)
             savedInstanceState.putSerializable("me", Me);
+        if (mColors != null)
+            savedInstanceState.putSerializable("colors", (Hashtable<String, KanboardColor>) mColors);
 
         savedInstanceState.putInt("ViewPagerItem", mViewPager.getCurrentItem());
 
@@ -380,6 +384,13 @@ public class MainActivity extends AppCompatActivity
         if (savedInstanceState.containsKey("project"))
             mProject = (KanboardProject) savedInstanceState.getSerializable("project");
         mode = savedInstanceState.getInt("mode");
+        if (savedInstanceState.containsKey("colors")) {
+            Object o = savedInstanceState.getSerializable("colors");
+            if (o instanceof HashMap)
+                mColors = new Hashtable<>((HashMap<String, KanboardColor>) o);
+            else
+                mColors = (Hashtable<String, KanboardColor>) o;
+        }
 
         if (mDashboard != null && (progressBarCount <= 0) && (mode == 0))
             showDashboard();
