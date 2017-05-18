@@ -316,6 +316,10 @@ public class MainActivity extends AppCompatActivity
             }
         });
 
+        if (savedInstanceState != null) {
+            restoreSavedState(savedInstanceState);
+        }
+
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close) {
@@ -332,16 +336,6 @@ public class MainActivity extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-        if (savedInstanceState != null) {
-            if (BuildConfig.DEBUG) Log.v(Constants.TAG, "MainActivity: restore savedInstanceState");
-
-            if (savedInstanceState.containsKey("dashboard")) {
-                // App was restarted by System, load saved instance
-                mDashboard = (KanboardDashboard) savedInstanceState.getSerializable("dashboard");
-            }
-            if (savedInstanceState.containsKey("project"))
-                mProject = (KanboardProject) savedInstanceState.getSerializable("project");
-        }
     }
 
     @Override
@@ -368,29 +362,8 @@ public class MainActivity extends AppCompatActivity
     @Override
     public void onRestoreInstanceState(Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
-        // User rotated the screen or something
-        if (BuildConfig.DEBUG) Log.v(Constants.TAG, "MainActivity: restore savedInstanceState");
 
-        if (savedInstanceState.containsKey("me")) {
-            Me = (KanboardUserInfo) savedInstanceState.getSerializable("me");
-        }
-        if (savedInstanceState.containsKey("dashboard")) {
-            mDashboard = (KanboardDashboard) savedInstanceState.getSerializable("dashboard");
-        }
-        if (savedInstanceState.containsKey("projectList")) {
-            mProjectList = (ArrayList<KanboardProject>) savedInstanceState.getSerializable("projectList");
-            populateProjectsMenu();
-        }
-        if (savedInstanceState.containsKey("project"))
-            mProject = (KanboardProject) savedInstanceState.getSerializable("project");
-        mode = savedInstanceState.getInt("mode");
-        if (savedInstanceState.containsKey("colors")) {
-            Object o = savedInstanceState.getSerializable("colors");
-            if (o instanceof HashMap)
-                mColors = new Hashtable<>((HashMap<String, KanboardColor>) o);
-            else
-                mColors = (Hashtable<String, KanboardColor>) o;
-        }
+        restoreSavedState(savedInstanceState);
 
         if (mDashboard != null && (progressBarCount <= 0) && (mode == 0))
             showDashboard();
@@ -499,6 +472,32 @@ public class MainActivity extends AppCompatActivity
     //endregion
 
     //region private methods
+
+    private void restoreSavedState(Bundle savedInstanceState) {
+        // User rotated the screen or something
+        if (BuildConfig.DEBUG) Log.v(Constants.TAG, "MainActivity: restore savedInstanceState");
+
+        if (savedInstanceState.containsKey("me")) {
+            Me = (KanboardUserInfo) savedInstanceState.getSerializable("me");
+        }
+        if (savedInstanceState.containsKey("dashboard")) {
+            mDashboard = (KanboardDashboard) savedInstanceState.getSerializable("dashboard");
+        }
+        if (savedInstanceState.containsKey("projectList")) {
+            mProjectList = (ArrayList<KanboardProject>) savedInstanceState.getSerializable("projectList");
+            populateProjectsMenu();
+        }
+        if (savedInstanceState.containsKey("project"))
+            mProject = (KanboardProject) savedInstanceState.getSerializable("project");
+        mode = savedInstanceState.getInt("mode");
+        if (savedInstanceState.containsKey("colors")) {
+            Object o = savedInstanceState.getSerializable("colors");
+            if (o instanceof HashMap)
+                mColors = new Hashtable<>((HashMap<String, KanboardColor>) o);
+            else
+                mColors = (Hashtable<String, KanboardColor>) o;
+        }
+    }
 
     private void combineDashboard() {
         if (mDashboard != null && mMyOverduetasks != null && mMyActivities != null && mProjectList != null) {
