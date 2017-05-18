@@ -42,8 +42,8 @@ public class KanboardDashboard implements Serializable {
     private List<KanboardTask> Tasks;
     private List<KanboardSubtask> Subtasks;
     private Dictionary<Integer, List<KanboardTask>> GroupedTasks;
-    private List<KanboardTask> OverdueTasks;
-    private List<KanboardActivity> Activities;
+    private List<KanboardTask> OverdueTasks = new ArrayList<>();
+    private List<KanboardActivity> Activities = new ArrayList<>();
 
     private boolean newDashFormat = false;
 
@@ -103,8 +103,6 @@ public class KanboardDashboard implements Serializable {
             for (int i = 0; i < overdue.length(); i++) {
                 OverdueTasks.add(new KanboardTask(overdue.optJSONObject(i)));
             }
-        } else {
-            OverdueTasks = null;
         }
 
         if (activities != null) {
@@ -112,8 +110,6 @@ public class KanboardDashboard implements Serializable {
             for (int i = 0; i < activities.length(); i++) {
                 Activities.add(new KanboardActivity(activities.optJSONObject(i)));
             }
-        } else {
-            Activities = null;
         }
     }
 
