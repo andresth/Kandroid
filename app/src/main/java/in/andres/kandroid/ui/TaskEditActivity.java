@@ -367,7 +367,7 @@ public class TaskEditActivity extends AppCompatActivity implements OnCreateTaskL
         btnColor.setEnabled(true);
 
         Drawable dot = ResourcesCompat.getDrawable(getResources(), R.drawable.shape_circle, null);
-        if (colorId != null) {
+        if (colorId != null && kanboardColors.get(colorId) != null) {  //FIXME: it seems that colorId can have a value that is not in the list. Fallback to defaultColor for now.
             dot.setColorFilter(kanboardColors.get(colorId).getBackground(), PorterDuff.Mode.MULTIPLY);
             btnColor.setText(Utils.fromHtml(getString(R.string.taskedit_color, kanboardColors.get(colorId).getName())));
         } else {
