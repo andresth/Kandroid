@@ -351,6 +351,8 @@ public class MainActivity extends AppCompatActivity
             savedInstanceState.putSerializable("project", mProject);
         if (mProjectList != null)
             savedInstanceState.putSerializable("projectList", (ArrayList<KanboardProject>) mProjectList);
+        if (Me != null)
+            savedInstanceState.putSerializable("me", Me);
 
         savedInstanceState.putInt("ViewPagerItem", mViewPager.getCurrentItem());
 
@@ -365,6 +367,9 @@ public class MainActivity extends AppCompatActivity
         // User rotated the screen or something
         if (BuildConfig.DEBUG) Log.v(Constants.TAG, "MainActivity: restore savedInstanceState");
 
+        if (savedInstanceState.containsKey("me")) {
+            Me = (KanboardUserInfo) savedInstanceState.getSerializable("me");
+        }
         if (savedInstanceState.containsKey("dashboard")) {
             mDashboard = (KanboardDashboard) savedInstanceState.getSerializable("dashboard");
         }
