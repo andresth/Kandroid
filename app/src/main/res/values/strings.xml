@@ -150,6 +150,7 @@
     <string name="taskedit_clear_date">Clear</string>
     <string name="taskedit_owner">Owner:</string>
     <string name="taskedit_priority">Priority:</string>
+    <string name="taskedit_column">Column:</string>
     <string name="taskedit_color"><![CDATA[<b>Color:</b> %s]]></string>
     <string name="taskedit_seclect_color">Select a color</string>
 

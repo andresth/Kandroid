@@ -154,4 +154,5 @@
     <string name="menu_caption_file">Datei #%d</string>
     <string name="delete_dlg_file">Datei löschen</string>
     <string name="error_msg_remove_File">Fehler beim löschen der Datei!</string>
+    <string name="taskedit_column">Splate:</string>
 </resources>
