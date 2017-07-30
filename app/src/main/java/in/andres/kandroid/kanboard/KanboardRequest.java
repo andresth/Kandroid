@@ -449,6 +449,24 @@ public class KanboardRequest {
                 "}", taskid)});
     }
 
+    @NonNull
+    public static KanboardRequest moveTaskPosition(int projectid, int taskid, int columnid, int position,
+                                                   int swimlaneid) {
+        return new KanboardRequest("moveTaskPosition", new String[] {String.format(
+                "{\n" +
+                "    \"jsonrpc\": \"2.0\",\n" +
+                "    \"method\": \"moveTaskPosition\",\n" +
+                "    \"id\": 117211800,\n" +
+                "    \"params\": {\n" +
+                "        \"project_id\": %d,\n" +
+                "        \"task_id\": %d,\n" +
+                "        \"column_id\": %d,\n" +
+                "        \"position\": %d,\n" +
+                "        \"swimlane_id\": %d\n" +
+                "    }\n" +
+                "}", projectid, taskid, columnid, position, swimlaneid)});
+    }
+
     @Nullable
     public static KanboardRequest createSubtask(int taskid, @NonNull String title, @Nullable Integer userid,
                                                 @Nullable Integer timeestimated, @Nullable Integer timespent, @Nullable Integer status) {
