@@ -68,6 +68,7 @@ import in.andres.kandroid.kanboard.events.OnCreateCommentListener;
 import in.andres.kandroid.kanboard.events.OnCreateSubtaskListener;
 import in.andres.kandroid.kanboard.events.OnCreateTaskListener;
 import in.andres.kandroid.kanboard.events.OnDownloadTaskFileListener;
+import in.andres.kandroid.kanboard.events.OnDuplicateTaskToProjectListener;
 import in.andres.kandroid.kanboard.events.OnErrorListener;
 import in.andres.kandroid.kanboard.events.OnGetActiveSwimlanesListener;
 import in.andres.kandroid.kanboard.events.OnGetAllCategoriesListener;
@@ -611,6 +612,17 @@ public class KanboardAPI {
                 return;
             }
 
+            if (s.Request.Command.equalsIgnoreCase("duplicateTaskToProject")) {
+                Integer res = null;
+                if (s.Result[0].has("result")) {
+                    success = true;
+                    res = s.Result[0].optInt("result");
+                }
+                for (OnDuplicateTaskToProjectListener l: onDuplicateTaskToProjectListeners)
+                    l.onDuplicateTaskToProject(success, res);
+                return;
+            }
+
             if (s.Request.Command.equalsIgnoreCase("getAllTaskFiles")) {
                 List<KanboardTaskFile> res = null;
                 try {
@@ -932,6 +944,7 @@ public class KanboardAPI {
     private HashSet<OnUpdateTaskListener> onUpdateTaskListeners = new HashSet<>();
     private HashSet<OnMoveTaskPositionListener> onMoveTaskPositionListeners = new HashSet<>();
     private HashSet<OnMoveTaskToProjectListener> onMoveTaskToProjectListeners = new HashSet<>();
+    private HashSet<OnDuplicateTaskToProjectListener> onDuplicateTaskToProjectListeners = new HashSet<>();
     private HashSet<OnGetVersionListener> onGetVersionListeners = new HashSet<>();
     private HashSet<OnErrorListener> onErrorListeners = new HashSet<>();
     private HashSet<OnGetDefaultColorListener> onGetDefaultColorListeners = new HashSet<>();
@@ -1105,6 +1118,14 @@ public class KanboardAPI {
 
     public void removeOnMoveTaskToProjectListener(@NonNull OnMoveTaskToProjectListener listener) {
         onMoveTaskToProjectListeners.remove(listener);
+    }
+
+    public void addOnDuplicateTaskToProjectListener(@NonNull OnDuplicateTaskToProjectListener listener) {
+        onDuplicateTaskToProjectListeners.add(listener);
+    }
+
+    public void removeOnDuplicateTaskToProjectListener(@NonNull OnDuplicateTaskToProjectListener listener) {
+        onDuplicateTaskToProjectListeners.remove(listener);
     }
 
     public void addOnGetAllCategoriesListener(@NonNull OnGetAllCategoriesListener listener) {
@@ -1397,6 +1418,12 @@ public class KanboardAPI {
                                   @Nullable Integer position, @Nullable Integer swimlaneid) {
         new KanboardAsync().executeOnExecutor(threadPoolExecutor,
                 KanboardRequest.moveTaskToProject(projectid, taskid, columnid, position, swimlaneid));
+    }
+
+    public void duplicateTaskToProject(int projectid, int taskid, @Nullable Integer columnid,
+                                  @Nullable Integer position, @Nullable Integer swimlaneid) {
+        new KanboardAsync().executeOnExecutor(threadPoolExecutor,
+                KanboardRequest.duplicateTaskToProject(projectid, taskid, columnid, position, swimlaneid));
     }
 
     public void getAllComments(int taskid) {

@@ -467,6 +467,7 @@ public class KanboardRequest {
                 "}", projectid, taskid, columnid, position, swimlaneid)});
     }
 
+    @NonNull
     public static KanboardRequest moveTaskToProject(int projectid, int taskid, @Nullable Integer columnid,
                                                     @Nullable Integer position, @Nullable Integer swimlaneid) {
         String content = String.format("" +
@@ -489,7 +490,30 @@ public class KanboardRequest {
                 "}", content)});
     }
 
-    @Nullable
+    @NonNull
+    public static KanboardRequest duplicateTaskToProject(int projectid, int taskid, @Nullable Integer columnid,
+                                                    @Nullable Integer position, @Nullable Integer swimlaneid) {
+        String content = String.format("" +
+                "        \"project_id\": %d,\n" +
+                "        \"task_id\": %d", projectid, taskid);
+        if (columnid != null)
+            content += String.format("" + ",\n        \"column_id\": %d", columnid);
+        if (position != null)
+            content += String.format("" + ",\n        \"position\": %d", position);
+        if (swimlaneid != null)
+            content += String.format("" + ",\n        \"swimlane_id\": %d", swimlaneid);
+        return new KanboardRequest("duplicateTaskToProject", new String[] {String.format(
+                "{\n" +
+                "    \"jsonrpc\": \"2.0\",\n" +
+                "    \"method\": \"duplicateTaskToProject\",\n" +
+                "    \"id\": 1662458687,\n" +
+                "    \"params\": {\n" +
+                "%s\n" +
+                "    }\n" +
+                "}", content)});
+    }
+
+    @NonNull
     public static KanboardRequest createSubtask(int taskid, @NonNull String title, @Nullable Integer userid,
                                                 @Nullable Integer timeestimated, @Nullable Integer timespent, @Nullable Integer status) {
         String content = String.format("" +
