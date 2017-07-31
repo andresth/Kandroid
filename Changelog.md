@@ -1,6 +1,7 @@
 ## 0.5.6 (development)
 #### new features
 * Download files attached to tasks
+* Move task to other columns
 
 #### improvements
 

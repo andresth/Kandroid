@@ -108,9 +108,11 @@ import in.andres.kandroid.kanboard.events.OnGetAllCommentsListener;
 import in.andres.kandroid.kanboard.events.OnGetAllSubtasksListener;
 import in.andres.kandroid.kanboard.events.OnGetAllTaskFilesListener;
 import in.andres.kandroid.kanboard.events.OnGetCategoryListener;
+import in.andres.kandroid.kanboard.events.OnGetColumnsListener;
 import in.andres.kandroid.kanboard.events.OnGetProjectUsersListener;
 import in.andres.kandroid.kanboard.events.OnGetSwimlaneListener;
 import in.andres.kandroid.kanboard.events.OnGetTaskListener;
+import in.andres.kandroid.kanboard.events.OnMoveTaskPositionListener;
 import in.andres.kandroid.kanboard.events.OnOpenTaskListener;
 import in.andres.kandroid.kanboard.events.OnRemoveCommentListener;
 import in.andres.kandroid.kanboard.events.OnRemoveSubtaskListener;
@@ -129,6 +131,7 @@ public class TaskDetailActivity extends AppCompatActivity {
     private List<KanboardComment> comments;
     private List<KanboardSubtask> subtasks;
     private List<KanboardTaskFile> files;
+    private List<KanboardColumn> projectColumns;
     private Dictionary<Integer, String> users;
     private Hashtable<Integer, Double> hasTimer = new Hashtable<>();
 //    private HashSet<Integer> hasTimer = new HashSet<>();
@@ -416,6 +419,26 @@ public class TaskDetailActivity extends AppCompatActivity {
             }
         }
     };
+    private OnGetColumnsListener getColumnsListener = new OnGetColumnsListener() {
+        @Override
+        public void onGetColumns(boolean success, List<KanboardColumn> result) {
+            hideProgress();
+            if (success) {
+                projectColumns = result;
+            } else {
+                Snackbar.make(findViewById(R.id.root_layout), "Error while receiving project columns", Snackbar.LENGTH_LONG).show();
+            }
+        }
+    };
+    private OnMoveTaskPositionListener moveTaskPositionListener = new OnMoveTaskPositionListener() {
+        @Override
+        public void onMoveTaskPosition(boolean success) {
+            if (success)
+                refresh();
+            else
+                Snackbar.make(findViewById(R.id.root_layout), "Error while moving task", Snackbar.LENGTH_LONG).show();
+        }
+    };
     //endregion
 
     private TextView textCategory;
@@ -602,6 +625,8 @@ public class TaskDetailActivity extends AppCompatActivity {
             kanboardAPI.addOnGetAllTaskFilesListListeners(getAllTaskFilesListener);
             kanboardAPI.addOnRemoveTaskFileListeners(removeTaskFileListener);
             kanboardAPI.addOnDownloadTaskFileListeners(downloadTaskFileListener);
+            kanboardAPI.addOnGetColumnsListener(getColumnsListener);
+            kanboardAPI.addOnMoveTaskPositionListener(moveTaskPositionListener);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -793,6 +818,11 @@ public class TaskDetailActivity extends AppCompatActivity {
                 intent.putExtra("projectusers", (Hashtable<Integer, String>)users);
                 startActivityForResult(intent, Constants.RequestEditTask);
                 return true;
+            case R.id.action_change_column:
+                showChangeColumnDialog();
+                return true;
+            case R.id.action_change_swimlane:
+                return true;
             case R.id.action_close_task:
                 setResult(Constants.ResultChanged);
                 if (task.getIsActive()) {
@@ -925,6 +955,8 @@ public class TaskDetailActivity extends AppCompatActivity {
         kanboardAPI.getAllSubtasks(task.getId());
         showProgress();
         kanboardAPI.getAllTaskFiles(task.getId());
+        showProgress();
+        kanboardAPI.getColumns(task.getProjectId());
     }
 
     private void showCommentDialog(@Nullable final KanboardComment comment) {
@@ -1000,6 +1032,37 @@ public class TaskDetailActivity extends AppCompatActivity {
                     }
                     dialog.dismiss();
                 }
+            }
+        });
+        builder.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.cancel();
+            }
+        });
+        builder.show();
+    }
+
+    private void showChangeColumnDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(self);
+        builder.setTitle(getText(R.string.taskview_fab_change_column));
+        final Spinner input = new Spinner(this);
+        ArrayAdapter<KanboardColumn> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, projectColumns);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        input.setAdapter(adapter);
+        for (int i = 0; i < projectColumns.size(); i++) {
+            if (projectColumns.get(i).getId() == task.getColumnId()) {
+                input.setSelection(i);
+                break;
+            }
+        }
+        builder.setView(input);
+        builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                setResult(Constants.ResultChanged);
+                kanboardAPI.moveTaskPosition(task.getProjectId(), task.getId(), ((KanboardColumn)input.getSelectedItem()).getId(), 1, task.getSwimlaneId());
+                dialog.dismiss();
             }
         });
         builder.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {

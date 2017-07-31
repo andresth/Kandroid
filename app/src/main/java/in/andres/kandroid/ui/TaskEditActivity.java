@@ -55,6 +55,7 @@ import java.util.Dictionary;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Hashtable;
+import java.util.List;
 
 import in.andres.kandroid.BuildConfig;
 import in.andres.kandroid.Constants;
@@ -62,14 +63,16 @@ import in.andres.kandroid.R;
 import in.andres.kandroid.Utils;
 import in.andres.kandroid.kanboard.KanboardAPI;
 import in.andres.kandroid.kanboard.KanboardColor;
+import in.andres.kandroid.kanboard.KanboardColumn;
 import in.andres.kandroid.kanboard.KanboardTask;
 import in.andres.kandroid.kanboard.events.OnCreateTaskListener;
+import in.andres.kandroid.kanboard.events.OnGetColumnsListener;
 import in.andres.kandroid.kanboard.events.OnGetDefaultColorListener;
 import in.andres.kandroid.kanboard.events.OnGetDefaultColorsListener;
 import in.andres.kandroid.kanboard.events.OnGetVersionListener;
 import in.andres.kandroid.kanboard.events.OnUpdateTaskListener;
 
-public class TaskEditActivity extends AppCompatActivity implements OnCreateTaskListener, OnUpdateTaskListener, OnGetDefaultColorListener, OnGetDefaultColorsListener, OnGetVersionListener {
+public class TaskEditActivity extends AppCompatActivity implements OnCreateTaskListener, OnUpdateTaskListener, OnGetDefaultColorListener, OnGetDefaultColorsListener, OnGetVersionListener, OnGetColumnsListener {
     private KanboardTask task;
     private String taskTitle;
     private String taskDescription;
@@ -85,6 +88,7 @@ public class TaskEditActivity extends AppCompatActivity implements OnCreateTaskL
     private String colorId;
     private int projectid;
     private Hashtable<Integer, String> projectUsers;
+    private List<KanboardColumn> projectColumns;
     private Dictionary<String, KanboardColor> kanboardColors;
     private int[] colorArray;
     private String defaultColor;
@@ -97,6 +101,7 @@ public class TaskEditActivity extends AppCompatActivity implements OnCreateTaskL
     private EditText editHoursEstimated;
     private EditText editHoursSpent;
     private Spinner spinnerProjectUsers;
+    private Spinner spinnerColumns;
 
     private KanboardAPI kanboardAPI;
 
@@ -143,10 +148,12 @@ public class TaskEditActivity extends AppCompatActivity implements OnCreateTaskL
         editHoursEstimated = (EditText) findViewById(R.id.edit_hours_estimated);
         editHoursSpent = (EditText) findViewById(R.id.edit_hours_spent);
         spinnerProjectUsers = (Spinner) findViewById(R.id.user_spinner);
+        spinnerColumns = (Spinner) findViewById(R.id.column_spinner);
 
         if (getIntent().hasExtra("task")) {
             isNewTask = false;
             task = (KanboardTask) getIntent().getSerializableExtra("task");
+            projectid = task.getProjectId();
             taskTitle = task.getTitle();
             taskDescription = task.getDescription();
             startDate = task.getDateStarted();
@@ -175,9 +182,11 @@ public class TaskEditActivity extends AppCompatActivity implements OnCreateTaskL
             kanboardAPI.addOnGetDefaultColorListener(this);
             kanboardAPI.addOnGetDefaultColorsListener(this);
             kanboardAPI.addOnGetVersionListener(this);
+            kanboardAPI.addOnGetColumnsListener(this);
             kanboardAPI.getDefaultTaskColor();
             kanboardAPI.getDefaultTaskColors();
             kanboardAPI.getVersion();
+            kanboardAPI.getColumns(projectid);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -375,5 +384,15 @@ public class TaskEditActivity extends AppCompatActivity implements OnCreateTaskL
             btnColor.setText(Utils.fromHtml(getString(R.string.taskedit_color, kanboardColors.get(defaultColor).getName())));
         }
         btnColor.setCompoundDrawablesRelativeWithIntrinsicBounds(dot, null, null, null);
+    }
+
+    @Override
+    public void onGetColumns(boolean success, List<KanboardColumn> result) {
+        if (success) {
+            projectColumns = result;
+            ArrayAdapter<KanboardColumn> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, projectColumns);
+            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+            spinnerColumns.setAdapter(adapter);
+        }
     }
 }

@@ -155,4 +155,6 @@
     <string name="delete_dlg_file">Datei löschen</string>
     <string name="error_msg_remove_File">Fehler beim löschen der Datei!</string>
     <string name="taskedit_column">Splate:</string>
+    <string name="taskview_fab_change_column">Spalte ändern</string>
+    <string name="taskview_fab_change_swimlane">Swimlane ändern</string>
 </resources>

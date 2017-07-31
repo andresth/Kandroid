@@ -123,6 +123,8 @@
     <string name="taskview_fab_open_task">Open Task</string>
     <string name="taskview_fab_remove_task">Delete Task</string>
     <string name="taskview_fab_edit_task">Edit Task</string>
+    <string name="taskview_fab_change_column">Change Column</string>
+    <string name="taskview_fab_change_swimlane">Change Swimlane</string>
     <string name="task_not_assigned">not assigned</string>
     <string name="subtask_dlg_owner">Owner:</string>
     <string name="subtask_dlg_title">Title:</string>
