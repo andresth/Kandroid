@@ -1,4 +1,11 @@
-## 0.5.6 (development)
+## 0.5.7 (development)
+#### new features
+
+#### improvements
+
+#### fixes
+
+## 0.5.6
 #### new features
 * Download files attached to tasks
 * Move task to other columns
