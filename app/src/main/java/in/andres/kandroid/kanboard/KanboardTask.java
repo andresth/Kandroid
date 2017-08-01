@@ -221,7 +221,8 @@ public class KanboardTask implements Comparable<KanboardTask>, Serializable {
 
     @Override
     public int compareTo(@NonNull KanboardTask o) {
-        return this.Title.compareTo(o.Title);
+        return this.getPosition() - o.getPosition();
+//        return this.Title.compareTo(o.Title);
     }
 
     @Override

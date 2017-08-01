@@ -29,8 +29,10 @@ import java.io.Serializable;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.Dictionary;
+import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.List;
@@ -207,22 +209,34 @@ public class KanboardProject implements Comparable<KanboardProject>, Serializabl
             }
             GroupedActiveTasks.put(col.getId(), tmpTable);
         }
+
         Categories = categories;
         for (KanboardCategory cat: Categories)
             CategoryHashtable.put(cat.getId(), cat);
+
         ActiveTasks = activetasks;
+        Collections.sort(ActiveTasks);
         for (KanboardTask task: ActiveTasks) {
             GroupedActiveTasks.get(task.getColumnId()).get(task.getSwimlaneId()).add(task);
             TaskHashtable.put(task.getId(), task);
         }
+
         InactiveTasks = inactivetasks;
+        Collections.sort(InactiveTasks);
         for (KanboardTask task: InactiveTasks) {
             GroupedInactiveTasks.get(task.getSwimlaneId()).add(task);
             TaskHashtable.put(task.getId(), task);
         }
+
         for (KanboardTask task: overduetasks) {
             OverdueTasks.add(TaskHashtable.get(task.getId()));
             GroupedOverdueTasks.get(TaskHashtable.get(task.getId()).getSwimlaneId()).add(TaskHashtable.get(task.getId()));
+        }
+        Collections.sort(OverdueTasks);
+        Enumeration<Integer> enumSwimlanes = GroupedOverdueTasks.keys();
+        while (enumSwimlanes.hasMoreElements()) {
+            Integer swimKey = enumSwimlanes.nextElement();
+            Collections.sort(GroupedOverdueTasks.get(swimKey));
         }
         ProjectUsers = projectusers;
     }

@@ -5,6 +5,7 @@
 * Move task to other swimlane
 
 #### improvements
+* sort task by position value
 
 #### fixes
 * Various bug fixes
