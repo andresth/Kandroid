@@ -692,6 +692,8 @@ public class TaskDetailActivity extends AppCompatActivity {
         outState.putSerializable("comments", (ArrayList<KanboardComment>) comments);
         outState.putSerializable("subtasks", (ArrayList<KanboardSubtask>) subtasks);
         outState.putSerializable("files", (ArrayList<KanboardTaskFile>) files);
+        outState.putSerializable("projectColumns", (ArrayList<KanboardColumn>) projectColumns);
+        outState.putSerializable("projectSwimlanes", (ArrayList<KanboardSwimlane>) projectSwimlanes);
 
         if (BuildConfig.DEBUG) Log.d(Constants.TAG, "TaskDetailActivity: saved savedInstanceState");
     }
@@ -874,6 +876,8 @@ public class TaskDetailActivity extends AppCompatActivity {
         comments = (ArrayList<KanboardComment>) savedInstanceState.getSerializable("comments");
         subtasks = (ArrayList<KanboardSubtask>) savedInstanceState.getSerializable("subtasks");
         files = (ArrayList<KanboardTaskFile>) savedInstanceState.getSerializable("files");
+        projectColumns = (ArrayList<KanboardColumn>) savedInstanceState.getSerializable("projectColumns");
+        projectSwimlanes = (ArrayList<KanboardSwimlane>) savedInstanceState.getSerializable("projectSwimlanes");
 
         setTaskDetails();
         setCategoryDetails();
