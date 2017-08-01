@@ -104,6 +104,7 @@ import in.andres.kandroid.kanboard.events.OnCloseTaskListener;
 import in.andres.kandroid.kanboard.events.OnCreateCommentListener;
 import in.andres.kandroid.kanboard.events.OnCreateSubtaskListener;
 import in.andres.kandroid.kanboard.events.OnDownloadTaskFileListener;
+import in.andres.kandroid.kanboard.events.OnGetActiveSwimlanesListener;
 import in.andres.kandroid.kanboard.events.OnGetAllCommentsListener;
 import in.andres.kandroid.kanboard.events.OnGetAllSubtasksListener;
 import in.andres.kandroid.kanboard.events.OnGetAllTaskFilesListener;
@@ -132,6 +133,7 @@ public class TaskDetailActivity extends AppCompatActivity {
     private List<KanboardSubtask> subtasks;
     private List<KanboardTaskFile> files;
     private List<KanboardColumn> projectColumns;
+    private List<KanboardSwimlane> projectSwimlanes;
     private Dictionary<Integer, String> users;
     private Hashtable<Integer, Double> hasTimer = new Hashtable<>();
 //    private HashSet<Integer> hasTimer = new HashSet<>();
@@ -439,6 +441,15 @@ public class TaskDetailActivity extends AppCompatActivity {
                 Snackbar.make(findViewById(R.id.root_layout), "Error while moving task", Snackbar.LENGTH_LONG).show();
         }
     };
+    private OnGetActiveSwimlanesListener getActiveSwimlanesListener = new OnGetActiveSwimlanesListener() {
+        @Override
+        public void onGetActiveSwimlanes(boolean success, List<KanboardSwimlane> result) {
+            hideProgress();
+            if (success) {
+                projectSwimlanes = result;
+            }
+        }
+    };
     //endregion
 
     private TextView textCategory;
@@ -627,6 +638,7 @@ public class TaskDetailActivity extends AppCompatActivity {
             kanboardAPI.addOnDownloadTaskFileListeners(downloadTaskFileListener);
             kanboardAPI.addOnGetColumnsListener(getColumnsListener);
             kanboardAPI.addOnMoveTaskPositionListener(moveTaskPositionListener);
+            kanboardAPI.addOnGetActiveSwimlanesListener(getActiveSwimlanesListener);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -822,6 +834,7 @@ public class TaskDetailActivity extends AppCompatActivity {
                 showChangeColumnDialog();
                 return true;
             case R.id.action_change_swimlane:
+                showChangeSwimlaneDialog();
                 return true;
             case R.id.action_close_task:
                 setResult(Constants.ResultChanged);
@@ -957,6 +970,8 @@ public class TaskDetailActivity extends AppCompatActivity {
         kanboardAPI.getAllTaskFiles(task.getId());
         showProgress();
         kanboardAPI.getColumns(task.getProjectId());
+        showProgress();
+        kanboardAPI.getActiveSwimlanes(task.getProjectId());
     }
 
     private void showCommentDialog(@Nullable final KanboardComment comment) {
@@ -1062,6 +1077,37 @@ public class TaskDetailActivity extends AppCompatActivity {
             public void onClick(DialogInterface dialog, int which) {
                 setResult(Constants.ResultChanged);
                 kanboardAPI.moveTaskPosition(task.getProjectId(), task.getId(), ((KanboardColumn)input.getSelectedItem()).getId(), 1, task.getSwimlaneId());
+                dialog.dismiss();
+            }
+        });
+        builder.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.cancel();
+            }
+        });
+        builder.show();
+    }
+
+    private void showChangeSwimlaneDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(self);
+        builder.setTitle(getText(R.string.taskview_fab_change_swimlane));
+        final Spinner input = new Spinner(this);
+        ArrayAdapter<KanboardSwimlane> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, projectSwimlanes);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        input.setAdapter(adapter);
+        for (int i = 0; i < projectSwimlanes.size(); i++) {
+            if (projectSwimlanes.get(i).getId() == task.getSwimlaneId()) {
+                input.setSelection(i);
+                break;
+            }
+        }
+        builder.setView(input);
+        builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                setResult(Constants.ResultChanged);
+                kanboardAPI.moveTaskPosition(task.getProjectId(), task.getId(), task.getColumnId(), 1, ((KanboardSwimlane)input.getSelectedItem()).getId());
                 dialog.dismiss();
             }
         });

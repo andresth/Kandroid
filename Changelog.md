@@ -2,6 +2,7 @@
 #### new features
 * Download files attached to tasks
 * Move task to other columns
+* Move task to other swimlane
 
 #### improvements
 
