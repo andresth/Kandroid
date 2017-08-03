@@ -2,6 +2,7 @@
 #### new features
 
 #### improvements
+* Show notification while downloading file
 
 #### fixes
 

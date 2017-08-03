@@ -89,12 +89,14 @@ import java.util.Locale;
 import in.andres.kandroid.BuildConfig;
 import in.andres.kandroid.CompactHtmlRenderer;
 import in.andres.kandroid.Constants;
+import in.andres.kandroid.DownloadIntentService;
 import in.andres.kandroid.R;
 import in.andres.kandroid.Utils;
 import in.andres.kandroid.kanboard.KanboardAPI;
 import in.andres.kandroid.kanboard.KanboardCategory;
 import in.andres.kandroid.kanboard.KanboardColumn;
 import in.andres.kandroid.kanboard.KanboardComment;
+import in.andres.kandroid.kanboard.KanboardRequest;
 import in.andres.kandroid.kanboard.KanboardSubtask;
 import in.andres.kandroid.kanboard.KanboardSwimlane;
 import in.andres.kandroid.kanboard.KanboardTask;
@@ -748,8 +750,12 @@ public class TaskDetailActivity extends AppCompatActivity {
                 return true;
             case R.id.action_download_file:
                 if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
-                    kanboardAPI.downloadTaskFile(((KanboardTaskFile) filesListview.getAdapter().getItem(info.position)).getId());
-                    Snackbar.make(findViewById(R.id.root_layout), "Starting download", Snackbar.LENGTH_LONG).show();
+                    Intent downloadIntent = new Intent(this, DownloadIntentService.class);
+                    downloadIntent.putExtra("request", KanboardRequest.downloadTaskFile(((KanboardTaskFile) filesListview.getAdapter().getItem(info.position)).getId()).JSON[0]);
+                    downloadIntent.putExtra("filename", ((KanboardTaskFile) filesListview.getAdapter().getItem(info.position)).getName());
+                    startService(downloadIntent);
+//                    kanboardAPI.downloadTaskFile(((KanboardTaskFile) filesListview.getAdapter().getItem(info.position)).getId());
+//                    Snackbar.make(findViewById(R.id.root_layout), "Starting download", Snackbar.LENGTH_LONG).show();
                 } else {
 //                    if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
 //                        new AlertDialog.Builder(this)
