@@ -51,6 +51,7 @@
         </activity>
         <activity android:name=".ui.TaskDetailActivity" />
         <activity android:name=".ui.TaskEditActivity"></activity>
+        <service android:name=".DownloadIntentService" />
     </application>
 
 </manifest>

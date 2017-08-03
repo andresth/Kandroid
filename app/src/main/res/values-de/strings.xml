@@ -157,4 +157,7 @@
     <string name="taskedit_column">Splate:</string>
     <string name="taskview_fab_change_column">Spalte ändern</string>
     <string name="taskview_fab_change_swimlane">Swimlane ändern</string>
+    <string name="service_downloading">Datei wird heruntergeladen…</string>
+    <string name="service_result_empty">Datei konnte nicht heruntergeladen werden!</string>
+    <string name="download_manager_name">Kandroid Datei</string>
 </resources>

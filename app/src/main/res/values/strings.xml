@@ -164,6 +164,11 @@
     <string name="menu_caption_subtask">Comment #%d</string>
     <string name="menu_caption_file">File #%d</string>
 
+    <!--Service strings-->
+    <string name="service_downloading">Downloading file…</string>
+    <string name="service_result_empty">Couldn\'t download file!</string>
+    <string name="download_manager_name">Kandroid file</string>
+
     <!--ARAC strings-->
     <string name="acra_send_mail" translatable="false">Send email</string>
     <string name="acra_dialog_title" translatable="false">Kandroid has crashed</string>
