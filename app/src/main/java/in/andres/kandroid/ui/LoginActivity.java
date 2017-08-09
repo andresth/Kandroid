@@ -203,6 +203,9 @@ public class LoginActivity extends AppCompatActivity {
                         } else if (error.Code == -40) {
                             mServerURLView.setError(getString(R.string.error_ssl, error.Message));
                             mServerURLView.requestFocus();
+                        } else if (error.Code == -50) {
+                            mServerURLView.setError(getString(R.string.error_server_resonse));
+                            mServerURLView.requestFocus();
                         } else if (error.HTTPReturnCode == 401 || error.HTTPReturnCode == 403 || error.Code == -20) {
                             mUsernameView.setError(getString(R.string.error_incorrect_username));
                             mPasswordView.setError(getString(R.string.error_incorrect_password));

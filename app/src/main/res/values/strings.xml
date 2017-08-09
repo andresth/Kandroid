@@ -15,6 +15,7 @@
     <string name="prompt_password">Password</string>
     <string name="action_sign">Sign in</string>
     <string name="error_server_url">Unable to contact server</string>
+    <string name="error_server_resonse">Invalid response from server.\nPlease check URL.</string>
     <string name="error_host_unknown">Unknown host</string>
     <string name="error_invalid_password">This password is too short</string>
     <string name="error_incorrect_username">This username is incorrect</string>

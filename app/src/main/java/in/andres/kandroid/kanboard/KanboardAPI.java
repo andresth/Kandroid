@@ -26,6 +26,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.Log;
 
+import org.acra.ACRA;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -166,7 +167,6 @@ public class KanboardAPI {
                     }
                     in.close();
                     httpResponseCode = con.getResponseCode();
-                    con.disconnect();
 
                     Log.i(Constants.TAG, String.format("API: Received Response \"%s\"", params[0].Command));
                     if (BuildConfig.DEBUG)
@@ -181,11 +181,15 @@ public class KanboardAPI {
                         response.put("jsonrpc", "2.0");
                         response.put("id", null);
                         response.put("error", new JSONObject()
-                                .put("code", con.getResponseCode())
+                                .put("code", -50)
+                                .put("responseCode", con.getResponseCode())
                                 .put("message", con.getResponseMessage()))
                                 .put("data", responseStr.toString());
                     }
                     responseList.add(response);
+
+                    con.disconnect();
+
                 } catch (SSLException e) {
                     Log.e(Constants.TAG, "API: SSL Error.");
                     e.printStackTrace();
@@ -234,7 +238,7 @@ public class KanboardAPI {
         @Override
         protected void onPostExecute(KanboardResult s) {
             // Handle Errors
-            if (s == null || s.Result == null) {
+            if (s == null || s.Result == null || s.Result[0] == null) {
                 KanboardError res = new KanboardError(null, null, 0);
                 for (OnErrorListener l: onErrorListeners)
                     l.onError(res);

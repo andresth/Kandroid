@@ -160,4 +160,5 @@
     <string name="service_downloading">Datei wird heruntergeladen…</string>
     <string name="service_result_empty">Datei konnte nicht heruntergeladen werden!</string>
     <string name="download_manager_name">Kandroid Datei</string>
+    <string name="error_server_resonse">Ungültige Antwort vom Server.\nBitte prüfen Sie die URL</string>
 </resources>

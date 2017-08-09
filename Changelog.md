@@ -3,6 +3,7 @@
 
 #### improvements
 * Show notification while downloading file
+* Show error message when server returns invalid resonses (Login screen)
 
 #### fixes
 * fixed crash when user has assigned tasks but no projects
