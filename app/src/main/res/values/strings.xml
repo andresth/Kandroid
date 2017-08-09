@@ -44,7 +44,7 @@
     <string name="pref_acra_user_email">Email address</string>
     <string name="pref_acra_user_email_summary">Email address to be included in the reports</string>
     <string name="pref_acra_alwaysaccept">Send reports automatically</string>
-    <string name="pref_acra_alwaysaccept_enabled">Berichte werden automatisch gesendet</string>
+    <string name="pref_acra_alwaysaccept_enabled">Reports are sent automatically</string>
     <string name="pref_acra_alwaysaccept_disabled">Send reports must be confirmed</string>
 
     <!-- Strings related to Tabs -->

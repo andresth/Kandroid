@@ -136,7 +136,7 @@
     <string name="pref_acra_user_email_summary">E-Mail-Adresse, die in die Berichte aufgenommen werden soll</string>
     <string name="pref_acra_user_email">E-Mail Adresse</string>
     <string name="pref_acra_alwaysaccept">Berichte automatisch senden</string>
-    <string name="pref_acra_alwaysaccept_enabled">Reports are sent automatically</string>
+    <string name="pref_acra_alwaysaccept_enabled">Berichte werden automatisch gesendet</string>
     <string name="pref_acra_alwaysaccept_disabled">Senden der Berichte muss bestätigt werden</string>
     <string name="taskedit_new_task">Neue Aufgabe</string>
     <string name="taskedit_save">Speichern</string>
