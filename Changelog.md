@@ -5,6 +5,7 @@
 * Show notification while downloading file
 
 #### fixes
+* fixed crash when user has assigned tasks but no projects
 
 ## 0.5.6
 #### new features

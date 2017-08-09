@@ -126,7 +126,8 @@ public class KanboardDashboard implements Serializable {
                     }
                 }
             }
-            Projects = tmpProject;
+            if (projectList.size() == Projects.size())
+                Projects = tmpProject;
         }
     }
 
