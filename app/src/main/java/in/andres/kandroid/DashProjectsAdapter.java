@@ -73,7 +73,7 @@ public class DashProjectsAdapter extends BaseExpandableListAdapter {
 
     @Override
     public int getGroupCount() {
-        return mDashboard.getGroupedTasks().size();
+        return mDashboard.getProjects().size();
     }
 
     @Override
