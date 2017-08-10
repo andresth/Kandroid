@@ -84,7 +84,7 @@ public class TaskEditActivity extends AppCompatActivity implements OnCreateTaskL
     private int swimlaneId;
     private int columnId;
     private int ownerId;
-    private int creatorId;
+//    private int creatorId;
     private String colorId;
     private int projectid;
     private Hashtable<Integer, String> projectUsers;
@@ -167,7 +167,7 @@ public class TaskEditActivity extends AppCompatActivity implements OnCreateTaskL
             isNewTask = true;
             projectid = getIntent().getIntExtra("projectid", 0);
 //            colorId = getIntent().getIntExtra("colorid", 0);
-            creatorId = getIntent().getIntExtra("creatorid", 0);
+//            creatorId = getIntent().getIntExtra("creatorid", 0);
             ownerId = getIntent().getIntExtra("ownerid", 0);
             columnId = getIntent().getIntExtra("columnid",0);
             swimlaneId = getIntent().getIntExtra("swimlaneid", 0);
@@ -268,6 +268,56 @@ public class TaskEditActivity extends AppCompatActivity implements OnCreateTaskL
                 dlgDate.show();
             }
         });
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putSerializable("projectUsers", projectUsers);
+        outState.putBoolean("isNewTask", isNewTask);
+        if (!isNewTask)
+            outState.putSerializable("task", task);
+        outState.putSerializable("projectColumns", (ArrayList<KanboardColumn>) projectColumns);
+        outState.putSerializable("kanboardColors", (Hashtable<String, KanboardColor>) kanboardColors);
+        outState.putString("colorId", colorId);
+        outState.putString("defaultColor", defaultColor);
+        outState.putInt("projectId", projectid);
+        outState.putInt("ownertId", ownerId);
+        outState.putInt("columntId", columnId);
+        outState.putInt("swimlaneId", swimlaneId);
+        outState.putSerializable("startDate", startDate);
+        outState.putSerializable("dueDate", dueDate);
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        Object ou = savedInstanceState.getSerializable("projectUsers");
+        if (ou instanceof HashMap)
+            projectUsers = new Hashtable<>((HashMap<Integer, String>) ou);
+        else
+            projectUsers = (Hashtable<Integer, String>) ou;
+        isNewTask = savedInstanceState.getBoolean("isNewTask");
+        if (!isNewTask)
+            savedInstanceState.getSerializable("task");
+        projectColumns = (ArrayList<KanboardColumn>) savedInstanceState.getSerializable("projectColumns");
+        ou = savedInstanceState.getSerializable("kanboardColors");
+        if (ou instanceof HashMap)
+            kanboardColors = new Hashtable<>((HashMap<String, KanboardColor>) ou);
+        else
+            kanboardColors = (Hashtable<String, KanboardColor>) ou;
+        colorId = savedInstanceState.getString("colorId");
+        defaultColor = savedInstanceState.getString("defaultColor");
+        projectid = savedInstanceState.getInt("projectId");
+        ownerId = savedInstanceState.getInt("ownerId");
+        columnId = savedInstanceState.getInt("columnId");
+        swimlaneId = savedInstanceState.getInt("swimlaneId");
+        startDate = (Date) savedInstanceState.getSerializable("startDate");
+        dueDate = (Date) savedInstanceState.getSerializable("dueDate");
+
+        btnStartDate.setText(Utils.fromHtml(getString(R.string.taskview_date_start, startDate)));
+        btnDueDate.setText(Utils.fromHtml(getString(R.string.taskview_date_due, dueDate)));
+        setButtonColor();
     }
 
     @Override
