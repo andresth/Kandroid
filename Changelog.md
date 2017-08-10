@@ -5,6 +5,7 @@
 * Show notification while downloading file
 * Show error message when server returns invalid resonses (Login screen)
 * Follow URL redirects (HTTP codes 301, 302, 307, 308)
+* Automatically change the server URL to the correct endpoint if possible
 
 #### fixes
 * fixed crash when user has assigned tasks but no projects

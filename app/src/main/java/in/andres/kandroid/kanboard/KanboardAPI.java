@@ -158,6 +158,22 @@ public class KanboardAPI {
         return con;
     }
 
+    private static Pattern urlPattern = Pattern.compile("(?i)[^/]+?\\.\\D{2,4}?$", Pattern.CASE_INSENSITIVE | Pattern.UNICODE_CASE);
+
+    public static URL sanitizeURL(String url) throws MalformedURLException {
+        Matcher regexMatcher = urlPattern.matcher(url);
+        if (regexMatcher.find()) {
+            //URL has filename, replace it
+            return new URL(regexMatcher.replaceAll("jsonrpc.php"));
+        } else {
+            //URL hs no filename, add one
+            if (!url.endsWith("/"))
+                url += "/";
+            url += "jsonrpc.php";
+            return new URL(url);
+        }
+    }
+
     private class KanboardAsync extends AsyncTask<KanboardRequest, Void, KanboardResult> {
         @Override
         protected KanboardResult doInBackground(KanboardRequest... params) {
@@ -993,14 +1009,7 @@ public class KanboardAPI {
             }
 
         });
-        serverURL = serverURL.trim();
-        String tmpURL = serverURL;
-        if (!serverURL.endsWith("jsonrpc.php")) {
-            if (!serverURL.endsWith("/"))
-                tmpURL += "/";
-            tmpURL += "jsonrpc.php";
-        }
-        kanboardURL = new URL(tmpURL);
+        kanboardURL = KanboardAPI.sanitizeURL(serverURL.trim());
         Log.i(Constants.TAG, String.format("Host uses %s", kanboardURL.getProtocol()));
 //        threadPoolExecutor = new ThreadPoolExecutor(12, 12, 20, TimeUnit.SECONDS, new ArrayBlockingQueue<Runnable>(256));
         threadPoolExecutor = (ThreadPoolExecutor) AsyncTask.THREAD_POOL_EXECUTOR;

@@ -69,36 +69,32 @@ public class DownloadIntentService extends IntentService {
 
         });
 
-        String serverURL = preferences.getString("serverurl", "").trim();
-        String tmpURL = serverURL;
-        if (!serverURL.endsWith("jsonrpc.php")) {
-            if (!serverURL.endsWith("/"))
-                tmpURL += "/";
-            tmpURL += "jsonrpc.php";
-        }
-
-        String request = intent.getStringExtra("request");
-        String filename = intent.getStringExtra("filename");
-        if (BuildConfig.DEBUG) {
-            Log.d(Constants.TAG, request);
-            Log.d(Constants.TAG, filename);
-        }
-
-        NotificationManager mNotificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-
-        NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this);
-        notificationBuilder.setContentTitle(getString(R.string.service_downloading))
-                .setContentText(filename)
-                .setSmallIcon(android.R.drawable.stat_sys_download)
-                .setAutoCancel(false)
-                .setOngoing(true)
-                .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
-                .setProgress(100, 0, true);
-
-        mNotificationManager.notify(554, notificationBuilder.build());
+        String serverURL = preferences.getString("serverurl", "");
 
         try {
-            con = KanboardAPI.openConnection(new URL(tmpURL), request);
+            URL kanboardURL = KanboardAPI.sanitizeURL(serverURL.trim());
+
+            String request = intent.getStringExtra("request");
+            String filename = intent.getStringExtra("filename");
+            if (BuildConfig.DEBUG) {
+                Log.d(Constants.TAG, request);
+                Log.d(Constants.TAG, filename);
+            }
+
+            NotificationManager mNotificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+
+            NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this);
+            notificationBuilder.setContentTitle(getString(R.string.service_downloading))
+                    .setContentText(filename)
+                    .setSmallIcon(android.R.drawable.stat_sys_download)
+                    .setAutoCancel(false)
+                    .setOngoing(true)
+                    .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
+                    .setProgress(100, 0, true);
+
+            mNotificationManager.notify(554, notificationBuilder.build());
+
+            con = KanboardAPI.openConnection(kanboardURL, request);
 
             if (con == null) {
                 Log.e(Constants.TAG, "DownloadService: Unable to connect to host");
