@@ -69,6 +69,9 @@ public class DownloadIntentService extends IntentService {
 
         });
 
+        NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this);
+        NotificationManager mNotificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+
         String serverURL = preferences.getString("serverurl", "");
 
         try {
@@ -81,9 +84,6 @@ public class DownloadIntentService extends IntentService {
                 Log.d(Constants.TAG, filename);
             }
 
-            NotificationManager mNotificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-
-            NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this);
             notificationBuilder.setContentTitle(getString(R.string.service_downloading))
                     .setContentText(filename)
                     .setSmallIcon(android.R.drawable.stat_sys_download)
@@ -165,6 +165,13 @@ public class DownloadIntentService extends IntentService {
             mNotificationManager.cancel(554);
         } catch (MalformedURLException e) {
             // Do Something
+        } catch (IllegalArgumentException e) {
+            notificationBuilder.setContentTitle(getText(R.string.error_host_unknown))
+                    .setOngoing(false)
+                    .setSmallIcon(android.R.drawable.stat_notify_error)
+                    .setProgress(0, 0, false);
+            mNotificationManager.notify(554, notificationBuilder.build());
+
         } catch (IOException e) {
             Log.d(Constants.TAG, e.toString());
             // Do Something

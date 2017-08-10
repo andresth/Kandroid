@@ -161,4 +161,5 @@
     <string name="service_result_empty">Datei konnte nicht heruntergeladen werden!</string>
     <string name="download_manager_name">Kandroid Datei</string>
     <string name="error_server_resonse">Ungültige Antwort vom Server.\nBitte prüfen Sie die URL</string>
+    <string name="error_base64_decode">Konnte Datei nicht dekodieren.</string>
 </resources>

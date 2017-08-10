@@ -168,6 +168,7 @@
     <!--Service strings-->
     <string name="service_downloading">Downloading file…</string>
     <string name="service_result_empty">Couldn\'t download file!</string>
+    <string name="error_base64_decode">Unable to decode file.</string>
     <string name="download_manager_name">Kandroid file</string>
 
     <!--ARAC strings-->
