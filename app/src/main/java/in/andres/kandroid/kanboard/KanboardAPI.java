@@ -158,7 +158,7 @@ public class KanboardAPI {
         return con;
     }
 
-    private static Pattern urlPattern = Pattern.compile("(?i)[^/]+?\\.\\D{2,4}?$", Pattern.CASE_INSENSITIVE | Pattern.UNICODE_CASE);
+    private static Pattern urlPattern = Pattern.compile("(?i)[^/]+?\\.(php|html|htm|asp){1}?$", Pattern.CASE_INSENSITIVE | Pattern.UNICODE_CASE);
 
     public static URL sanitizeURL(String url) throws MalformedURLException {
         Matcher regexMatcher = urlPattern.matcher(url);
