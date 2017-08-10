@@ -166,7 +166,7 @@ public class DownloadIntentService extends IntentService {
         } catch (MalformedURLException e) {
             // Do Something
         } catch (IllegalArgumentException e) {
-            notificationBuilder.setContentTitle(getText(R.string.error_host_unknown))
+            notificationBuilder.setContentTitle(getText(R.string.error_base64_decode))
                     .setOngoing(false)
                     .setSmallIcon(android.R.drawable.stat_notify_error)
                     .setProgress(0, 0, false);
