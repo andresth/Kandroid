@@ -9,6 +9,7 @@
 
 #### fixes
 * fixed crash when user has assigned tasks but no projects
+* Various bug fixes
 
 ## 0.5.6
 #### new features

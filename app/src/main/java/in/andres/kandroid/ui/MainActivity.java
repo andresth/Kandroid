@@ -388,8 +388,8 @@ public class MainActivity extends AppCompatActivity
     }
 
     @Override
-    protected void onResume() {
-        super.onResume();
+    protected void onPostResume() {
+        super.onPostResume();
         if (mDashboard != null && (progressBarCount <= 0) && (mode == 0))
             showDashboard();
         if (mProject != null && progressBarCount <= 0 && mode > 0)
