@@ -36,7 +36,6 @@ import android.webkit.MimeTypeMap;
 
 import org.json.JSONObject;
 
-import java.io.DataOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -46,12 +45,9 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.PasswordAuthentication;
 import java.net.URL;
-import java.security.KeyStore;
 import java.security.cert.CertificateException;
 
-import javax.net.ssl.HttpsURLConnection;
-import javax.net.ssl.SSLContext;
-import javax.net.ssl.TrustManagerFactory;
+import in.andres.kandroid.kanboard.KanboardAPI;
 
 
 public class DownloadIntentService extends IntentService {
@@ -62,9 +58,7 @@ public class DownloadIntentService extends IntentService {
     @Override
     protected void onHandleIntent(@Nullable Intent intent) {
         Log.d(Constants.TAG, "Starting Download in Service");
-        URL kanboardURL = null;
         HttpURLConnection con = null;
-        SSLContext sslcontext = null;
         final SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this.getBaseContext());
 
         Authenticator.setDefault(new Authenticator() {
@@ -104,88 +98,75 @@ public class DownloadIntentService extends IntentService {
         mNotificationManager.notify(554, notificationBuilder.build());
 
         try {
-            kanboardURL = new URL(tmpURL);
-            con = (HttpURLConnection) kanboardURL.openConnection();
-            if (kanboardURL.getProtocol().equalsIgnoreCase("https")) {
-                KeyStore keyStore = KeyStore.getInstance("AndroidCAStore");
-                keyStore.load(null);
-                TrustManagerFactory tmf = TrustManagerFactory.getInstance(TrustManagerFactory.getDefaultAlgorithm());
-                tmf.init(keyStore);
-                sslcontext = SSLContext.getInstance("TLS");
-                sslcontext.init(null, tmf.getTrustManagers(), null);
-                ((HttpsURLConnection)con).setSSLSocketFactory(sslcontext.getSocketFactory());
-                con.setConnectTimeout(120000);
-                con.setReadTimeout(120000);
-                con.setInstanceFollowRedirects(true);
-                con.setRequestMethod("POST");
-                con.setRequestProperty("Content-Type", "application/json");
-                con.setRequestProperty("charset", "utf-8");
-                con.setDoOutput(true);
-                con.setDoInput(true);
-                DataOutputStream out = new DataOutputStream(con.getOutputStream());
-                out.writeBytes(request);
-                out.flush();
-                out.close();
+            con = KanboardAPI.openConnection(new URL(tmpURL), request);
 
-                if (BuildConfig.DEBUG) {
-                    Log.d(Constants.TAG, Integer.toString(con.getResponseCode()));
-                }
-
-                int resultSize = con.getContentLength();
-
-                StringBuilder contentString = new StringBuilder();
-
-                InputStreamReader in;
-                if (con.getResponseCode() < 400)
-                    in = (new InputStreamReader(con.getInputStream()));
-                else
-                    in = (new InputStreamReader(con.getErrorStream()));
-
-                char[] data = new char[1024];
-                int count;
-                int bytesRead = 0;
-
-                while ((count = in.read(data)) != -1) {
-                    bytesRead += count;
-                    contentString.append(data);
-                    if (BuildConfig.DEBUG) {
-                        Log.d(Constants.TAG, Integer.toString(bytesRead));
-                    }
-                }
-
-                JSONObject jsonData = new JSONObject(contentString.toString());
-                String encodedData = jsonData.optString("result", "");
-                if (encodedData.isEmpty()) {
-                    Log.d(Constants.TAG, "Ist leer");
-                    notificationBuilder.setContentTitle(getText(R.string.service_result_empty))
-                            .setOngoing(false)
-                            .setSmallIcon(android.R.drawable.stat_notify_error)
-                            .setProgress(0, 0, false);
-                    mNotificationManager.notify(554, notificationBuilder.build());
-                    return;
-                    // Show error message
-                }
-                byte[] decodedData = Base64.decode(encodedData, Base64.DEFAULT);
-
-                File file = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS), filename);
-                FileOutputStream fs = new FileOutputStream(file);
-                fs.write(decodedData);
-                fs.close();
-
-                String mime = MimeTypeMap.getSingleton().getMimeTypeFromExtension(MimeTypeMap.getFileExtensionFromUrl(Uri.fromFile(file).toString()));
-                if (mime == null) {
-                    mime = "application/octet-stream";
-                }
-                if (BuildConfig.DEBUG) {
-                    Log.d(Constants.TAG, Uri.fromFile(file).toString());
-                    Log.d(Constants.TAG, mime);
-                }
-
-                DownloadManager dm = (DownloadManager) getSystemService(Context.DOWNLOAD_SERVICE);
-                dm.addCompletedDownload(file.getName(), getString(R.string.download_manager_name), false, mime, file.getPath(), file.length(), true);
-                Thread.sleep(500);
-                mNotificationManager.cancel(554);
+            if (con == null) {
+                Log.e(Constants.TAG, "DownloadService: Unable to connect to host");
+                notificationBuilder.setContentTitle(getText(R.string.error_host_unknown))
+                        .setOngoing(false)
+                        .setSmallIcon(android.R.drawable.stat_notify_error)
+                        .setProgress(0, 0, false);
+                mNotificationManager.notify(554, notificationBuilder.build());
+                return;
             }
+
+            if (BuildConfig.DEBUG) {
+                Log.d(Constants.TAG, Integer.toString(con.getResponseCode()));
+            }
+
+            int resultSize = con.getContentLength();
+
+            StringBuilder contentString = new StringBuilder();
+
+            InputStreamReader in;
+            if (con.getResponseCode() < 400)
+                in = (new InputStreamReader(con.getInputStream()));
+            else
+                in = (new InputStreamReader(con.getErrorStream()));
+
+            char[] data = new char[1024];
+            int count;
+            int bytesRead = 0;
+
+            while ((count = in.read(data)) != -1) {
+                bytesRead += count;
+                contentString.append(data);
+                if (BuildConfig.DEBUG) {
+                    Log.d(Constants.TAG, Integer.toString(bytesRead));
+                }
+            }
+
+            JSONObject jsonData = new JSONObject(contentString.toString());
+            String encodedData = jsonData.optString("result", "");
+            if (encodedData.isEmpty()) {
+                Log.d(Constants.TAG, "Ist leer");
+                notificationBuilder.setContentTitle(getText(R.string.service_result_empty))
+                        .setOngoing(false)
+                        .setSmallIcon(android.R.drawable.stat_notify_error)
+                        .setProgress(0, 0, false);
+                mNotificationManager.notify(554, notificationBuilder.build());
+                return;
+            }
+            byte[] decodedData = Base64.decode(encodedData, Base64.DEFAULT);
+
+            File file = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS), filename);
+            FileOutputStream fs = new FileOutputStream(file);
+            fs.write(decodedData);
+            fs.close();
+
+            String mime = MimeTypeMap.getSingleton().getMimeTypeFromExtension(MimeTypeMap.getFileExtensionFromUrl(Uri.fromFile(file).toString()));
+            if (mime == null) {
+                mime = "application/octet-stream";
+            }
+            if (BuildConfig.DEBUG) {
+                Log.d(Constants.TAG, Uri.fromFile(file).toString());
+                Log.d(Constants.TAG, mime);
+            }
+
+            DownloadManager dm = (DownloadManager) getSystemService(Context.DOWNLOAD_SERVICE);
+            dm.addCompletedDownload(file.getName(), getString(R.string.download_manager_name), false, mime, file.getPath(), file.length(), true);
+            Thread.sleep(500);
+            mNotificationManager.cancel(554);
         } catch (MalformedURLException e) {
             // Do Something
         } catch (IOException e) {
