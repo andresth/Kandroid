@@ -9,6 +9,7 @@
 
 #### fixes
 * fixed crash when user has assigned tasks but no projects
+* fixed crash when trying to change swimlane/column while receiving data
 * Various bug fixes
 
 ## 0.5.6

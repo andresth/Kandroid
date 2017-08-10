@@ -156,6 +156,7 @@
     <string name="taskedit_column">Column:</string>
     <string name="taskedit_color"><![CDATA[<b>Color:</b> %s]]></string>
     <string name="taskedit_seclect_color">Select a color</string>
+    <string name="toast_wait_loading">Please wait. Still loading data.</string>
 
     <!--Menu strings-->
     <string name="action_edit">Edit</string>

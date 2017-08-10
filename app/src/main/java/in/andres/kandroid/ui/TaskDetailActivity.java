@@ -67,6 +67,7 @@ import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.Switch;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import org.commonmark.parser.Parser;
 import org.commonmark.renderer.NodeRenderer;
@@ -839,10 +840,16 @@ public class TaskDetailActivity extends AppCompatActivity {
                 startActivityForResult(intent, Constants.RequestEditTask);
                 return true;
             case R.id.action_change_column:
-                showChangeColumnDialog();
+                if (progressVisible)
+                    Toast.makeText(this, getString(R.string.toast_wait_loading), Toast.LENGTH_SHORT).show();
+                else
+                    showChangeColumnDialog();
                 return true;
             case R.id.action_change_swimlane:
-                showChangeSwimlaneDialog();
+                if (progressVisible)
+                    Toast.makeText(this, getString(R.string.toast_wait_loading), Toast.LENGTH_SHORT).show();
+                else
+                    showChangeSwimlaneDialog();
                 return true;
             case R.id.action_close_task:
                 setResult(Constants.ResultChanged);
