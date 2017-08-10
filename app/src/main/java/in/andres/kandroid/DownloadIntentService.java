@@ -132,6 +132,8 @@ public class DownloadIntentService extends IntentService {
                 }
             }
 
+            con.disconnect();
+
             JSONObject jsonData = new JSONObject(contentString.toString());
             String encodedData = jsonData.optString("result", "");
             if (encodedData.isEmpty()) {
@@ -164,6 +166,9 @@ public class DownloadIntentService extends IntentService {
             Thread.sleep(500);
             mNotificationManager.cancel(554);
         } catch (MalformedURLException e) {
+            if (con != null)
+                con.disconnect();
+
             // Do Something
         } catch (IllegalArgumentException e) {
             notificationBuilder.setContentTitle(getText(R.string.error_base64_decode))
@@ -172,14 +177,22 @@ public class DownloadIntentService extends IntentService {
                     .setProgress(0, 0, false);
             mNotificationManager.notify(554, notificationBuilder.build());
 
+            if (con != null)
+                con.disconnect();
         } catch (IOException e) {
             Log.d(Constants.TAG, e.toString());
+            if (con != null)
+                con.disconnect();
             // Do Something
         } catch (CertificateException e) {
             Log.d(Constants.TAG, e.toString());
+            if (con != null)
+                con.disconnect();
             // Do Something
         } catch (Exception e) {
             Log.d(Constants.TAG, e.toString());
+            if (con != null)
+                con.disconnect();
             // Do Something
         }
 
