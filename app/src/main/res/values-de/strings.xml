@@ -163,4 +163,5 @@
     <string name="error_server_resonse">Ungültige Antwort vom Server.\nBitte prüfen Sie die URL</string>
     <string name="error_base64_decode">Konnte Datei nicht dekodieren.</string>
     <string name="toast_wait_loading">Bitte warten. Daten werden geladen.</string>
+    <string name="error_swimlanes_deactivated">Alle Swimlanes sind deaktiviert!\nBitte aktivieren Sie mindestens eine Swimlane.</string>
 </resources>

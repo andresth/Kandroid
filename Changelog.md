@@ -6,10 +6,12 @@
 * Show error message when server returns invalid resonses (Login screen)
 * Follow URL redirects (HTTP codes 301, 302, 307, 308)
 * Automatically change the server URL to the correct endpoint if possible
+* Show error message when all swimlanes are deactivated
 
 #### fixes
 * fixed crash when user has assigned tasks but no projects
 * fixed crash when trying to change swimlane/column while receiving data
+* handle deactivated swimlanes correctly
 * Various bug fixes
 
 ## 0.5.6

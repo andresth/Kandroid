@@ -54,6 +54,9 @@
     <string name="tab_overview">Overview</string>
     <string name="tab_inactive_tasks">Inactive Tasks</string>
 
+    <string name="hint_swimlane_deactivated">Some swimlanes are deactivated</string>
+    <string name="error_swimlanes_deactivated">All swimlanes are deactivated!\nPlease enable at least one swimlane.</string>
+
     <string name="caption_name">Name:</string>
     <string name="caption_description"><big><b><u>Description</u></b></big></string>
     <string name="caption_tasks"><big><b><u>Tasks</u></b></big></string>

@@ -48,6 +48,7 @@ import android.view.SubMenu;
 import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -563,11 +564,25 @@ public class MainActivity extends AppCompatActivity
 
         mArrayPager.removeAllFragments();
         mArrayPager.addFragment(ProjectOverviewFragment.newInstance(), getString(R.string.tab_overview));
-        for (KanboardColumn column: mProject.getColumns()) {
-            mArrayPager.addFragment(ProjectTasksFragment.newInstance(column), column.getTitle());
+        if (mProject.getSwimlanes().size() > 0) {
+            for (KanboardColumn column : mProject.getColumns()) {
+                mArrayPager.addFragment(ProjectTasksFragment.newInstance(column), column.getTitle());
+            }
+            mArrayPager.addFragment(ProjectOverdueTasksFragment.newInstance(), getString(R.string.tab_overdue_tasks));
+            mArrayPager.addFragment(ProjectInactiveTasksFragment.newInstance(), getString(R.string.tab_inactive_tasks));
+
+            if (mProject.hasHiddenSwimlanes()) {
+                Toast.makeText(this, getString(R.string.hint_swimlane_deactivated), Toast.LENGTH_LONG).show();
+            }
+        } else {
+            // ask user to activate at least one swimlane
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setTitle(android.R.string.dialog_alert_title);
+            builder.setMessage(R.string.error_swimlanes_deactivated);
+            builder.setIcon(android.R.drawable.ic_dialog_alert);
+            builder.setPositiveButton(android.R.string.ok, null);
+            builder.show();
         }
-        mArrayPager.addFragment(ProjectOverdueTasksFragment.newInstance(), getString(R.string.tab_overdue_tasks));
-        mArrayPager.addFragment(ProjectInactiveTasksFragment.newInstance(), getString(R.string.tab_inactive_tasks));
         mArrayPager.notifyDataSetChanged();
     }
 
