@@ -192,16 +192,19 @@ public class TaskEditActivity extends AppCompatActivity implements OnCreateTaskL
         }
 
         if (getIntent().hasExtra("projectusers")) {
-            if (getIntent().getSerializableExtra("projectusers") instanceof HashMap) {
+            Object ou = getIntent().getSerializableExtra("projectusers");
+            if (ou instanceof HashMap) {
                 projectUsers = new Hashtable<>((HashMap<Integer, String>) getIntent().getSerializableExtra("projectusers"));
-                ArrayList<String> possibleOwners = Collections.list(projectUsers.elements());
-                possibleOwners.add(0, "");
-                ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, possibleOwners);
-                adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                spinnerProjectUsers.setAdapter(adapter);
-                if (ownerId != 0) {
-                    spinnerProjectUsers.setSelection(possibleOwners.indexOf(projectUsers.get(ownerId)));
-                }
+            } else {
+                projectUsers = (Hashtable<Integer, String>) ou;
+            }
+            ArrayList<String> possibleOwners = Collections.list(projectUsers.elements());
+            possibleOwners.add(0, "");
+            ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, possibleOwners);
+            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+            spinnerProjectUsers.setAdapter(adapter);
+            if (ownerId != 0) {
+                spinnerProjectUsers.setSelection(possibleOwners.indexOf(projectUsers.get(ownerId)));
             }
         }
 
