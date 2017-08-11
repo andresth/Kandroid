@@ -217,20 +217,23 @@ public class KanboardProject implements Comparable<KanboardProject>, Serializabl
         ActiveTasks = activetasks;
         Collections.sort(ActiveTasks);
         for (KanboardTask task: ActiveTasks) {
-            GroupedActiveTasks.get(task.getColumnId()).get(task.getSwimlaneId()).add(task);
+            if (Swimlanes.size() > 0)
+                GroupedActiveTasks.get(task.getColumnId()).get(task.getSwimlaneId()).add(task);
             TaskHashtable.put(task.getId(), task);
         }
 
         InactiveTasks = inactivetasks;
         Collections.sort(InactiveTasks);
         for (KanboardTask task: InactiveTasks) {
-            GroupedInactiveTasks.get(task.getSwimlaneId()).add(task);
+            if (Swimlanes.size() > 0)
+                GroupedInactiveTasks.get(task.getSwimlaneId()).add(task);
             TaskHashtable.put(task.getId(), task);
         }
 
         for (KanboardTask task: overduetasks) {
             OverdueTasks.add(TaskHashtable.get(task.getId()));
-            GroupedOverdueTasks.get(TaskHashtable.get(task.getId()).getSwimlaneId()).add(TaskHashtable.get(task.getId()));
+            if (Swimlanes.size() > 0)
+                GroupedOverdueTasks.get(TaskHashtable.get(task.getId()).getSwimlaneId()).add(TaskHashtable.get(task.getId()));
         }
         Collections.sort(OverdueTasks);
         Enumeration<Integer> enumSwimlanes = GroupedOverdueTasks.keys();
