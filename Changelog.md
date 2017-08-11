@@ -11,6 +11,7 @@
 #### fixes
 * fixed crash when user has assigned tasks but no projects
 * fixed crash when trying to change swimlane/column while receiving data
+* fixed crash when trying to add subtask/comment while receiving data
 * handle deactivated swimlanes correctly
 * Various bug fixes
 

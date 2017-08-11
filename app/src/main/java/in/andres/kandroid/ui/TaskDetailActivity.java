@@ -828,10 +828,16 @@ public class TaskDetailActivity extends AppCompatActivity {
                 refresh();
                 return true;
             case R.id.action_new_comment:
-                showCommentDialog(null);
+                if (progressVisible)
+                    Toast.makeText(this, getString(R.string.toast_wait_loading), Toast.LENGTH_SHORT).show();
+                else
+                    showCommentDialog(null);
                 return true;
             case R.id.action_new_subtask:
-                showSubtaskDialog(null);
+                if (progressVisible)
+                    Toast.makeText(this, getString(R.string.toast_wait_loading), Toast.LENGTH_SHORT).show();
+                else
+                    showSubtaskDialog(null);
                 return true;
             case R.id.action_edit_task:
                 Intent intent = new Intent(getBaseContext(), TaskEditActivity.class);
