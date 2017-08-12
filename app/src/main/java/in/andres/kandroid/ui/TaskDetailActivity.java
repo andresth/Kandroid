@@ -139,6 +139,8 @@ public class TaskDetailActivity extends AppCompatActivity {
     private List<KanboardSwimlane> projectSwimlanes;
     private Dictionary<Integer, String> users;
     private Hashtable<Integer, Double> hasTimer = new Hashtable<>();
+    private int downloadFileId = -1;
+    private String downloadFileName = null;
 //    private HashSet<Integer> hasTimer = new HashSet<>();
     private MenuItem refreshAction;
     private MenuItem opencloseAction;
@@ -776,30 +778,17 @@ public class TaskDetailActivity extends AppCompatActivity {
                 showDeleteSubtaskDialog((KanboardSubtask)subtaskListview.getAdapter().getItem(info.position));
                 return true;
             case R.id.action_download_file:
+                downloadFileId = ((KanboardTaskFile) filesListview.getAdapter().getItem(info.position)).getId();
+                downloadFileName = ((KanboardTaskFile) filesListview.getAdapter().getItem(info.position)).getName();
                 if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
                     Intent downloadIntent = new Intent(this, DownloadIntentService.class);
-                    downloadIntent.putExtra("request", KanboardRequest.downloadTaskFile(((KanboardTaskFile) filesListview.getAdapter().getItem(info.position)).getId()).JSON[0]);
-                    downloadIntent.putExtra("filename", ((KanboardTaskFile) filesListview.getAdapter().getItem(info.position)).getName());
+                    downloadIntent.putExtra("request", KanboardRequest.downloadTaskFile(downloadFileId).JSON[0]);
+                    downloadIntent.putExtra("filename", downloadFileName);
                     startService(downloadIntent);
-//                    kanboardAPI.downloadTaskFile(((KanboardTaskFile) filesListview.getAdapter().getItem(info.position)).getId());
-//                    Snackbar.make(findViewById(R.id.root_layout), "Starting download", Snackbar.LENGTH_LONG).show();
                 } else {
-//                    if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
-//                        new AlertDialog.Builder(this)
-//                                .setMessage("jahksedgrfkjashdgf")
-//                                .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
-//                                    @Override
-//                                    public void onClick(DialogInterface dialog, int which) {
-//                                        ActivityCompat.requestPermissions((Activity) self,
-//                                                new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
-//                                                25);
-//                                    }
-//                                }).show();
-//                    }
                     ActivityCompat.requestPermissions((Activity) self,
                             new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
                             Constants.RequestStoragePermission);
-
                 }
                 return true;
             case R.id.action_delete_file:
@@ -815,11 +804,19 @@ public class TaskDetailActivity extends AppCompatActivity {
         switch (requestCode) {
             case Constants.RequestStoragePermission:
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    Snackbar.make(findViewById(R.id.root_layout), "Storage permission was granted, please start the download again.", Snackbar.LENGTH_LONG).show();
+                    if (downloadFileId != -1) {
+                        Intent downloadIntent = new Intent(this, DownloadIntentService.class);
+                        downloadIntent.putExtra("request", KanboardRequest.downloadTaskFile(downloadFileId).JSON[0]);
+                        downloadIntent.putExtra("filename", downloadFileName);
+                        startService(downloadIntent);
+                        downloadFileId = -1;
+                        downloadFileName = null;
+                    } else {
+                        Snackbar.make(findViewById(R.id.root_layout), getString(R.string.permission_storage_granted), Snackbar.LENGTH_LONG).show();
+                    }
                 } else {
-                    Snackbar.make(findViewById(R.id.root_layout), "Storage permission was denied.", Snackbar.LENGTH_LONG).show();
+                    Snackbar.make(findViewById(R.id.root_layout), getString(R.string.permission_storage_denied), Snackbar.LENGTH_LONG).show();
                 }
-                return;
         }
     }
 
