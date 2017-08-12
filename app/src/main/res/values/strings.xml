@@ -160,6 +160,9 @@
     <string name="taskedit_color"><![CDATA[<b>Color:</b> %s]]></string>
     <string name="taskedit_seclect_color">Select a color</string>
     <string name="toast_wait_loading">Please wait. Still loading data.</string>
+    
+    <string name="permission_storage_granted">Storage permission was granted, please start the download again.</string>
+    <string name="permission_storage_denied">Storage permission was denied.</string>
 
     <!--Menu strings-->
     <string name="action_edit">Edit</string>
