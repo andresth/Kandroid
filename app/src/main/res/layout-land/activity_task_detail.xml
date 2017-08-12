@@ -217,10 +217,15 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:textAlignment="center"/>
+                        <ProgressBar
+                            android:id="@+id/subtaskProgress"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content" />
                         <in.andres.kandroid.widget.StaticListView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:isScrollContainer="false"
+                            android:visibility="gone"
                             android:id="@+id/subtask_listview"/>
                     </LinearLayout>
                 </android.support.v7.widget.CardView>

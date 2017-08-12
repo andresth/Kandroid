@@ -160,10 +160,10 @@ public class TaskDetailActivity extends AppCompatActivity {
         @Override
         public void onGetAllComments(boolean success, List<KanboardComment> result) {
             hideProgress();
+            hideCommentProgress();
             if (success && result.size() >= 0) {
                 comments = result;
                 commentListview.setAdapter(new CommentAdapter (getBaseContext(), comments, true));
-                hideCommentProgress();
 //                findViewById(R.id.card_comments).setVisibility(View.VISIBLE);
             } else {
 //                findViewById(R.id.card_comments).setVisibility(View.GONE);
@@ -244,6 +244,7 @@ public class TaskDetailActivity extends AppCompatActivity {
         @Override
         public void onGetAllSubtasks(boolean success, List<KanboardSubtask> result) {
             hideProgress();
+            hideSubtaskProgress();
             if (success && result.size() > 0) {
                 subtasks = result;
                 subtaskListview.setAdapter(new SubtaskAdapter(getBaseContext(), subtasks, true));
@@ -550,6 +551,7 @@ public class TaskDetailActivity extends AppCompatActivity {
         registerForContextMenu(filesListview);
 
         showCommentProgress();
+        showSubtaskProgress();
 
         fabMenu = (FloatingActionButton) findViewById(R.id.fab);
         fabMenuButtonRemoveTask = (FloatingActionButton) findViewById(R.id.fab_menu_button_remove_task);
@@ -936,6 +938,7 @@ public class TaskDetailActivity extends AppCompatActivity {
 
         if (subtasks != null) {
             subtaskListview.setAdapter(new SubtaskAdapter(getBaseContext(), subtasks, true));
+            hideSubtaskProgress();
 //            findViewById(R.id.card_subtasks).setVisibility(View.VISIBLE);
         } else {
 //            findViewById(R.id.card_subtasks).setVisibility(View.GONE);
@@ -1014,6 +1017,16 @@ public class TaskDetailActivity extends AppCompatActivity {
         findViewById(R.id.commentProgress).setVisibility(View.GONE);
     }
 
+    private void showSubtaskProgress() {
+        subtaskListview.setVisibility(View.GONE);
+        findViewById(R.id.subtaskProgress).setVisibility(View.VISIBLE);
+    }
+
+    private void hideSubtaskProgress() {
+        subtaskListview.setVisibility(View.VISIBLE);
+        findViewById(R.id.subtaskProgress).setVisibility(View.GONE);
+    }
+
     private void refresh() {
         Log.i(Constants.TAG, "Loading task data.");
         showProgress();
@@ -1025,6 +1038,7 @@ public class TaskDetailActivity extends AppCompatActivity {
         showCommentProgress();
         showProgress();
         kanboardAPI.getAllSubtasks(task.getId());
+        showSubtaskProgress();
         showProgress();
         kanboardAPI.getAllTaskFiles(task.getId());
         showProgress();
