@@ -7,6 +7,7 @@
 * Follow URL redirects (HTTP codes 301, 302, 307, 308)
 * Automatically change the server URL to the correct endpoint if possible
 * Show error message when all swimlanes are deactivated
+* Moved new comment button to listview
 
 #### fixes
 * fixed crash when user has assigned tasks but no projects

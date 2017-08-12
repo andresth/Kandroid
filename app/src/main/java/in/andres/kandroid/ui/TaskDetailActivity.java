@@ -132,7 +132,7 @@ public class TaskDetailActivity extends AppCompatActivity {
     private KanboardSwimlane swimlane;
     private KanboardColumn column;
     private KanboardUserInfo me;
-    private List<KanboardComment> comments;
+    private List<KanboardComment> comments = new ArrayList<>();
     private List<KanboardSubtask> subtasks;
     private List<KanboardTaskFile> files;
     private List<KanboardColumn> projectColumns;
@@ -160,12 +160,12 @@ public class TaskDetailActivity extends AppCompatActivity {
         @Override
         public void onGetAllComments(boolean success, List<KanboardComment> result) {
             hideProgress();
-            if (success && result.size() > 0) {
+            if (success && result.size() >= 0) {
                 comments = result;
-                commentListview.setAdapter(new CommentAdapter (getBaseContext(), comments));
-                findViewById(R.id.card_comments).setVisibility(View.VISIBLE);
+                commentListview.setAdapter(new CommentAdapter (getBaseContext(), comments, true));
+//                findViewById(R.id.card_comments).setVisibility(View.VISIBLE);
             } else {
-                findViewById(R.id.card_comments).setVisibility(View.GONE);
+//                findViewById(R.id.card_comments).setVisibility(View.GONE);
             }
         }
     };
@@ -501,7 +501,7 @@ public class TaskDetailActivity extends AppCompatActivity {
 
         findViewById(R.id.card_description).setVisibility(View.GONE);
         findViewById(R.id.card_subtasks).setVisibility(View.GONE);
-        findViewById(R.id.card_comments).setVisibility(View.GONE);
+//        findViewById(R.id.card_comments).setVisibility(View.GONE);
         findViewById(R.id.card_files).setVisibility(View.GONE);
 
         textCategory = (TextView) findViewById(R.id.text_category);
@@ -524,6 +524,14 @@ public class TaskDetailActivity extends AppCompatActivity {
         textDescription.setMovementMethod(LinkMovementMethod.getInstance());
 
         commentListview = (ListView) findViewById(R.id.comment_listview);
+        commentListview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                if (position >= comments.size() && !progressVisible) {
+                    showCommentDialog(null);
+                }
+            }
+        });
         registerForContextMenu(commentListview);
 
         subtaskListview = (ListView) findViewById(R.id.subtask_listview);
@@ -616,6 +624,10 @@ public class TaskDetailActivity extends AppCompatActivity {
                 showDeleteTaskDialog(task);
             }
         });
+
+        commentListview.setAdapter(new CommentAdapter (getBaseContext(), comments, true));
+//        findViewById(R.id.card_comments).setVisibility(View.VISIBLE);
+
 
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this.getBaseContext());
         try {
@@ -711,11 +723,13 @@ public class TaskDetailActivity extends AppCompatActivity {
     public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
         super.onCreateContextMenu(menu, v, menuInfo);
         if (v.getId() == R.id.comment_listview) {
-            menu.setHeaderTitle(getString(R.string.menu_caption_comment,
-                    ((KanboardComment)commentListview.getAdapter().getItem(((AdapterView.AdapterContextMenuInfo)menuInfo).position)).getId()
-            ));
-            MenuInflater inflater = getMenuInflater();
-            inflater.inflate(R.menu.activity_taskdetail_context_comment, menu);
+            if (((AdapterView.AdapterContextMenuInfo)menuInfo).position < comments.size()) {
+                menu.setHeaderTitle(getString(R.string.menu_caption_comment,
+                        ((KanboardComment) commentListview.getAdapter().getItem(((AdapterView.AdapterContextMenuInfo) menuInfo).position)).getId()
+                ));
+                MenuInflater inflater = getMenuInflater();
+                inflater.inflate(R.menu.activity_taskdetail_context_comment, menu);
+            }
         }
         if (v.getId() == R.id.subtask_listview) {
             menu.setHeaderTitle(getString(R.string.menu_caption_subtask,
@@ -903,10 +917,10 @@ public class TaskDetailActivity extends AppCompatActivity {
         setSwimlaneDetails(swimlane.getName());
 
         if (comments != null) {
-            commentListview.setAdapter(new CommentAdapter (getBaseContext(), comments));
-            findViewById(R.id.card_comments).setVisibility(View.VISIBLE);
+            commentListview.setAdapter(new CommentAdapter (getBaseContext(), comments, true));
+//            findViewById(R.id.card_comments).setVisibility(View.VISIBLE);
         } else {
-            findViewById(R.id.card_comments).setVisibility(View.GONE);
+//            findViewById(R.id.card_comments).setVisibility(View.GONE);
         }
 
         if (subtasks != null) {
@@ -1393,27 +1407,38 @@ public class TaskDetailActivity extends AppCompatActivity {
     private class CommentAdapter extends ArrayAdapter<KanboardComment> {
         private Context mContext;
         private LayoutInflater mInflater;
-        List<KanboardComment> mObjects;
+        private List<KanboardComment> mObjects;
+        private boolean mShowAdd = false;
 
-        public CommentAdapter(Context context, List<KanboardComment> objects) {
+        public CommentAdapter(Context context, List<KanboardComment> objects, boolean showAdd) {
             super(context, R.layout.listitem_comment, objects);
             mContext = context;
             mInflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             mObjects = objects;
+            mShowAdd = showAdd;
+        }
 
+        @Override
+        public int getCount() {
+            return mObjects.size() + (mShowAdd ? 1 : 0);
         }
 
         @NonNull
         @Override
         public View getView(int position, View convertView, @NonNull ViewGroup parent) {
-            if (convertView == null) {
+            if (position < getCount() - (mShowAdd ? 1 : 0)) {
+                Log.d(Constants.TAG, String.format("Render Comment %d", position));
                 convertView = mInflater.inflate(R.layout.listitem_comment, parent, false);
                 convertView.setLongClickable(true);
+                ((TextView) convertView.findViewById(R.id.username)).setText(Utils.fromHtml(String.format("<small>%s</small>", users == null ? mObjects.get(position).getUsername() : users.get(mObjects.get(position).getUserId()))));
+                ((TextView) convertView.findViewById(R.id.date)).setText(Utils.fromHtml(String.format("<small>%tF</small>", mObjects.get(position).getDateModification())));
+                ((TextView) convertView.findViewById(R.id.comment)).setText(Utils.fromHtml(mRenderer.render(mParser.parse(mObjects.get(position).getContent()))));
+            } else {
+                Log.d(Constants.TAG, String.format("Render Plus %d", position));
+                convertView = mInflater.inflate(android.R.layout.simple_list_item_1, parent, false);
+                ((TextView) convertView.findViewById(android.R.id.text1)).setText(getString(R.string.taskview_fab_new_comment));
+                ((TextView) convertView.findViewById(android.R.id.text1)).setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
             }
-
-            ((TextView) convertView.findViewById(R.id.username)).setText(Utils.fromHtml(String.format("<small>%s</small>", users == null ? mObjects.get(position).getUsername() : users.get(mObjects.get(position).getUserId()))));
-            ((TextView) convertView.findViewById(R.id.date)).setText(Utils.fromHtml(String.format("<small>%tF</small>", mObjects.get(position).getDateModification())));
-            ((TextView) convertView.findViewById(R.id.comment)).setText(Utils.fromHtml(mRenderer.render(mParser.parse(mObjects.get(position).getContent()))));
 
             return convertView;
         }
