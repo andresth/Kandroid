@@ -159,6 +159,7 @@ public class DownloadIntentService extends IntentService {
             fs.write(decodedData);
             fs.close();
 
+            Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).mkdirs();
             String mime = MimeTypeMap.getSingleton().getMimeTypeFromExtension(MimeTypeMap.getFileExtensionFromUrl(Uri.fromFile(file).toString()));
             if (mime == null) {
                 mime = "application/octet-stream";
