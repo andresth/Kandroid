@@ -141,7 +141,8 @@ public class ProjectTaskAdapter extends BaseExpandableListAdapter {
                 convertView.findViewById(R.id.list_card).setBackgroundColor(child.getColorBackground());
         } else {
             convertView = mInflater.inflate(android.R.layout.simple_list_item_1, parent, false);
-            ((TextView) convertView.findViewById(android.R.id.text1)).setText("+");
+            ((TextView) convertView.findViewById(android.R.id.text1)).setText(mContext.getString(R.string.taskedit_new_task));
+            ((TextView) convertView.findViewById(android.R.id.text1)).setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
         }
 
         return convertView;
