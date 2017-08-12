@@ -134,7 +134,7 @@ public class TaskDetailActivity extends AppCompatActivity {
     private KanboardUserInfo me;
     private List<KanboardComment> comments = new ArrayList<>();
     private List<KanboardSubtask> subtasks = new ArrayList<>();
-    private List<KanboardTaskFile> files;
+    private List<KanboardTaskFile> files = new ArrayList<>();
     private List<KanboardColumn> projectColumns;
     private List<KanboardSwimlane> projectSwimlanes;
     private Dictionary<Integer, String> users;
@@ -373,12 +373,13 @@ public class TaskDetailActivity extends AppCompatActivity {
         @Override
         public void onGetAllTaskFiles(boolean success, List<KanboardTaskFile> result) {
             hideProgress();
+            hideFilesProgress();
             if (success && result.size() > 0) {
-                findViewById(R.id.card_files).setVisibility(View.VISIBLE);
+//                findViewById(R.id.card_files).setVisibility(View.VISIBLE);
                 files = result;
                 filesListview.setAdapter(new TaskFilesAdapter(getBaseContext(), files));
             } else {
-                findViewById(R.id.card_files).setVisibility(View.GONE);
+//                findViewById(R.id.card_files).setVisibility(View.GONE);
             }
         }
     };
@@ -506,7 +507,7 @@ public class TaskDetailActivity extends AppCompatActivity {
         findViewById(R.id.card_description).setVisibility(View.GONE);
 //        findViewById(R.id.card_subtasks).setVisibility(View.GONE);
 //        findViewById(R.id.card_comments).setVisibility(View.GONE);
-        findViewById(R.id.card_files).setVisibility(View.GONE);
+//        findViewById(R.id.card_files).setVisibility(View.GONE);
 
         textCategory = (TextView) findViewById(R.id.text_category);
         textStatus = (TextView) findViewById(R.id.text_status);
@@ -554,6 +555,7 @@ public class TaskDetailActivity extends AppCompatActivity {
 
         showCommentProgress();
         showSubtaskProgress();
+        showFilesProgress();
 
         fabMenu = (FloatingActionButton) findViewById(R.id.fab);
         fabMenuButtonRemoveTask = (FloatingActionButton) findViewById(R.id.fab_menu_button_remove_task);
@@ -642,6 +644,7 @@ public class TaskDetailActivity extends AppCompatActivity {
 
         commentListview.setAdapter(new CommentAdapter (getBaseContext(), comments, true));
         subtaskListview.setAdapter(new SubtaskAdapter(getBaseContext(), subtasks, true));
+        filesListview.setAdapter((new TaskFilesAdapter(getBaseContext(), files)));
 
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this.getBaseContext());
         try {
@@ -943,10 +946,11 @@ public class TaskDetailActivity extends AppCompatActivity {
 
         if (files != null) {
             filesListview.setAdapter(new TaskFilesAdapter(getBaseContext(), files));
-            findViewById(R.id.card_files).setVisibility(View.VISIBLE);
+            hideFilesProgress();
+//            findViewById(R.id.card_files).setVisibility(View.VISIBLE);
             Log.d(Constants.TAG, "restore files");
         } else {
-            findViewById(R.id.card_files).setVisibility(View.GONE);
+//            findViewById(R.id.card_files).setVisibility(View.GONE);
             Log.d(Constants.TAG, "no files");
         }
 
@@ -1024,6 +1028,16 @@ public class TaskDetailActivity extends AppCompatActivity {
         findViewById(R.id.subtaskProgress).setVisibility(View.GONE);
     }
 
+    private void showFilesProgress() {
+        filesListview.setVisibility(View.GONE);
+        findViewById(R.id.filesProgress).setVisibility(View.VISIBLE);
+    }
+
+    private void hideFilesProgress() {
+        filesListview.setVisibility(View.VISIBLE);
+        findViewById(R.id.filesProgress).setVisibility(View.GONE);
+    }
+
     private void refresh() {
         Log.i(Constants.TAG, "Loading task data.");
         showProgress();
@@ -1038,6 +1052,7 @@ public class TaskDetailActivity extends AppCompatActivity {
         showSubtaskProgress();
         showProgress();
         kanboardAPI.getAllTaskFiles(task.getId());
+        showFilesProgress();
         showProgress();
         kanboardAPI.getColumns(task.getProjectId());
         showProgress();
