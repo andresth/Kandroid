@@ -163,6 +163,7 @@
     
     <string name="permission_storage_granted">Storage permission was granted, please start the download again.</string>
     <string name="permission_storage_denied">Storage permission was denied.</string>
+    <string name="error_no_sdcard">No storage device available.</string>
 
     <!--Menu strings-->
     <string name="action_edit">Edit</string>

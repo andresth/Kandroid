@@ -166,4 +166,5 @@
     <string name="error_swimlanes_deactivated">Alle Swimlanes sind deaktiviert!\nBitte aktivieren Sie mindestens eine Swimlane.</string>
     <string name="permission_storage_denied">Speicherzugriff wurde nicht gewährt.</string>
     <string name="permission_storage_granted">Speicherzugriff wurde gewährt, bitte Download erneut starten.</string>
+    <string name="error_no_sdcard">Kein Speichergerät verfügbar.</string>
 </resources>

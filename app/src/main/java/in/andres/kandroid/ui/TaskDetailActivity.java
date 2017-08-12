@@ -781,17 +781,22 @@ public class TaskDetailActivity extends AppCompatActivity {
                 showDeleteSubtaskDialog((KanboardSubtask)subtaskListview.getAdapter().getItem(info.position));
                 return true;
             case R.id.action_download_file:
-                downloadFileId = ((KanboardTaskFile) filesListview.getAdapter().getItem(info.position)).getId();
-                downloadFileName = ((KanboardTaskFile) filesListview.getAdapter().getItem(info.position)).getName();
-                if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
-                    Intent downloadIntent = new Intent(this, DownloadIntentService.class);
-                    downloadIntent.putExtra("request", KanboardRequest.downloadTaskFile(downloadFileId).JSON[0]);
-                    downloadIntent.putExtra("filename", downloadFileName);
-                    startService(downloadIntent);
+                String state = Environment.getExternalStorageState();
+                if (Environment.MEDIA_MOUNTED.equals(state)) {
+                    downloadFileId = ((KanboardTaskFile) filesListview.getAdapter().getItem(info.position)).getId();
+                    downloadFileName = ((KanboardTaskFile) filesListview.getAdapter().getItem(info.position)).getName();
+                    if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
+                        Intent downloadIntent = new Intent(this, DownloadIntentService.class);
+                        downloadIntent.putExtra("request", KanboardRequest.downloadTaskFile(downloadFileId).JSON[0]);
+                        downloadIntent.putExtra("filename", downloadFileName);
+                        startService(downloadIntent);
+                    } else {
+                        ActivityCompat.requestPermissions((Activity) self,
+                                new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
+                                Constants.RequestStoragePermission);
+                    }
                 } else {
-                    ActivityCompat.requestPermissions((Activity) self,
-                            new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
-                            Constants.RequestStoragePermission);
+                    Snackbar.make(findViewById(R.id.root_layout), getString(R.string.error_no_sdcard), Snackbar.LENGTH_LONG).show();
                 }
                 return true;
             case R.id.action_delete_file:
