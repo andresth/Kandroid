@@ -19,13 +19,16 @@
 
 package in.andres.kandroid;
 
+import android.app.Activity;
 import android.app.DownloadManager;
 import android.app.IntentService;
 import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
+import android.os.Bundle;
 import android.os.Environment;
 import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
@@ -34,8 +37,10 @@ import android.util.Base64;
 import android.util.Log;
 import android.webkit.MimeTypeMap;
 
+import org.acra.util.IOUtils;
 import org.json.JSONObject;
 
+import java.io.DataInputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -51,6 +56,18 @@ import in.andres.kandroid.kanboard.KanboardAPI;
 
 
 public class DownloadIntentService extends IntentService {
+//    private class StopServiceIntent extends Activity {
+//        public StopServiceIntent() {
+//            super();
+//        }
+//        @Override
+//        protected void onCreate(@Nullable Bundle savedInstanceState) {
+//            super.onCreate(savedInstanceState);
+//            Log.d(Constants.TAG, "DownloadService: Stop");
+//            stopService((Intent) getIntent().getSerializableExtra("serviceIntent"));
+//        }
+//    }
+
     public DownloadIntentService() {
         super("DownloadService");
     }
@@ -84,12 +101,16 @@ public class DownloadIntentService extends IntentService {
                 Log.d(Constants.TAG, filename);
             }
 
+//            Intent stopIntent = new Intent(this, StopServiceIntent.class);
+//            stopIntent.putExtra("serviceIntent", intent);
+
             notificationBuilder.setContentTitle(getString(R.string.service_downloading))
                     .setContentText(filename)
                     .setSmallIcon(android.R.drawable.stat_sys_download)
                     .setAutoCancel(false)
                     .setOngoing(true)
                     .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
+//                    .addAction(android.R.drawable.ic_menu_close_clear_cancel, getText(android.R.string.cancel), PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT))
                     .setProgress(100, 0, true);
 
             mNotificationManager.notify(554, notificationBuilder.build());
@@ -110,31 +131,17 @@ public class DownloadIntentService extends IntentService {
                 Log.d(Constants.TAG, Integer.toString(con.getResponseCode()));
             }
 
-            int resultSize = con.getContentLength();
-
-            StringBuilder contentString = new StringBuilder();
-
-            InputStreamReader in;
+            DataInputStream in;
             if (con.getResponseCode() < 400)
-                in = (new InputStreamReader(con.getInputStream()));
+                in = (new DataInputStream(con.getInputStream()));
             else
-                in = (new InputStreamReader(con.getErrorStream()));
+                in = (new DataInputStream(con.getErrorStream()));
 
-            char[] data = new char[1024];
-            int count;
-            int bytesRead = 0;
-
-            while ((count = in.read(data)) != -1) {
-                bytesRead += count;
-                contentString.append(data);
-                if (BuildConfig.DEBUG) {
-                    Log.d(Constants.TAG, Integer.toString(bytesRead));
-                }
-            }
+            String contentStr = org.apache.commons.io.IOUtils.toString(in, org.apache.commons.io.Charsets.toCharset(con.getContentEncoding()));
 
             con.disconnect();
 
-            JSONObject jsonData = new JSONObject(contentString.toString());
+            JSONObject jsonData = new JSONObject(contentStr);
             String encodedData = jsonData.optString("result", "");
             if (encodedData.isEmpty()) {
                 Log.d(Constants.TAG, "Ist leer");
