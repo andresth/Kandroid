@@ -8,6 +8,7 @@
 * Automatically change the server URL to the correct endpoint if possible
 * Show error message when all swimlanes are deactivated
 * Moved new comment button to listview
+* Moved new subtask button to listview
 
 #### fixes
 * fixed crash when user has assigned tasks but no projects

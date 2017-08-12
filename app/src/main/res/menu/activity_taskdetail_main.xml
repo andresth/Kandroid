@@ -12,6 +12,7 @@
         android:orderInCategory="100"
         android:icon="@drawable/subtask_white"
         android:title="@string/taskview_fab_new_subtask"
+        android:visible="false"
         app:showAsAction="never"/>
     <item
         android:id="@+id/action_new_comment"
