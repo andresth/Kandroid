@@ -37,14 +37,12 @@ import android.util.Base64;
 import android.util.Log;
 import android.webkit.MimeTypeMap;
 
-import org.acra.util.IOUtils;
 import org.json.JSONObject;
 
 import java.io.DataInputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.net.Authenticator;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
@@ -53,21 +51,23 @@ import java.net.URL;
 import java.security.cert.CertificateException;
 
 import in.andres.kandroid.kanboard.KanboardAPI;
+import in.andres.kandroid.ui.MainActivity;
 
 
 public class DownloadIntentService extends IntentService {
-//    private class StopServiceIntent extends Activity {
-//        public StopServiceIntent() {
-//            super();
-//        }
-//        @Override
-//        protected void onCreate(@Nullable Bundle savedInstanceState) {
-//            super.onCreate(savedInstanceState);
-//            Log.d(Constants.TAG, "DownloadService: Stop");
-//            stopService((Intent) getIntent().getSerializableExtra("serviceIntent"));
-//        }
-//    }
-
+    public class StopServiceIntent extends Activity {
+        public StopServiceIntent() {
+            super();
+            Log.d(Constants.TAG, "DownloadService: Stop");
+            stopService((Intent) getIntent().getSerializableExtra("serviceIntent"));
+        }
+        @Override
+        protected void onCreate(@Nullable Bundle savedInstanceState) {
+            super.onCreate(savedInstanceState);
+            Log.d(Constants.TAG, "DownloadService: Stop");
+            stopService((Intent) getIntent().getSerializableExtra("serviceIntent"));
+        }
+    }
     public DownloadIntentService() {
         super("DownloadService");
     }
@@ -101,8 +101,8 @@ public class DownloadIntentService extends IntentService {
                 Log.d(Constants.TAG, filename);
             }
 
-//            Intent stopIntent = new Intent(this, StopServiceIntent.class);
-//            stopIntent.putExtra("serviceIntent", intent);
+            Intent stopIntent = new Intent(this, DownloadIntentService.StopServiceIntent.class);
+            stopIntent.putExtra("serviceIntent", intent);
 
             notificationBuilder.setContentTitle(getString(R.string.service_downloading))
                     .setContentText(filename)
@@ -110,7 +110,7 @@ public class DownloadIntentService extends IntentService {
                     .setAutoCancel(false)
                     .setOngoing(true)
                     .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
-//                    .addAction(android.R.drawable.ic_menu_close_clear_cancel, getText(android.R.string.cancel), PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT))
+//                    .addAction(android.R.drawable.ic_menu_close_clear_cancel, getText(android.R.string.cancel), PendingIntent.getActivity(this, 0, stopIntent, PendingIntent.FLAG_UPDATE_CURRENT))
                     .setProgress(100, 0, true);
 
             mNotificationManager.notify(554, notificationBuilder.build());

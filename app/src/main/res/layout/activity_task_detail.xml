@@ -245,9 +245,14 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:textAlignment="center"/>
+                    <ProgressBar
+                        android:id="@+id/commentProgress"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content" />
                     <in.andres.kandroid.widget.StaticListView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:visibility="gone"
                         android:isScrollContainer="false"
                         android:id="@+id/comment_listview"/>
                 </LinearLayout>

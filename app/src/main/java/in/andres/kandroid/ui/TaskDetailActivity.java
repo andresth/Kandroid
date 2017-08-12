@@ -163,6 +163,7 @@ public class TaskDetailActivity extends AppCompatActivity {
             if (success && result.size() >= 0) {
                 comments = result;
                 commentListview.setAdapter(new CommentAdapter (getBaseContext(), comments, true));
+                hideCommentProgress();
 //                findViewById(R.id.card_comments).setVisibility(View.VISIBLE);
             } else {
 //                findViewById(R.id.card_comments).setVisibility(View.GONE);
@@ -548,6 +549,8 @@ public class TaskDetailActivity extends AppCompatActivity {
         filesListview = (ListView) findViewById(R.id.files_listview);
         registerForContextMenu(filesListview);
 
+        showCommentProgress();
+
         fabMenu = (FloatingActionButton) findViewById(R.id.fab);
         fabMenuButtonRemoveTask = (FloatingActionButton) findViewById(R.id.fab_menu_button_remove_task);
         fabMenuButtonOpenCloseTask = (FloatingActionButton) findViewById(R.id.fab_menu_button_open_close_task);
@@ -925,6 +928,7 @@ public class TaskDetailActivity extends AppCompatActivity {
 
         if (comments != null) {
             commentListview.setAdapter(new CommentAdapter (getBaseContext(), comments, true));
+            hideCommentProgress();
 //            findViewById(R.id.card_comments).setVisibility(View.VISIBLE);
         } else {
 //            findViewById(R.id.card_comments).setVisibility(View.GONE);
@@ -1000,6 +1004,16 @@ public class TaskDetailActivity extends AppCompatActivity {
         }
     }
 
+    private void showCommentProgress() {
+        commentListview.setVisibility(View.GONE);
+        findViewById(R.id.commentProgress).setVisibility(View.VISIBLE);
+    }
+
+    private void hideCommentProgress() {
+        commentListview.setVisibility(View.VISIBLE);
+        findViewById(R.id.commentProgress).setVisibility(View.GONE);
+    }
+
     private void refresh() {
         Log.i(Constants.TAG, "Loading task data.");
         showProgress();
@@ -1008,6 +1022,7 @@ public class TaskDetailActivity extends AppCompatActivity {
         kanboardAPI.getProjectUsers(task.getProjectId());
         showProgress();
         kanboardAPI.getAllComments(task.getId());
+        showCommentProgress();
         showProgress();
         kanboardAPI.getAllSubtasks(task.getId());
         showProgress();
