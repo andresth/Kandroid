@@ -141,12 +141,15 @@ public class MainActivity extends AppCompatActivity
     private OnGetMeListener getMeListener = new OnGetMeListener() {
         @Override
         public void onGetMe(boolean success, KanboardUserInfo result) {
-            Me = result;
-            if (!showProgress(false)) {
-                if (mode == 0)
-                    combineDashboard();
-                else
-                    combineProject();
+            boolean prog = !showProgress(false);
+            if (success) {
+                Me = result;
+                if (prog) {
+                    if (mode == 0)
+                        combineDashboard();
+                    else
+                        combineProject();
+                }
             }
         }
     };
