@@ -144,6 +144,7 @@ public class MainActivity extends AppCompatActivity
             boolean prog = !showProgress(false);
             if (success) {
                 Me = result;
+                ((TextView) findViewById(R.id.nav_serverurl)).setText(Me.getName());
                 if (prog) {
                     if (mode == 0)
                         combineDashboard();
@@ -328,9 +329,9 @@ public class MainActivity extends AppCompatActivity
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close) {
             public void onDrawerOpened(View drawerView) {
-                TextView mServerUrl = (TextView) findViewById(R.id.nav_serverurl);
-                if ((Me != null) && (mServerUrl != null))
-                    mServerUrl.setText(Me.getName());
+//                TextView mServerUrl = (TextView) findViewById(R.id.nav_serverurl);
+//                if ((Me != null) && (mServerUrl != null))
+//                    mServerUrl.setText(Me.getName());
             }
         };
         drawer.addDrawerListener(toggle);
