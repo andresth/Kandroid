@@ -1,4 +1,11 @@
-## 0.5.7 (development)
+## 0.5.8 (development)
+#### new features
+
+#### improvements
+
+#### fixes
+
+## 0.5.7
 #### new features
 
 #### improvements
