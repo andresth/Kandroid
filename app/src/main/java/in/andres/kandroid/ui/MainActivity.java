@@ -505,6 +505,8 @@ public class MainActivity extends AppCompatActivity
             mDashboard.setExtra(mMyOverduetasks, mMyActivities, mProjectList);
             populateProjectsMenu();
             showDashboard();
+            NavigationView nav = (NavigationView) findViewById(R.id.nav_view);
+            nav.getMenu().findItem(R.id.nav_dashboard).setEnabled(true);
         } else {
             Log.w(Constants.TAG, "Something happened while assembling mDashboard.");
         }
@@ -699,6 +701,8 @@ public class MainActivity extends AppCompatActivity
         kanboardAPI.getMe();
 
         if (mode == 0) {
+            NavigationView nav = (NavigationView) findViewById(R.id.nav_view);
+            nav.getMenu().findItem(R.id.nav_dashboard).setEnabled(false);
             Log.i(Constants.TAG, "Loading dashboard data.");
             showProgress(true);
             kanboardAPI.getDefaultTaskColors();
