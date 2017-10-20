@@ -119,12 +119,12 @@
     <string name="task_not_assigned">no asignado</string>
     <string name="subtask_dlg_owner">Propietario:</string>
     <string name="subtask_dlg_title">Título:</string>
-    <string name="delete_dlg_message">¿Esta seguro?</string>
+    <string name="delete_dlg_message">¿Está seguro?</string>
     <string name="delete_dlg_task">Eliminar Tarea</string>
     <string name="delete_dlg_subtask">Eliminar Subtarea</string>
     <string name="delete_dlg_comment">Eliminar Comentario</string>
     <string name="error_msg_remove_task">Error mientras eliminaba tarea!</string>
-    <string name="error_msg_open_task">Error mientras abria tarea!</string>
+    <string name="error_msg_open_task">Error mientras abría tarea!</string>
     <string name="error_msg_close_task">Error mientras cerraba tarea!</string>
     <string name="error_msg_create_comment">Error mientras eliminaba tarea!</string>
     <string name="error_msg_update_comment">Error mientras creaba comentario!</string>
@@ -145,7 +145,7 @@
     <string name="taskedit_seclect_color">Elija un color</string>
 
     <!--Menu strings-->
-    <string name="action_edit">Editarar</string>
+    <string name="action_edit">Editar</string>
     <string name="action_delete">Eliminar</string>
     <string name="menu_caption_comment">Comentario #%d</string>
     <string name="menu_caption_subtask">Comentario #%d</string>
