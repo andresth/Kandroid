@@ -60,7 +60,7 @@ public class LoginActivity extends AppCompatActivity {
 
     // UI references.
     private EditText mServerURLView;
-//    private EditText mAPIKeyView;
+    //    private EditText mAPIKeyView;
     private EditText mUsernameView;
     private EditText mPasswordView;
     private View mProgressView;
@@ -239,9 +239,7 @@ public class LoginActivity extends AppCompatActivity {
                             editor.putString("username", username);
                             editor.putString("password", password);
                             editor.apply();
-                        } else if (version[0] >= Constants.minKanboardVersion[0] &&
-                            version[1] >= Constants.minKanboardVersion[1] &&
-                            version[2] >= Constants.minKanboardVersion[2]) {
+                        } else if (isSupportedVersion(version)) {
                             SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
                             SharedPreferences.Editor editor = preferences.edit();
                             editor.putString("serverurl", serverurl.trim());
@@ -262,6 +260,12 @@ public class LoginActivity extends AppCompatActivity {
                 e.printStackTrace();
             }
         }
+    }
+
+    public static boolean isSupportedVersion(int[] version) {
+        return version[0] > Constants.minKanboardVersion[0] ||
+                (version[0] == Constants.minKanboardVersion[0] && version[1] > Constants.minKanboardVersion[1]) ||
+                (version[1] == Constants.minKanboardVersion[0] && version[1] == Constants.minKanboardVersion[1] && version[2] >= Constants.minKanboardVersion[2]);
     }
 
     private boolean isPasswordValid(String password) {
