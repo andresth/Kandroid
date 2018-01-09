@@ -60,7 +60,7 @@ public class LoginActivity extends AppCompatActivity {
 
     // UI references.
     private EditText mServerURLView;
-    //    private EditText mAPIKeyView;
+//    private EditText mAPIKeyView;
     private EditText mUsernameView;
     private EditText mPasswordView;
     private View mProgressView;
