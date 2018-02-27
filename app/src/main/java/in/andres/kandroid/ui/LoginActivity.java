@@ -239,9 +239,11 @@ public class LoginActivity extends AppCompatActivity {
                             editor.putString("username", username);
                             editor.putString("password", password);
                             editor.apply();
-                        } else if (version[0] >= Constants.minKanboardVersion[0] &&
-                            version[1] >= Constants.minKanboardVersion[1] &&
-                            version[2] >= Constants.minKanboardVersion[2]) {
+                          } else if (version[0]*10000+version[1]*100+version[2] >=
+                                      Constants.minKanboardVersion[0]*10000
+                                              +Constants.minKanboardVersion[1]*100
+                                              +Constants.minKanboardVersion[2]
+                            ) {
                             SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
                             SharedPreferences.Editor editor = preferences.edit();
                             editor.putString("serverurl", serverurl.trim());
@@ -305,4 +307,3 @@ public class LoginActivity extends AppCompatActivity {
         }
     }
 }
-

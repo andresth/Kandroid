@@ -21,6 +21,7 @@ package in.andres.kandroid.kanboard;
 
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.text.TextUtils;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -75,6 +76,15 @@ public class KanboardProject implements Comparable<KanboardProject>, Serializabl
         this(project, null, null, null, null, null, null, null);
     }
 
+    private URL readUrlFromJSON(JSONObject urls, String urlName ) throws MalformedURLException {
+        String url = urls.optString(urlName);
+        URL returnUrl = null;
+        if (!TextUtils.isEmpty(url)){
+            returnUrl = new URL(url);
+        }
+        return returnUrl;
+    }
+
     public KanboardProject(@NonNull JSONObject project, @Nullable JSONArray columns, @Nullable JSONArray swimlanes,
                            @Nullable JSONArray categories, @Nullable JSONArray activetasks,
                            @Nullable JSONArray inactivetasks, @Nullable JSONArray overduetasks,
@@ -108,9 +118,10 @@ public class KanboardProject implements Comparable<KanboardProject>, Serializabl
         NumberActiveTasks = project.optInt("nb_active_tasks");
         JSONObject urls = project.optJSONObject("url");
         if (urls != null) {
-            ListURL = new URL(urls.optString("list"));
-            BoardURL = new URL(urls.optString("board"));
-            CalendarURL = new URL(urls.optString("calendar"));
+            ListURL = readUrlFromJSON(urls,"list");
+            BoardURL = readUrlFromJSON(urls,"board");
+            CalendarURL = readUrlFromJSON(urls,"calendar");
+
         } else {
             ListURL = null;
             BoardURL = null;
