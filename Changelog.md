@@ -4,6 +4,7 @@
 #### improvements
 
 #### fixes
+* fixed version check
 
 ## 0.5.7
 #### new features
