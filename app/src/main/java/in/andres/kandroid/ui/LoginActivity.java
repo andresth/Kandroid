@@ -265,7 +265,7 @@ public class LoginActivity extends AppCompatActivity {
     public static boolean isSupportedVersion(int[] version) {
         return version[0] > Constants.minKanboardVersion[0] ||
                 (version[0] == Constants.minKanboardVersion[0] && version[1] > Constants.minKanboardVersion[1]) ||
-                (version[1] == Constants.minKanboardVersion[0] && version[1] == Constants.minKanboardVersion[1] && version[2] >= Constants.minKanboardVersion[2]);
+                (version[0] == Constants.minKanboardVersion[0] && version[1] == Constants.minKanboardVersion[1] && version[2] >= Constants.minKanboardVersion[2]);
     }
 
     private boolean isPasswordValid(String password) {
