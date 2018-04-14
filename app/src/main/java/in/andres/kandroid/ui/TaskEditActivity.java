@@ -64,15 +64,17 @@ import in.andres.kandroid.Utils;
 import in.andres.kandroid.kanboard.KanboardAPI;
 import in.andres.kandroid.kanboard.KanboardColor;
 import in.andres.kandroid.kanboard.KanboardColumn;
+import in.andres.kandroid.kanboard.KanboardError;
 import in.andres.kandroid.kanboard.KanboardTask;
 import in.andres.kandroid.kanboard.events.OnCreateTaskListener;
+import in.andres.kandroid.kanboard.events.OnErrorListener;
 import in.andres.kandroid.kanboard.events.OnGetColumnsListener;
 import in.andres.kandroid.kanboard.events.OnGetDefaultColorListener;
 import in.andres.kandroid.kanboard.events.OnGetDefaultColorsListener;
 import in.andres.kandroid.kanboard.events.OnGetVersionListener;
 import in.andres.kandroid.kanboard.events.OnUpdateTaskListener;
 
-public class TaskEditActivity extends AppCompatActivity implements OnCreateTaskListener, OnUpdateTaskListener, OnGetDefaultColorListener, OnGetDefaultColorsListener, OnGetVersionListener, OnGetColumnsListener {
+public class TaskEditActivity extends AppCompatActivity implements OnCreateTaskListener, OnUpdateTaskListener, OnGetDefaultColorListener, OnGetDefaultColorsListener, OnGetVersionListener, OnGetColumnsListener, OnErrorListener {
     private KanboardTask task;
     private String taskTitle;
     private String taskDescription;
@@ -177,6 +179,7 @@ public class TaskEditActivity extends AppCompatActivity implements OnCreateTaskL
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this.getBaseContext());
         try {
             kanboardAPI = new KanboardAPI(preferences.getString("serverurl", ""), preferences.getString("username", ""), preferences.getString("password", ""));
+            kanboardAPI.addErrorListener(this);
             kanboardAPI.addOnCreateTaskListener(this);
             kanboardAPI.addOnUpdateTaskListener(this);
             kanboardAPI.addOnGetDefaultColorListener(this);
@@ -378,15 +381,24 @@ public class TaskEditActivity extends AppCompatActivity implements OnCreateTaskL
     }
 
     @Override
+    public void onError(KanboardError error) {
+
+    }
+
+    @Override
     public void onCreateTask(boolean success, Integer taskid) {
-        setResult(Constants.ResultChanged, new Intent());
-        finish();
+        if (success) {
+            setResult(Constants.ResultChanged, new Intent());
+            finish();
+        }
     }
 
     @Override
     public void onUpdateTask(boolean success) {
-        setResult(Constants.ResultChanged, new Intent());
-        finish();
+        if (success) {
+            setResult(Constants.ResultChanged, new Intent());
+            finish();
+        }
     }
 
     @Override
