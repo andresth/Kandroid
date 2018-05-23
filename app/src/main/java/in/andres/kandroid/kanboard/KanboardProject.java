@@ -110,7 +110,11 @@ public class KanboardProject implements Comparable<KanboardProject>, Serializabl
         if (urls != null) {
             ListURL = new URL(urls.optString("list"));
             BoardURL = new URL(urls.optString("board"));
-            CalendarURL = new URL(urls.optString("calendar"));
+            if (urls.has("calendar")) {
+                CalendarURL = new URL(urls.optString("calendar"));
+            } else {
+                CalendarURL = null;
+            }
         } else {
             ListURL = null;
             BoardURL = null;
