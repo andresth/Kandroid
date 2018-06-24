@@ -1,9 +1,10 @@
-## 0.5.9 (development)
+## 0.5.9
 #### new features
 
 #### improvements
 
 #### fixes
+* Set CalendarURL to null when it's not in the response
 
 ## 0.5.8
 #### new features
