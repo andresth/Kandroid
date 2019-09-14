@@ -325,7 +325,7 @@ public class KanboardAPI {
                             tag = res;
                         } else {
                             try {
-                                Pattern regex = Pattern.compile("^(\\d+)\\.(\\d+)\\.(\\d+)(?:,(.*)){0,1}$", Pattern.CASE_INSENSITIVE | Pattern.UNICODE_CASE);
+                                Pattern regex = Pattern.compile("^[vV]{0,1}(\\d+)\\.(\\d+)\\.(\\d+)(?:,(.*)){0,1}$", Pattern.CASE_INSENSITIVE | Pattern.UNICODE_CASE);
                                 Matcher regexMatcher = regex.matcher(res);
                                 if (regexMatcher.find()) {
                                     version[0] = Integer.parseInt(regexMatcher.group(1));
